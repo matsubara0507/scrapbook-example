@@ -1,0 +1,13 @@
+feed:
+  title: "Sample Site Posts"
+  baseUrl: "https://matsubara0507.github.io/scrapbook-example"
+
+sites:
+  - title: "ひげメモ"
+    author: "matsubara0507"
+    url: https://matsubara0507.github.io
+    feed: https://matsubara0507.github.io/feed
+  - title: "BIGMOON haskellers blog"
+    author: "e-bigmoon"
+    url: https://haskell.e-bigmoon.com
+    feed: https://haskell.e-bigmoon.com/feed.xml
