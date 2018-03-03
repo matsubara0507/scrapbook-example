@@ -6,7 +6,7 @@ sites:
   - title: "ひげメモ"
     author: "matsubara0507"
     url: https://matsubara0507.github.io
-    feed: https://matsubara0507.github.io/feed
+    atom: https://matsubara0507.github.io/feed
   - title: "BIGMOON haskellers blog"
     author: "e-bigmoon"
     url: https://haskell.e-bigmoon.com
@@ -15,3 +15,8 @@ sites:
     author: "matsubara0507"
     url: https://github.com/matsubara0507/test-rss
     feed: https://github.com/matsubara0507/test-rss/releases.atom
+  # example RSS 2.0
+  - title: "あどけない話"
+    author: "kazu-yamamoto"
+    url: http://d.hatena.ne.jp/kazu-yamamoto
+    rss: http://d.hatena.ne.jp/kazu-yamamoto/rss2
