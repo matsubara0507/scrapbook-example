@@ -11,3 +11,7 @@ sites:
     author: "e-bigmoon"
     url: https://haskell.e-bigmoon.com
     feed: https://haskell.e-bigmoon.com/feed.xml
+  - title: "TestRSS"
+    author: "matsubara0507"
+    url: https://github.com/matsubara0507/test-rss
+    feed: https://github.com/matsubara0507/test-rss/releases.atom
