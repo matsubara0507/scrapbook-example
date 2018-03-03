@@ -1,6 +1,6 @@
 resolver: lts-10.7
 extra-deps:
 - git: https://github.com/matsubara0507/scrapbook.git
-  commit: 492e364a498deb77aec2dba7f04406b2a34d084c
+  commit: 48bd316d5ad68eff8d0125e7d0b356f2ce183aa9
 - git: https://github.com/matsubara0507/extensible-instances.git
   commit: 8dabe7a3dd9cf162e2d81e4ca16dbe73b98a3809
