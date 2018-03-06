@@ -1,4 +1,138 @@
-<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-03-04T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://matsubara0507.github.io/posts/2018-03-04-fix-tasty-discover-windows.html</id><title type="text">tasty-discover が Windows+日本語環境で動かなかったので直す</title><updated>2018-03-04T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-03-04-fix-tasty-discover-windows.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
+<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-03-06T05:29:45Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>http://d.hatena.ne.jp/kazu-yamamoto/20180306/1520314185</id><title type="text">[Haskell]あなたの知らないSemigroupの世界</title><updated>2018-03-06T05:29:45Z</updated><author><name>kazu-yamamoto</name></author><link href="http://d.hatena.ne.jp/kazu-yamamoto/20180306/1520314185"/><summary type="html">
+&lt;div class="section"&gt;
+&lt;p&gt;自分で定義するデータの中には、足し算したくなるようなデータがある。たとえば、送信と受信のカウンターを定義したとしよう。&lt;/p&gt;
+&lt;pre class="syntax-highlight"&gt;
+&lt;span class="synType"&gt;data&lt;/span&gt; Metrics &lt;span class="synStatement"&gt;=&lt;/span&gt; Metrics {
+    rx &lt;span class="synStatement"&gt;::&lt;/span&gt; Int
+  , ts &lt;span class="synStatement"&gt;::&lt;/span&gt; Int
+  } &lt;span class="synType"&gt;deriving&lt;/span&gt; (Eq, Show)
+&lt;/pre&gt;
+
+&lt;p&gt;これは以下のように足し算できると嬉しいだろう。&lt;/p&gt;
+&lt;pre class="syntax-highlight"&gt;
+&lt;span class="synStatement"&gt;&amp;#62;&lt;/span&gt; Metrics &lt;span class="synConstant"&gt;1&lt;/span&gt; &lt;span class="synConstant"&gt;2&lt;/span&gt; &lt;span class="synStatement"&gt;+&lt;/span&gt; Metrics &lt;span class="synConstant"&gt;3&lt;/span&gt; &lt;span class="synConstant"&gt;4&lt;/span&gt;
+Metrics {rx &lt;span class="synStatement"&gt;=&lt;/span&gt; &lt;span class="synConstant"&gt;4&lt;/span&gt;, ts &lt;span class="synStatement"&gt;=&lt;/span&gt; &lt;span class="synConstant"&gt;6&lt;/span&gt;}
+&lt;/pre&gt;
+
+&lt;p&gt;しかしこれは Num のインスタンスにすべきではない。このデータ型に掛け算は定義できないからだ。かといって、addMetrics みたいな関数を定義するのはかっこ悪い。&lt;/p&gt;
+&lt;pre class="syntax-highlight"&gt;
+&lt;span class="synStatement"&gt;&amp;#62;&lt;/span&gt; Metrics &lt;span class="synConstant"&gt;1&lt;/span&gt; &lt;span class="synConstant"&gt;2&lt;/span&gt; &lt;span class="synStatement"&gt;`addMetrics`&lt;/span&gt; Metrics &lt;span class="synConstant"&gt;3&lt;/span&gt; &lt;span class="synConstant"&gt;4&lt;/span&gt;
+Metrics {rx &lt;span class="synStatement"&gt;=&lt;/span&gt; &lt;span class="synConstant"&gt;4&lt;/span&gt;, ts &lt;span class="synStatement"&gt;=&lt;/span&gt; &lt;span class="synConstant"&gt;6&lt;/span&gt;}
+&lt;/pre&gt;
+
+&lt;p&gt;このように演算子が一個だけ欲しいと思ったら、それは多分 Monoid だ。&lt;/p&gt;
+&lt;pre class="syntax-highlight"&gt;
+&lt;span class="synPreProc"&gt;import&lt;/span&gt; Data.Monoid
+
+&lt;span class="synType"&gt;instance&lt;/span&gt; Monoid Metrics &lt;span class="synType"&gt;where&lt;/span&gt;
+    mempty &lt;span class="synStatement"&gt;=&lt;/span&gt; Metrics &lt;span class="synConstant"&gt;0&lt;/span&gt; &lt;span class="synConstant"&gt;0&lt;/span&gt;
+    Metrics r1 t1 &lt;span class="synStatement"&gt;`mappend`&lt;/span&gt; Metrics r2 t2 &lt;span class="synStatement"&gt;=&lt;/span&gt; Metrics (r1 &lt;span class="synStatement"&gt;+&lt;/span&gt; r2) (t1 &lt;span class="synStatement"&gt;+&lt;/span&gt; t2)
+&lt;/pre&gt;
+
+&lt;p&gt;GHC 7.10までは、(&amp;#60;&amp;#62;) が mappend の別名であるので、以下のようなコードが書ける。&lt;/p&gt;
+&lt;pre class="syntax-highlight"&gt;
+&lt;span class="synStatement"&gt;&amp;#62;&lt;/span&gt; Metrics &lt;span class="synConstant"&gt;1&lt;/span&gt; &lt;span class="synConstant"&gt;2&lt;/span&gt; &lt;span class="synStatement"&gt;&amp;#60;&amp;#62;&lt;/span&gt; Metrics &lt;span class="synConstant"&gt;3&lt;/span&gt; &lt;span class="synConstant"&gt;4&lt;/span&gt;
+Metrics {rx &lt;span class="synStatement"&gt;=&lt;/span&gt; &lt;span class="synConstant"&gt;4&lt;/span&gt;, ts &lt;span class="synStatement"&gt;=&lt;/span&gt; &lt;span class="synConstant"&gt;6&lt;/span&gt;}
+&lt;/pre&gt;
+
+&lt;p&gt;やったね！&lt;/p&gt;
+&lt;h4&gt;GHC 8.4へようこそ&lt;/h4&gt;
+&lt;p&gt;上記のコードを GHC 8.4 で読み込むと以下のようなエラーが出る。&lt;/p&gt;
+&lt;pre class="syntax-highlight"&gt;
+Example.hs&lt;span class="synStatement"&gt;:&lt;/span&gt;&lt;span class="synConstant"&gt;8&lt;/span&gt;&lt;span class="synStatement"&gt;:&lt;/span&gt;&lt;span class="synConstant"&gt;10&lt;/span&gt;&lt;span class="synStatement"&gt;:&lt;/span&gt; error&lt;span class="synStatement"&gt;:&lt;/span&gt;
+    ・ No &lt;span class="synType"&gt;instance&lt;/span&gt; for (Semigroup Metrics)
+        arising from the superclasses &lt;span class="synStatement"&gt;of&lt;/span&gt; an &lt;span class="synType"&gt;instance&lt;/span&gt; declaration
+    ・In the &lt;span class="synType"&gt;instance&lt;/span&gt; declaration for ‘Monoid Metrics’
+  &lt;span class="synStatement"&gt;|&lt;/span&gt;
+&lt;span class="synConstant"&gt;8&lt;/span&gt; &lt;span class="synStatement"&gt;|&lt;/span&gt; &lt;span class="synType"&gt;instance&lt;/span&gt; Monoid Metrics &lt;span class="synType"&gt;where&lt;/span&gt;
+  &lt;span class="synStatement"&gt;|&lt;/span&gt;          &lt;span class="synStatement"&gt;^^^^^^^^^^^^^^&lt;/span&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;これはどういうことだろう？ その疑問に答えるのがこの記事の主旨である。&lt;/p&gt;
+&lt;p&gt;mappendよりも(&amp;#60;&amp;#62;)の方がかっこいいのに、長い間 (&amp;#60;&amp;#62;) はMonoidのメソッドにはしてもらえなかった。あくまで別名であった。それは一部の人に、SemigroupをMonoidのスーパークラスにするという野望があったからだ。&lt;/p&gt;
+&lt;p&gt;数学での定義を思い出そう：&lt;/p&gt;
+&lt;h5&gt; 半群 (Semigroup)&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt; 結合則: (a &amp;#60;&amp;#62; b) &amp;#60;&amp;#62; c = a &amp;#60;&amp;#62; (b &amp;#60;&amp;#62; c)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h5&gt; モノイド (Monoid)&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt; 結合則: (a &amp;#60;&amp;#62; b) &amp;#60;&amp;#62; c = a &amp;#60;&amp;#62; (b &amp;#60;&amp;#62; c)&lt;/li&gt;
+&lt;li&gt; 単位元：e &amp;#60;&amp;#62; a = a &amp;#60;&amp;#62; e = a&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h5&gt; 群 (Group)&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt; 結合則: (a &amp;#60;&amp;#62; b) &amp;#60;&amp;#62; c = a &amp;#60;&amp;#62; (b &amp;#60;&amp;#62; c)&lt;/li&gt;
+&lt;li&gt; 単位元：e &amp;#60;&amp;#62; a = a &amp;#60;&amp;#62; e = a&lt;/li&gt;
+&lt;li&gt; 逆元：a &amp;#60;&amp;#62; inv a = e&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;さっきの疑問に答えると、GHC 8.4ではSemigroupがMonoidのスーパークラスとなり、Metricsに対する(&amp;#60;&amp;#62;)の定義がないために、エラーが出たという訳だ。&lt;/p&gt;
+&lt;h4&gt;状況把握&lt;/h4&gt;
+&lt;p&gt;今後どのようなコードを書けばよいかという疑問に答えるためには、GHCの各バージョンでの状況を把握しなければならない。&lt;/p&gt;
+&lt;h5&gt;GHC 7.10 (base 4.8)&lt;/h5&gt;
+&lt;p&gt;GHC 7.10 では、みなさんご存知のように base パッケージに Data.Monoid モジュールがある：&lt;/p&gt;
+&lt;pre class="syntax-highlight"&gt;
+&lt;span class="synComment"&gt;-- base : Data.Monoid&lt;/span&gt;
+&lt;span class="synType"&gt;class&lt;/span&gt; Monoid a &lt;span class="synType"&gt;where&lt;/span&gt;
+    mempty &lt;span class="synStatement"&gt;::&lt;/span&gt; a
+    mappend &lt;span class="synStatement"&gt;::&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a
+
+(&lt;span class="synStatement"&gt;&amp;#60;&amp;#62;&lt;/span&gt;) &lt;span class="synStatement"&gt;::&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a
+(&lt;span class="synStatement"&gt;&amp;#60;&amp;#62;&lt;/span&gt;) &lt;span class="synStatement"&gt;=&lt;/span&gt; mappend
+&lt;/pre&gt;
+
+&lt;p&gt;Monoid型自体はPreludeの仲間入りを果たしたが、(&amp;#60;&amp;#62;)は明示的にimportする必要がある。&lt;/p&gt;
+&lt;p&gt;Data.Semigroupは、semigroupsパッケージで定義されている：&lt;/p&gt;
+&lt;pre class="syntax-highlight"&gt;
+&lt;span class="synComment"&gt;-- semigroup : Data.Semigroup&lt;/span&gt;
+&lt;span class="synType"&gt;class&lt;/span&gt; Semigroup a &lt;span class="synType"&gt;where&lt;/span&gt;
+    (&lt;span class="synStatement"&gt;&amp;#60;&amp;#62;&lt;/span&gt;) &lt;span class="synStatement"&gt;::&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a
+
+&lt;span class="synType"&gt;default&lt;/span&gt; (&lt;span class="synStatement"&gt;&amp;#60;&amp;#62;&lt;/span&gt;) &lt;span class="synStatement"&gt;::&lt;/span&gt; Monoid a &lt;span class="synStatement"&gt;=&amp;#62;&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a
+  (&lt;span class="synStatement"&gt;&amp;#60;&amp;#62;&lt;/span&gt;) &lt;span class="synStatement"&gt;=&lt;/span&gt; mappend
+&lt;/pre&gt;
+
+&lt;p&gt;最後の default は、DefaultSignatures という拡張で、Monoidの制約を持てば Semigroupの方の (&amp;#60;&amp;#62;) は mappend で代用できると読む。親子関係がひっくり返っていて、なんだかなぁという感じである。&lt;/p&gt;
+&lt;h5&gt;GHC 8.0 (base 4.9)&lt;/h5&gt;
+&lt;p&gt;Data.Semigroupがsemigroupパッケージからbaseパッケージへ移った：&lt;/p&gt;
+&lt;pre class="syntax-highlight"&gt;
+&lt;span class="synComment"&gt;-- base : Data.Monoid&lt;/span&gt;
+&lt;span class="synType"&gt;class&lt;/span&gt; Monoid a &lt;span class="synType"&gt;where&lt;/span&gt;
+    mempty &lt;span class="synStatement"&gt;::&lt;/span&gt; a
+    mappend &lt;span class="synStatement"&gt;::&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a
+
+(&lt;span class="synStatement"&gt;&amp;#60;&amp;#62;&lt;/span&gt;) &lt;span class="synStatement"&gt;::&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a
+(&lt;span class="synStatement"&gt;&amp;#60;&amp;#62;&lt;/span&gt;) &lt;span class="synStatement"&gt;=&lt;/span&gt; mappend
+
+&lt;span class="synComment"&gt;--base : Data.Semigroup&lt;/span&gt;
+&lt;span class="synType"&gt;class&lt;/span&gt; Semigroup a &lt;span class="synType"&gt;where&lt;/span&gt;
+    (&lt;span class="synStatement"&gt;&amp;#60;&amp;#62;&lt;/span&gt;) &lt;span class="synStatement"&gt;::&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a
+&lt;/pre&gt;
+
+&lt;p&gt;親子関係はない。&lt;/p&gt;
+&lt;p&gt;フラグ -Wnoncanonical-monoid-instances が定義された。これは、MonoidのインスタンスなのにSemigroupのインスタンスになってないと警告を出すフラグである。デフォルトは off。上位互換性に関するフラグ -Wcompat を付けても、警告が出る。&lt;/p&gt;
+&lt;p&gt;まだ GHC 8.4 を使えない人は、-Wall の横に -Wcompat を書き足して遊んでみるとよい。&lt;/p&gt;
+&lt;h5&gt; GHC 8.2 (base 4.10)&lt;/h5&gt;
+&lt;p&gt;何も変更なし。嵐の前の静けさだ。&lt;/p&gt;
+&lt;h5&gt; GHC 8.4 (base 4.11)&lt;/h5&gt;
+&lt;p&gt;なんとなんと、MonoidとSemigroupがPreludeの仲間に入った。そして、SemigroupがMonoidのスーパークラスとなった。&lt;/p&gt;
+&lt;pre class="syntax-highlight"&gt;
+&lt;span class="synComment"&gt;-- Prelude&lt;/span&gt;
+&lt;span class="synType"&gt;class&lt;/span&gt; Semigroup a &lt;span class="synType"&gt;where&lt;/span&gt;
+  (&lt;span class="synStatement"&gt;&amp;#60;&amp;#62;&lt;/span&gt;) &lt;span class="synStatement"&gt;::&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a &lt;span class="synStatement"&gt;-&amp;#62;&lt;/span&gt; a
+
+&lt;span class="synType"&gt;class&lt;/span&gt; Semigroup a &lt;span class="synStatement"&gt;=&amp;#62;&lt;/span&gt; Monoid a &lt;span class="synType"&gt;where&lt;/span&gt;
+  mempty &lt;span class="synStatement"&gt;::&lt;/span&gt; a
+&lt;/pre&gt;
+
+&lt;p&gt;フラグ -Wnoncanonical-monoid-instances でデフォルトで on となった。嵐がやってきたのだ。&lt;/p&gt;
+&lt;h4&gt;対処方法&lt;/h4&gt;
+&lt;p&gt;ここまで解説すれば、対処方法は明らかであろう。&lt;a href="https://prime.haskell.org/wiki/Libraries/Proposals/SemigroupMonoid" target="_blank"&gt;Semigroup (as superclass of) Monoid Proposal&lt;/a&gt;の最後に、semigroupsパッケージを使う方法と使わない方法が載っているので、よく眺めてほしい。&lt;/p&gt;
+&lt;/div&gt;
+</summary></entry><entry><id>https://matsubara0507.github.io/posts/2018-03-04-fix-tasty-discover-windows.html</id><title type="text">tasty-discover が Windows+日本語環境で動かなかったので直す</title><updated>2018-03-04T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-03-04-fix-tasty-discover-windows.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
  &lt;div class="card-content"&gt;
   &lt;header class="post-header"&gt;
     &lt;h1 class="post-title" itemprop="name headline"&gt;tasty-discover が Windows+日本語環境で動かなかったので直す&lt;/h1&gt;
@@ -3979,39 +4113,5 @@ udpLookup query sock tm checkSeqno retry rcv &lt;span class="synStatement"&gt;=&
 &lt;li&gt; リストを生成する関数はトップレベルで再帰せよ&lt;/li&gt;
 &lt;li&gt; それ以外の関数ではローカル関数で再帰せよ&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;
-</summary></entry><entry><id>http://d.hatena.ne.jp/kazu-yamamoto/20171205/1512455644</id><title type="text">[TLS][Haskell]TLS 1.3 開発日記 その23 BoringSSL</title><updated>2017-12-05T06:34:04Z</updated><author><name>kazu-yamamoto</name></author><link href="http://d.hatena.ne.jp/kazu-yamamoto/20171205/1512455644"/><summary type="html">
-&lt;div class="section"&gt;
-&lt;p&gt;BoringSSLでTLS 1.3を使う方法のまとめ。&lt;/p&gt;
-&lt;h4&gt;インストール&lt;/h4&gt;
-&lt;p&gt;ビルドシステムNinjaをあらかじめインストールしておく。&lt;/p&gt;
-&lt;pre&gt;
-% git clone &lt;a href="https://boringssl.googlesource.com/boringssl" target="_blank"&gt;https://boringssl.googlesource.com/boringssl&lt;/a&gt;
-% cd boringssl
-% mkdir build &amp;&amp; cd build &amp;&amp; cmake -GNinja .. &amp;&amp; ninja bssl
-&lt;/pre&gt;
-&lt;p&gt;ビルドは感心するほど速い！&lt;/p&gt;
-&lt;h4&gt;BoringSSLサーバ&lt;/h4&gt;
-&lt;pre&gt;
-% tool/bssl server -tls13-variant -accept 13443 -key $SOMEWHERE/key.pem -cert $SOMEWHERE/certificate.pem -loop -early-data
-&lt;/pre&gt;
-&lt;p&gt;追記：-tls13-draft22-variantはなくなったようだ。&lt;/p&gt;
-&lt;h4&gt;BoringSSLクライアント&lt;/h4&gt;
-&lt;p&gt;Full：&lt;/p&gt;
-&lt;pre&gt;
-% tool/bssl client -tls13-variant draft22 -connect 127.0.0.1:13443
-&lt;/pre&gt;
-&lt;p&gt;HRR：&lt;/p&gt;
-&lt;pre&gt;
-% tool/bssl client -tls13-variant draft22 -connect 127.0.0.1:13443 -curves P-521:x25519
-&lt;/pre&gt;
-&lt;p&gt;PSK：&lt;/p&gt;
-&lt;pre&gt;
-% tool/bssl client -tls13-variant draft22 -connect 127.0.0.1:13443 -test-resumption
-&lt;/pre&gt;
-&lt;p&gt;0RTT：&lt;/p&gt;
-&lt;pre&gt;
-% tool/bssl client -tls13-variant draft22 -connect 127.0.0.1:13443 -test-resumption -early-data @$SOMEWHERE/early-data.txt
-&lt;/pre&gt;
 &lt;/div&gt;
 </summary></entry></feed>
