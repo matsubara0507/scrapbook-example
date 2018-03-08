@@ -1,12 +1,14 @@
 feed:
   title: "Sample Site Posts"
   baseUrl: "https://matsubara0507.github.io/scrapbook-example"
+  name: atom.xml
 
 sites:
   - title: "ひげメモ"
     author: "matsubara0507"
     url: https://matsubara0507.github.io
-    atom: https://matsubara0507.github.io/feed
+    atom:
+      url: https://matsubara0507.github.io/feed
   - title: "BIGMOON haskellers blog"
     author: "e-bigmoon"
     url: https://haskell.e-bigmoon.com
@@ -20,3 +22,11 @@ sites:
     author: "kazu-yamamoto"
     url: http://d.hatena.ne.jp/kazu-yamamoto
     rss: http://d.hatena.ne.jp/kazu-yamamoto/rss2
+  # if filtering Atom feed's links using attr of `a` tag
+  - title: "Kuro's Blog"
+    author: "Hiroyuki Kurokawa"
+    url: http://kurokawh.blogspot.com/
+    atom:
+      url: http://kurokawh.blogspot.com/feeds/posts/default
+      linkAttrs:
+        rel: alternate
