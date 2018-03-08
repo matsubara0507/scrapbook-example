@@ -411,11 +411,79 @@ Example.hs&lt;span class="synStatement"&gt;:&lt;/span&gt;&lt;span class="synCons
   mempty &lt;span class="synStatement"&gt;::&lt;/span&gt; a
 &lt;/pre&gt;
 
-&lt;p&gt;フラグ -Wnoncanonical-monoid-instances でデフォルトで on となった。嵐がやってきたのだ。&lt;/p&gt;
+&lt;p&gt;訂正：SemigroupがMonoidのスパークラスになったために、(&amp;#60;&amp;#62;) を定義してないとエラーが出るようになった。嵐がやってきたのだ。&lt;/p&gt;
 &lt;h4&gt;対処方法&lt;/h4&gt;
 &lt;p&gt;ここまで解説すれば、対処方法は明らかであろう。&lt;a href="https://prime.haskell.org/wiki/Libraries/Proposals/SemigroupMonoid" target="_blank"&gt;Semigroup (as superclass of) Monoid Proposal&lt;/a&gt;の最後に、semigroupsパッケージを使う方法と使わない方法が載っているので、よく眺めてほしい。&lt;/p&gt;
 &lt;/div&gt;
-</summary></entry><entry><id>https://matsubara0507.github.io/posts/2018-03-04-fix-tasty-discover-windows.html</id><title type="text">tasty-discover が Windows+日本語環境で動かなかったので直す</title><updated>2018-03-04T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-03-04-fix-tasty-discover-windows.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
+</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/01/cygwin-cygwin.html</id><title type="text">[cygwin] cygwinセットアップ・環境構築手順メモ</title><updated>2018-03-05T23:52:06.430+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/01/cygwin-cygwin.html"/><summary type="text">
+
+主に自分向けの防備録です。windows10上で確認。インストーラーはここからDLする。
+
+
+
+
+
+&lt;&lt;設定&gt;&gt;
+
+ssh-agentの重複起動を防ぐ
+
+
+ユーザーのアカウント名、ホームディレクトリの変更
+
+
+
+/etc/passwdを編集する（最新バージョンでは自動生成されない？）
+Cygwinを移動したら/etc/passwdの再生成を
+巨大ドメインに参加している PC での /etc/passwd, /etc/group ファイルのつくりかた 
+
+ssh-agentのために秘密鍵セットアップ
+
+
+
+~/.ssh/
+
+
+※group/otherの権限を削除する必要がある
+
+% chmod 700 ~/.ssh 
+
+
+less, lv, manコマンド終了時に画面をクリアしない
+
+[linux][cygwin] less, manの終了直前の画面をクリアしないで端末上に残す方法 
+</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/03/haskell-http-clienthaskellhttp.html</id><title type="text">[haskell] http-clientライブラリを利用してHaskellでHTTPクライアント機能を実装する</title><updated>2018-03-05T09:34:57.715+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/03/haskell-http-clienthaskellhttp.html"/><summary type="text">Haskellでは、http-clientライブラリを用いることで、HTTPクライアント機能を簡単に実装できます。http-client以外にも何種類かライブラリがありますが、今回はhttp-client, http-client-tlsの機能と使い方をまとめておきます。
+
+本エントリで紹介するhttp-client, http-client-tlsライブラリの機能：
+
+単純なHTTP GETリクエスト
+
+主要な型の説明 
+
+Managerのカスタマイズ 
+
+https
+proxy設定 
+タイムアウト値の設定
+
+Requestのカスタマイズ
+
+ベーシック認証 
+リクエストヘッダ 
+
+Responseの操作
+
+ストリーミング受信 
+レスポンスヘッダの参照 
+
+エラーハンドリング 
+
+
+
+
+
+
+単純なHTTP GETリクエスト
+{-# LANGUAGE OverloadedStrings #</summary></entry><entry><id>https://matsubara0507.github.io/posts/2018-03-04-fix-tasty-discover-windows.html</id><title type="text">tasty-discover が Windows+日本語環境で動かなかったので直す</title><updated>2018-03-04T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-03-04-fix-tasty-discover-windows.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
  &lt;div class="card-content"&gt;
   &lt;header class="post-header"&gt;
     &lt;h1 class="post-title" itemprop="name headline"&gt;tasty-discover が Windows+日本語環境で動かなかったので直す&lt;/h1&gt;
@@ -778,7 +846,35 @@ Copyright 2013-18 Regents of the University of California. All Rights Reserved.&
 &lt;li&gt;篩型は &lt;code&gt;{-@ ... @-}&lt;/code&gt; で記述する&lt;/li&gt;
 &lt;li&gt;篩型の型エイリアスは &lt;code&gt;{-@ type @-}&lt;/code&gt; で記述する&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>http://d.hatena.ne.jp/kazu-yamamoto/20180302/1519966635</id><title type="text">TLS 1.3 開発日記 その26 ID 24</title><updated>2018-03-02T04:57:15Z</updated><author><name>kazu-yamamoto</name></author><link href="http://d.hatena.ne.jp/kazu-yamamoto/20180302/1519966635"/><summary type="html">
+&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/02/windows-windows10.html</id><title type="text">[windows] Windows10セットアップ・設定項目のメモ</title><updated>2018-03-02T10:19:01.008+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/02/windows-windows10.html"/><summary type="text">Windows10セットアップ時の設定項目、インストールアプリの備忘録。
+
+
+スタートメニュー・タスクバーの設定
+
+タスクバーの設定 
+
+小さいタスクバーボタンを使う：オン 
+[スタート]ボタンを右クリックするかWindowsキー＋Xキーを押したときに表示されるメニューで、コマンドプロンプトをWindows PowerShellに置き換える：オフ
+タスクバーボタンを結合する
+
+「タスクバーに入りきらない場合」を選択
+
+タスクバーをすべての ディスプレイに表示する：オフ
+
+
+
+ Quick Launcherを表示する
+
+クイック起動を復活する 
+Windows 10 タスクバーにクイック起動を表示する
+
+スタートメニューにコントロールパネルを表示する
+
+「Windows 10」のコントロールパネルを表示する方法について
+
+スタートメニューにピン止めするアプリ：
+
+Windowsシステム</summary></entry><entry><id>http://d.hatena.ne.jp/kazu-yamamoto/20180302/1519966635</id><title type="text">TLS 1.3 開発日記 その26 ID 24</title><updated>2018-03-02T04:57:15Z</updated><author><name>kazu-yamamoto</name></author><link href="http://d.hatena.ne.jp/kazu-yamamoto/20180302/1519966635"/><summary type="html">
 &lt;div class="section"&gt;
 &lt;p&gt;TLS 1.3 ドラフト24で重要な変更は1つだけ。レコードのバージョン。&lt;/p&gt;
 &lt;p&gt;ドラフト23では&lt;/p&gt;
@@ -1098,7 +1194,15 @@ Ok, 1 module loaded.
 &lt;/figure&gt;
 &lt;p&gt;ここから、計算の経過をクリックしつつ探すことができます。&lt;/p&gt;
 &lt;p&gt;私は &lt;code&gt;debug&lt;/code&gt; を使った感想や、これを改善できるようなアイディアを求めています。そのため、フィードバックや&lt;a href="https://github.com/ndmitchell/debug/issues"&gt;バグトラッカー&lt;/a&gt;経由のお手伝いなどをお待ちしています。&lt;/p&gt;
-&lt;p&gt;また別の Haskell のデバッガに興味があるのなら、&lt;a href="https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/ghci.html#the-ghci-debugger"&gt;GHCi デバッガ&lt;/a&gt;や &lt;a href="https://hackage.haskell.org/package/Hoed"&gt;Hood/Hoed&lt;/a&gt; などを試してみるべきでしょう。&lt;/p&gt;</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018-02-25-SLURP.html</id><title type="text">SLURP (翻訳)</title><updated>2018-02-25T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018-02-25-SLURP.html"/><summary type="html">&lt;h2 id="slurp"&gt;SLURP&lt;/h2&gt;
+&lt;p&gt;また別の Haskell のデバッガに興味があるのなら、&lt;a href="https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/ghci.html#the-ghci-debugger"&gt;GHCi デバッガ&lt;/a&gt;や &lt;a href="https://hackage.haskell.org/package/Hoed"&gt;Hood/Hoed&lt;/a&gt; などを試してみるべきでしょう。&lt;/p&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/02/haskell-stack-install-cryptoniteno-such.html</id><title type="text">[haskell] stack install cryptoniteがno such instruction: `rdrand %r8'エラーで失敗する問題の対処方法</title><updated>2018-02-25T15:34:07.378+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/02/haskell-stack-install-cryptoniteno-such.html"/><summary type="text">手許の環境（mac）で、cryptoniteライブラリのビルドがエラーになる問題が発生したが、ネットの情報を元に解決できたので、その症状と手順をblogに残しておく。
+
+
+
+エラーの症状：
+stack install cryptoniteで以下のようなエラーが発生。
+% stack install cryptonite
+--  While building custom Setup.hs for package cryptonite-0.24 using:
+      /Users/xxx/.stack/setup-exe-cache/x86_64-osx/Cabal-simple_mPHDZzAJ_2.0.1.0_ghc-8.2.2 --builddir=.stack-work/dist/x86_64-osx/Cabal-2.0.1.0 build --ghc-options " </summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018-02-25-SLURP.html</id><title type="text">SLURP (翻訳)</title><updated>2018-02-25T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018-02-25-SLURP.html"/><summary type="html">&lt;h2 id="slurp"&gt;SLURP&lt;/h2&gt;
 &lt;p&gt;Great original post: &lt;a href="https://www.snoyman.com/blog/2018/01/slurp"&gt;SLURP&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;すでにコミュニティの多くの人々が SLURP の提案を見ていると思います。何人かの人たちに私の意見を聞かれたり、私が議論に参加しないことについて、まぁいろいろな意見をもらいました。この議題を私が避けてきた理由を今ここで書かせてください。作者はその提案をリリース前に教えてくれましたが、その時はサポートしないことを伝えました。私はまた、失礼にならないような形で SLURP へのコメントを控えていることも伝えました。残念ながら、その結果2つのことが起こりました。&lt;/p&gt;
 &lt;ul&gt;
@@ -4321,4 +4425,299 @@ udpLookup query sock tm checkSeqno retry rcv &lt;span class="synStatement"&gt;=&
 &lt;li&gt; それ以外の関数ではローカル関数で再帰せよ&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
+</summary></entry><entry><id>http://kurokawh.blogspot.com/2016/12/haskellyesod-typedcontent.html</id><title type="text">[haskell][yesod] TypedContentを利用してクライアントが要求するフォーマットでレスポンスを返す</title><updated>2016-12-17T15:16:26.835+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2016/12/haskellyesod-typedcontent.html"/><summary type="text">Yesod Advent Calendar 2016の6日目の記事です。
+
+RESTfulなAPIを提供する場合、クライアントの都合にあわせて、フォーマットを変えてレスポンスを返したいケースがあります。サーバー上で管理しているDBから、表現だけをHTML, JSON, XML, CSVなどに変更して返すイメージです。例えば、人物情報（名前、年齢、性別など）の一覧を返す際には以下のようなデータが返されることになります。
+
+HTML
+&lt;table border&gt;
+  &lt;tr&gt;
+    &lt;th&gt;name&lt;/th&gt;    &lt;th&gt;sex&lt;/th&gt;    &lt;th&gt;age&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Taro Yamada&lt;/td&gt;    &lt;td&gt;Male&lt;/td&gt;    &lt;td&gt;18&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Hanako Yamada&lt;/</summary></entry><entry><id>http://kurokawh.blogspot.com/2016/07/yesodhaskell-stack-new-xxx-project.html</id><title type="text">[haskell][yesod] stackのnewコマンドで指定できるyesod関連templateの説明</title><updated>2016-12-03T23:37:28.283+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2016/07/yesodhaskell-stack-new-xxx-project.html"/><summary type="text">現状、stackで指定できるyesod関連のtemplatesには以下のものがあります。どのtemplateに何が用意されているのか、知りたかったのですがどこにも説明されていないようなので、調べてまとめてみました。
+% stack templates | grep yesod
+yesod-hello-world （←現時点では削除されています）
+yesod-minimal
+yesod-mongo
+yesod-mysql
+yesod-postgres
+yesod-postgres-fay
+yesod-simple
+yesod-sqlite
+
+
+以下、各テンプレートの説明です。後に出てくるテンプレートほど内容が複雑になっています。テンプレートを指定して新しいプロジェクトを生成する場合は以下のコマンドを実行します。
+% stack new プロジェクト名 yesod-???
+
+
+
+
+</summary></entry><entry><id>http://kurokawh.blogspot.com/2016/11/emacs-emacsgrep.html</id><title type="text">[emacs] emacs上のgrep関連機能、複数ファイルの一括置換手順のまとめ</title><updated>2016-11-30T10:03:25.873+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2016/11/emacs-emacsgrep.html"/><summary type="text">emacs上でgrep関連の機能を利用する際のTIPSをまとめておきます（よく忘れて調べ直すので…）。
+
+
+grepコマンドのオプション
+
+指定ディレクトリ以下のファイルを再帰的に検索
+
+-R DIR    シンボリックリンクを辿る
+-r  DIR    シンボリックリンクは辿らない
+
+検索対象をファイル名でフィルタする
+
+--include=GLOB    GLOBにファイル名を指定する。"*.cpp"のようにワイルドカード（*,?,[...]）を指定可能
+
+検索対象から指定ファイル・ディレクトリを除外する
+
+--exclude=GLOB   GLOBに除外するファイルのファイル名を指定する（ワイルドカード指定可能）。
+--exclude-dir=DIR DIRに指定されたディレクトリをスキップ
+
+
+使用例：
+
+docディレクトリ以下の.txtを拡張子に持つ全てのファイルを対象に"</summary></entry><entry><id>http://kurokawh.blogspot.com/2016/09/cygwin-cygwin64.html</id><title type="text">[cygwin] cygwin64セットアップメモ</title><updated>2016-11-28T00:47:36.358+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2016/09/cygwin-cygwin64.html"/><summary type="text">自分向け備忘録。cygwin64環境をセットアップする際の手順をまとめておきます。
+
+
+設定
+
+
+ssh-agent関連
+
+ssh-agentの重複起動を防ぐ
+ssh-agentのために秘密鍵セットアップ
+
+~/.ssh/
+
+※group/otherのrw権限は削除
+
+
+ssh-agentがパスワードを覚えてくれなくなった問題への対処
+
+pingのエラー回避
+ユーザーのアカウント名、ホームディレクトリの変更
+
+/etc/passwdを編集する
+
+GNU screen でlessやvimの終了後に画面クリアをしない方法
+改行コードにCR+LFが用いられているbashスクリプトを実行するための設定
+tcshのデフォルト補完設定のイマイチな部分を修正
+
+
+
+
+環境変数
+
+HOME
+
+ホームディレクトリを設定
+
+
+
+SHELL
+
+"/bin/tcsh"とすることでデフォルトのシェルが切り替わる
+</summary></entry><entry><id>http://kurokawh.blogspot.com/2016/08/haskellyesod-yesodrestfuljson-api.html</id><title type="text">[haskell][yesod] YesodにおけるRESTfulなJSON API実装チュートリアル</title><updated>2016-08-28T17:53:43.356+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2016/08/haskellyesod-yesodrestfuljson-api.html"/><summary type="text">HaskellのwebフレームワークであるYesodにおいて、RESTful APIを実装する手順を紹介します。Haskell上のデータ構造をJSONテキストに変換する、逆に、JSONテキストをパースしてHaskell上のデータ構造を生成する、といった処理が非常に簡単に実現できます。加えて、コードを書かなくてもバックエンドのDBとのORマッピングが可能になっており、効率的に開発することができます。
+ここで紹介しているコードはgithubにコミットしています。
+
+
+準備：
+
+json-sampleというプロジェクト名でYesodのscaffolding siteをセットアップする
+
+空のプロジェクト生成
+
+% stack new json-sample yesod-sqlite --system-ghc
+
+"--system-ghc"は省略可能。インストール済みのghcを使うことを指示し</summary></entry><entry><id>http://kurokawh.blogspot.com/2016/07/haskellyesod-stackyesod-tutorial.html</id><title type="text">[haskell][yesod] stack対応版Yesod tutorial</title><updated>2016-07-17T18:06:36.108+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2016/07/haskellyesod-stackyesod-tutorial.html"/><summary type="text">HaskellのwebサービスフレームワークにYesodというフレームワークがあります。Yesodに触れたことのない開発者向けに書かれたチュートリアルの一つにYesod tutorialがあり、手順に沿っていくだけで簡単なwebサービスを動作させることができ、Yesodで何ができるかを簡単に理解できるようになっています。
+ただ残念なことに、このYesod tutorialの記載は内容が古く、stackを利用した現行の手順とマッチしなくなっています。stackに対応している最新環境（Yesod 1.4.x）における順があると役に立つと思い、書き起こしてみました。
+
+
+Before the real start（はじめに）
+
+Install（インストール手順）
+stackをインストールする。以下のサイトが参考になります。
+
+installation instructions for </summary></entry><entry><id>http://kurokawh.blogspot.com/2016/07/haskellyesod-stack-exec-yesod-devel.html</id><title type="text">[haskell][yesod] stack exec -- yesod devel で devel.hs: getAddrInfo: does not existというエラーになる問題の対処方法</title><updated>2016-07-17T17:39:43.279+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2016/07/haskellyesod-stack-exec-yesod-devel.html"/><summary type="text">
+Widnwos環境での現象：
+windows上でyesodのscafolding siteをセットアップし、さあ起動！ブラウザから接続確認してOKとなるはずが、なぜか「The application isn't built」という表示が出てしまいました。
+
+
+
+このときターミナルには以下のようなログが出力されていました。
+% stack exec -- yesod devel
+Yesod devel server. Type 'quit' to quit
+Application can be accessed at:
+
+http://localhost:3000
+https://localhost:3443
+If you wish to test https capabilities, you should set the following variable:
+  export </summary></entry><entry><id>http://kurokawh.blogspot.com/2015/04/haskell-cmdargs.html</id><title type="text">[haskell] cmdargsパッケージで楽々コマンドライン引数パース</title><updated>2016-02-11T01:10:46.307+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/04/haskell-cmdargs.html"/><summary type="text">コマンドラインツール実装時、オプション指定とか引数の並びとか考え始めると大変です。HaskellではSystem.EnvironmentモジュールからgetArgsという関数が提供されていますが、本エントリで紹介するcmdargsパッケージを利用すると以下のようなことが簡単にできます。
+
+cmdargsパッケージの特徴：
+
+データ構造を定義するだけで起動引数・オプションのパースができる
+パース結果を型付きで参照することができる
+パース失敗時には、原因がわかるエラーメッセージが表示される
+--help, --versionオプションで表示される情報を自動で生成してくれる
+
+Haskell版GNU getoptライブラリと比べて以下の2点が優れている、とHPには書かれています。
+
+HLintコマンドラインのハンドリングが1/3の短さ
+Cabal, darcsなどのmultiple mode</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/11/haskellyesodsqlite-persistent.html</id><title type="text">[haskell][persistent][sqlite] Persistentパッケージ利用時にテーブルにインデックスを生成する方法</title><updated>2016-01-30T17:12:12.076+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/11/haskellyesodsqlite-persistent.html"/><summary type="text">PersistentパッケージにはMigration機能が備わっており、自動的にテーブルを生成してくれます。スキーマ変更を行った際にも、変換が可能な限りテーブル内のレコードを保持したまま新しいスキーマに変換してくれます（Migration機能については過去のエントリでまとめています）。
+
+自分が利用する上で、インデックスやトリガーを生成する手順が紹介されておらず困っていたのですが、rawExecuteという関数を用いることで自由にDDLを発行できることがわかりました。以下その手順とサンプルを紹介しておきます。
+
+
+サンプルコード：
+以下は、personテーブルのnameカラムにインデックスをs生成するサンプルです。runMigration実行直後に、runExecuteを実行することでインデックスを生成しています。このサンプルではインデックスを生成しているだけですが、同じ手順でトリガーの</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/08/haskellyesodsqlite-persistentmigration.html</id><title type="text">[haskell][persistent][sqlite] Persistentパッケージのmigration機能のまとめ</title><updated>2016-01-30T17:11:40.032+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/08/haskellyesodsqlite-persistentmigration.html"/><summary type="text">HaskellでDB操作ができるPersistentパッケージの紹介をしましたが、このエントリではPersistentパッケージが提供しているmigration機能をまとめておきます。
+DBを作って運用していると、機能追加や仕様変更に伴いスキーマ変更が必要になるケースが多々あります。このようなケースにおいてPersistentのmigration機能がどれくらい使えるのかを調べた結果です。
+
+
+基本：
+Persistetのmigration機構は（保守的なルールに沿って）スキーマ変更をある程度まで自動で処理してくれます。
+ロードしたDB内のテーブル情報と、コードで定義されたEntity Definition（テーブル定義）を比較し、以下のケースにおいてスキーマの変更を行います。
+
+カラムの型を変更した場合：
+
+ただし、値の変換ができない場合には、DBによって拒否されることになります。
+
+</summary></entry><entry><id>http://kurokawh.blogspot.com/2016/01/haskellgccwin-windowshaskell.html</id><title type="text">[haskell][gcc][win] Windows版Haskell Platform付属のgccでC++11のコードをコンパイルする方法</title><updated>2016-01-15T00:45:37.692+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2016/01/haskellgccwin-windowshaskell.html"/><summary type="text">Windows版のHaskell Platformにはmingwが同梱されておりgccが含まれています。現在自分のPCにはHaskell Platform 2014.2.0.0をインストールしているのですが、これに付属されているgccでC++11のコードをコンパイルしようとすると、以下のようなエラーになってしまいました。
+% gcc -std=c++11 cpp11.cpp
+cc1plus.exe: error: unrecognized command line option '-std=c++11'
+
+
+-stdオプションで"c++11"を指定しても、認識してくれません。
+本家のサイトによると、'-std=c++11'オプションはgcc 4.7でサポートされたようです。これに対し、Haskell Platform 2014.2.0.0に付属されているgccのバージョンを確認したところ</summary></entry><entry><id>http://kurokawh.blogspot.com/2013/11/sqlite-sqlite.html</id><title type="text">[sqlite] SQLiteのロック・トランザクション関連仕様の整理</title><updated>2016-01-06T12:11:40.986+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2013/11/sqlite-sqlite.html"/><summary type="text">SQLiteは共有ロック・排他ロックの仕組みを備えており、プロセス内の複数スレッド、だけでなく、プロセスをまたぐ状態でSQLが同時に発行されても適切に処理されます。
+トランザクションに複数のモードが存在し、指定するモードに依って取得されるロックが変わります。さらにSQLの内容に依存してロック状態が遷移するため、複数プロセスがアクセスしたときの挙動を正確に把握できるよう、仕様を整理してみました。
+（文中の「プロセス」は、正確には「プロセス、もしくはスレッド」を意味します。）
+
+
+DBのロック状態の種類：
+
+UNLOCKED
+
+ロックされていない状態。誰も読み書きしていない。DBの初期状態。
+
+SHARED
+
+read可、write不可な状態。複数プロセスが同時にSHAREDロックを取得可能。複数プロセスが同時にreadできることを意味する。DBがこの状態にあるとき、他のプロセスからの</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/07/cygwinhaskellemacs-mingwcygwincygdrivec.html</id><title type="text">[cygwin][haskell][emacs] MinGWでcygwinの"/cygdrive"パスにアクセスする裏技（cygwin環境のemacsでflycheckを動作させる方法）</title><updated>2015-12-27T23:55:24.842+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/07/cygwinhaskellemacs-mingwcygwincygdrivec.html"/><summary type="text">haskell関連のコマンドはMinGW上でビルドされているため、cygwin環境の"/cygdrive"から始まるパスには対応していません。haskell-hlintから呼び出されるhlintも当然この問題の影響を受けておりemacs関連の設定が適切にされていたとしても、以下のようなエラーが表示されてしまいます。
+
+
+
+ミニバッファに表示されるエラー詳細：
+Suspicious state from syntax checker haskell-hlint: Checker haskell-hlint returned non-zero exit code 1, but no errors from output: hlint.exe: Couldn't find file: /cygdrive/c/Users/Hiroyuki/tmp/flycheck_hello.hs
+
+
+
+</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/11/haskellstack-stack-exec-ghcicouldnt.html</id><title type="text">[haskell][stack] stack exec ghciで”Couldn't match expected type"エラーが発生する問題の対処</title><updated>2015-11-08T15:09:21.187+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/11/haskellstack-stack-exec-ghcicouldnt.html"/><summary type="text">先日、haskellのパッケージ管理をcabalからstackに移行して「便利〜！」と感動していたところなのですが、stach exec ghciでソースをロードしようとすると"Couldn't match expected type: xxxxx"とエラーが発生する問題に遭遇しました。
+ネットの情報を参考に解決することができたのでその手順をまとめておきます。
+
+
+問題：
+stack buildは成功するにもかかわらず、stack exec ghci xxx.hs（xxx.hsはbuild対象のファイル）がエラーになる。
+stack exec ghci実行時のエラーログ：
+% stack exec ghci FileToVec.hs
+GHCi, version 7.10.2: http://www.haskell.org/ghc/  :? for help
+[1 of 1] </summary></entry><entry><id>http://kurokawh.blogspot.com/2015/11/cygwin-cygwinpathusrbinusrlocalbin.html</id><title type="text">[cygwin] cygwinのシェル起動時にPATHの先頭に/usr/binと/usr/local/binが勝手に追加されないようにする</title><updated>2015-11-04T22:29:43.126+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/11/cygwin-cygwinpathusrbinusrlocalbin.html"/><summary type="text">cygwinのデフォルトの設定では、シェル起動時に以下の2つのディレクトリが自動的にPATHの先頭に追加されます。
+
+/usr/local/bin
+/usr/bin
+
+
+cygwinでインストールされているコマンドと同名の別コマンドを優先して起動したい場合には、この設定が邪魔になります。
+これを無効にするには以下の方法があります。お好みでどちらかを選択してください。
+
+/etc/profileもしくは/etc/csh.loginの該当処理をコメントアウトする（bash / tcsh）
+
+cygwinがPATHを上書きしているのは、/etc/profile（bashの場合）と/etc/csh.login（tcshの場合）です。これらのスクリプトを編集することで、/usr/binと/usr/local/binが勝手に追加されないようにできます。
+
+ORIGINAL_PATHでPATHを上書き</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/09/ssh-opensshssh-agent.html</id><title type="text">[ssh] OpenSSHのアップデートでssh-agentがパスワードを覚えてくれなくなった問題への対処</title><updated>2015-09-06T00:44:24.703+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/09/ssh-opensshssh-agent.html"/><summary type="text">ssh-agent/ssh-addを利用してsshを用いたサーバーへのログイン時のパスワード入力を省略している方、OpenSSHのアップデートにより、毎回パスワード入力を求められるようになった場合は以下の設定を疑ってみてください。
+
+
+問題の症状：
+OpenSSHパッケージを最新版にアップデートすると発生するようになった問題です。ssh-agentを起動してssh-addで鍵を正しく登録しているにも関わらず、sshコマンドを実行する度に"password:"というプロンプトが表示されてパスワードの入力を求められてしまいます。
+
+
+環境：
+問題に遭遇＆解決した私のcygwin環境では以下のバージョンで問題が発生することを確認しました。
+
+OpenSSH_7.0p1, OpenSSL 1.0.2d 9 Jul 2015
+OpenSSH_7.1p1, OpenSSL 1.0.2d 9 Jul </summary></entry><entry><id>http://kurokawh.blogspot.com/2015/09/cygwin-cygwinx-serverxwin.html</id><title type="text">[cygwin] cygwin版X server（XWin）にリモートクライアントから接続できない問題の対処方法</title><updated>2015-09-02T23:09:07.989+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/09/cygwin-cygwinx-serverxwin.html"/><summary type="text">cygwinを最新バージョンにアップデートしたところ、リモートのX clientからwindows上のcygwin版X serverに接続できなくなってしまいました。
+対処方法は簡単でXWin起動時に"-listen tcp"オプションを付けてあげればよいだけです。cygwinバージョンアップ前にはオプション指定なしで接続できていたため、デフォルトの設定が変わったのだと思われます。
+
+
+cygwin環境：
+uname -aで表示されるcygwinバージョン情報です。
+
+% uname -a
+CYGWIN_NT-6.1 xxx 2.2.1(0.289/5/3) 2015-08-20 11:42 x86_64 Cygwin
+
+
+
+問題発生時の症状：
+クライアント側で起動したxtermをサーバー側で表示しようとすると、以下のようなエラーになっていました。
+% xterm
+xterm Xt </summary></entry><entry><id>http://kurokawh.blogspot.com/2015/08/cygwinemacs-cygwinemacsgtags.html</id><title type="text">[cygwin][emacs] cygwin版emacsでgtagsを使えるようにする方法</title><updated>2015-08-17T00:49:02.649+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/08/cygwinemacs-cygwinemacsgtags.html"/><summary type="text">これまでタグジャンプにはctagsを用いていたのですが、gtagsの「呼び出し元も一覧できる」という機能に惹かれてセットアップしてみました。いくつかはまりポイントがあったのでその対応方法も含め、手順を残しておきます。
+cgwin提供のパッケージにはgtagsは含まれていなかったため、自前でビルドすることにしました。
+
+
+目次：
+
+gatgsの特徴
+gtagsのインストール手順
+emacsの設定
+gtagsの使い方
+
+
+
+
+gtagsの特徴：
+
+良い点！
+
+関数の呼び出し元を一覧表示しジャンプできる（gtags-find-rtag）
+関数だけでなく、ローカル変数を含む任意のシンボルをタグジャンプできる（gtags-find-symbol）
+
+正規表現で一覧絞り込み可能（gtags-find-pattern）
+開いているファイルで絞り込み可能（gtags-parsefiile）
+
+特定文字列</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/06/subversion.html</id><title type="text">[subversion] 特定ディレクトリ以下をサーバーとの同期対象から除外する方法</title><updated>2015-06-26T13:55:24.651+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/06/subversion.html"/><summary type="text">subversionでチェックアウトした作業コピー内の特定ディレクトリ以下をサーバーとの同期対象から除外したい、ということを考えたことはないでしょうか。
+例えば、リポジトリの特定ディレクトリ以下に自分にとって不要なファイルやアーカイブが多数コミットされていると、以下のような無駄が生じます。これらの無駄をなくしたい、というのが主なユースケースです。
+
+不要なファイル・アーカイブによってディスクスペースが占有される
+サーバー上に更新が発生した際にupdateに余計な時間がかかってしまう
+
+
+
+単純に特定ディレクトリ以下の作業ファイルを削除してしまうと、コミット時に差分として検知されてしまう、また、次回以降のupdateコマンドで再ダウンロードされてしまう、という非常に残念な挙動になります。
+
+このようなケースでは以下の方法を使えば、差分が検知されない状態で所定ディレクトリ以下のファイルを削除</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/04/windowshaskell-widnwoshaskell-platform.html</id><title type="text">[windows][haskell] Widnwos環境でHaskell Platformを完全削除する方法</title><updated>2015-04-05T01:53:40.022+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/04/windowshaskell-widnwoshaskell-platform.html"/><summary type="text">Windows上でHaskell Platformを完全削除する方法です。
+LinuxやMac環境についてはネット上に多数情報がありますが、Windows環境についてはそれが見当たらなかったため、本エントリにまとめておきます。確認した環境はWindows 8.1＋Haslell Platform 2014.2.0.0です。
+
+
+削除手順：
+Windows環境では以下の手順でHaskell Platformを完全に削除できます。
+
+Haskell Platformのアンインストール
+
+[コントロールパネル] - [プログラム] - [プログラムと機能]を開く
+"Haslell Platform 2014.2.0.0"を選択して[アンインストール]を実行
+
+ユーザー領域に作成されたパッケージ関連ファイルの削除
+
+手動（エクスプローラ、rmコマンドなど）で次の２つのディレクトリ以下を完全に削除</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/03/cygwin-cygwingit.html</id><title type="text">[cygwin] cygwin版のgitコマンドでサーバーとの通信に失敗する問題の対処</title><updated>2015-03-27T00:35:59.717+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/03/cygwin-cygwingit.html"/><summary type="text">cygwin上でgitコマンドを使用しているのですが、ある環境でのみgit pull/pushで以下のようなエラーが発生する問題に遭遇しました。調子よく動作している別の環境との比較で原因が判明したので、同じ問題にハマってしまった人向けに情報を残しておきます。
+
+
+問題の現象：
+問題の環境ではgit pull/pushを実行すると、以下のようなエラーが出力されていました。
+% git pull origin master
+fatal: 'pull' appears to be a git command, but we were not
+able to execute it. Maybe git-pull is broken?
+
+% git push origin master
+fatal: Full write to remote helper failed: Broken pipe
+
 </summary></entry></feed>
