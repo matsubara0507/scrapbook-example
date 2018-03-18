@@ -1,4 +1,221 @@
-<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-03-16T03:12:13Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>http://d.hatena.ne.jp/kazu-yamamoto/20180316/1521169933</id><title type="text">TLS 1.3 開発日記 その27 ID 25/26</title><updated>2018-03-16T03:12:13Z</updated><author><name>kazu-yamamoto</name></author><link href="http://d.hatena.ne.jp/kazu-yamamoto/20180316/1521169933"/><summary type="html">
+<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-03-19T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://haskell.e-bigmoon.com/posts/2018/03-19-yesod-subsite.html</id><title type="text">Yesod v1.6 のサブサイト</title><updated>2018-03-19T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/03-19-yesod-subsite.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;今回は &lt;code&gt;Yesod&lt;/code&gt; を使っているマニア向け情報です。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Yesod&lt;/code&gt; にはサブサイトという機能があり、Yesod Book の &lt;a href="https://www.yesodweb.com/book/creating-a-subsite"&gt;Creating a Subsite&lt;/a&gt; で一通りの使い方が説明されています。&lt;/p&gt;
+&lt;p&gt;簡単に言えば、異なる &lt;code&gt;Yesod&lt;/code&gt; アプリケーションで共通のコンポーネント (認証システム等) を利用するために使えるようです。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;scaffolded site&lt;/code&gt; を使っている人は &lt;a href="https://www.stackage.org/lts-11.1/package/yesod-static-1.6.0"&gt;yesod-static&lt;/a&gt; パッケージで提供されている &lt;code&gt;Static&lt;/code&gt; 型をサブサイトとして利用していることでしょう。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Yesod&lt;/code&gt; のバージョンが &lt;code&gt;1.6&lt;/code&gt; に上がった影響により &lt;code&gt;Yesod Book&lt;/code&gt; の内容がそのままでは動かなくなっていたため、コードを修正して実際に動かしてみたいと思います。&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;h2 id="修正ポイント"&gt;修正ポイント&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;HandlerT site IO a&lt;/code&gt; のような形式は何も考えずに &lt;code&gt;HandlerFor site a&lt;/code&gt; に書き換える&lt;/li&gt;
+&lt;li&gt;サブサイトのハンドラ関数の型は &lt;code&gt;SubHandlerFor sub master a&lt;/code&gt; という形式に書き換える&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HandlerFor&lt;/code&gt; から &lt;code&gt;SubHandlerFor&lt;/code&gt; へ持ち上げる時は &lt;code&gt;liftHandler&lt;/code&gt; を使う&lt;/li&gt;
+&lt;li&gt;サブサイトの &lt;code&gt;YesodDispatch&lt;/code&gt; 型クラスのインスタンスは &lt;code&gt;HandlerT&lt;/code&gt; ではなく &lt;code&gt;instance Yesod master =&amp;gt; YesodSubDispatch HelloSub master where&lt;/code&gt; のように &lt;code&gt;Yesod&lt;/code&gt; 型クラスのインスタンスを直接指定できるようになった&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="修正後のソースコード"&gt;修正後のソースコード&lt;/h2&gt;
+&lt;p&gt;ここでは公式サイトのコードと同様のディレクトリ構造及び、ファイル名とします。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb1"&gt;&lt;pre class="sourceCode sh"&gt;&lt;code class="sourceCode bash"&gt;&lt;a class="sourceLine" id="cb1-1" data-line-number="1"&gt;$ &lt;span class="ex"&gt;tree&lt;/span&gt; .&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-2" data-line-number="2"&gt;&lt;span class="ex"&gt;.&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-3" data-line-number="3"&gt;├── &lt;span class="ex"&gt;HelloSub&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-4" data-line-number="4"&gt;│   └── &lt;span class="ex"&gt;Data.hs&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-5" data-line-number="5"&gt;├── &lt;span class="ex"&gt;HelloSub.hs&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-6" data-line-number="6"&gt;└── &lt;span class="ex"&gt;Main.hs&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-7" data-line-number="7"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-8" data-line-number="8"&gt;&lt;span class="ex"&gt;1&lt;/span&gt; directory, 3 files&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;ファイルを分割しているのは &lt;code&gt;TH&lt;/code&gt; の &lt;code&gt;GHC stage restriction&lt;/code&gt; を回避するためです。&lt;/p&gt;
+&lt;h3 id="hellosubdata.hs"&gt;HelloSub/Data.hs&lt;/h3&gt;
+&lt;div class="sourceCode" id="cb2"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb2-1" data-line-number="1"&gt;&lt;span class="ot"&gt;{-# LANGUAGE QuasiQuotes     #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-2" data-line-number="2"&gt;&lt;span class="ot"&gt;{-# LANGUAGE TemplateHaskell #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-3" data-line-number="3"&gt;&lt;span class="ot"&gt;{-# LANGUAGE TypeFamilies    #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-4" data-line-number="4"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;HelloSub.Data&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-5" data-line-number="5"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-6" data-line-number="6"&gt;&lt;span class="kw"&gt;import&lt;/span&gt;           &lt;span class="dt"&gt;Yesod&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-7" data-line-number="7"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-8" data-line-number="8"&gt;&lt;span class="kw"&gt;data&lt;/span&gt; &lt;span class="dt"&gt;HelloSub&lt;/span&gt; &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;HelloSub&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-9" data-line-number="9"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-10" data-line-number="10"&gt;mkYesodSubData &lt;span class="st"&gt;&amp;quot;HelloSub&amp;quot;&lt;/span&gt; [parseRoutes|&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-11" data-line-number="11"&gt;/ SubHomeR GET&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-12" data-line-number="12"&gt;|]&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;サブサイトのファウンデーション型 &lt;code&gt;HelloSub&lt;/code&gt; とルートを定義しています。&lt;/p&gt;
+&lt;p&gt;通常であれば &lt;code&gt;mkYesod&lt;/code&gt; を利用しますが &lt;code&gt;mkYesodSubData&lt;/code&gt; を利用している点がサブサイトの特徴です。&lt;/p&gt;
+&lt;h3 id="hellosub.hs"&gt;HelloSub.hs&lt;/h3&gt;
+&lt;div class="sourceCode" id="cb3"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb3-1" data-line-number="1"&gt;&lt;span class="ot"&gt;{-# LANGUAGE FlexibleInstances     #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-2" data-line-number="2"&gt;&lt;span class="ot"&gt;{-# LANGUAGE MultiParamTypeClasses #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-3" data-line-number="3"&gt;&lt;span class="ot"&gt;{-# LANGUAGE OverloadedStrings     #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-4" data-line-number="4"&gt;&lt;span class="ot"&gt;{-# LANGUAGE QuasiQuotes           #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-5" data-line-number="5"&gt;&lt;span class="ot"&gt;{-# LANGUAGE TemplateHaskell       #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-6" data-line-number="6"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;HelloSub&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-7" data-line-number="7"&gt;  ( &lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;HelloSub.Data&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-8" data-line-number="8"&gt;  , &lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;HelloSub&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-9" data-line-number="9"&gt;  ) &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-10" data-line-number="10"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-11" data-line-number="11"&gt;&lt;span class="kw"&gt;import&lt;/span&gt;           &lt;span class="dt"&gt;HelloSub.Data&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-12" data-line-number="12"&gt;&lt;span class="kw"&gt;import&lt;/span&gt;           &lt;span class="dt"&gt;Yesod&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-13" data-line-number="13"&gt;&lt;span class="kw"&gt;import&lt;/span&gt;           &lt;span class="dt"&gt;Yesod.Core.Types&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-14" data-line-number="14"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-15" data-line-number="15"&gt;&lt;span class="ot"&gt;getSubHomeR ::&lt;/span&gt; &lt;span class="dt"&gt;Yesod&lt;/span&gt; master &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;SubHandlerFor&lt;/span&gt; &lt;span class="dt"&gt;HelloSub&lt;/span&gt; master &lt;span class="dt"&gt;Html&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-16" data-line-number="16"&gt;getSubHomeR &lt;span class="fu"&gt;=&lt;/span&gt; liftHandler &lt;span class="fu"&gt;$&lt;/span&gt; defaultLayout [whamlet|Welcome to the subsite!|]&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-17" data-line-number="17"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-18" data-line-number="18"&gt;&lt;span class="kw"&gt;instance&lt;/span&gt; &lt;span class="dt"&gt;Yesod&lt;/span&gt; master &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;YesodSubDispatch&lt;/span&gt; &lt;span class="dt"&gt;HelloSub&lt;/span&gt; master &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-19" data-line-number="19"&gt;  yesodSubDispatch &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="fu"&gt;$&lt;/span&gt;(mkYesodSubDispatch resourcesHelloSub)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;サブサイトのハンドラと &lt;code&gt;dispatch&lt;/code&gt; の定義です。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;resourcesHelloSub&lt;/code&gt; は &lt;code&gt;HelloSub/Data.hs&lt;/code&gt; で定義した &lt;code&gt;mkYesodSubData&lt;/code&gt; でコンパイル時に自動生成されます。&lt;/p&gt;
+&lt;h3 id="main.hs"&gt;Main.hs&lt;/h3&gt;
+&lt;div class="sourceCode" id="cb4"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb4-1" data-line-number="1"&gt;&lt;span class="ot"&gt;#!/usr/bin/env stack&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-2" data-line-number="2"&gt;&lt;span class="co"&gt;-- stack --resolver lts-11.0 script --package yesod-core --package yesod&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-3" data-line-number="3"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-4" data-line-number="4"&gt;&lt;span class="ot"&gt;{-# LANGUAGE OverloadedStrings #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-5" data-line-number="5"&gt;&lt;span class="ot"&gt;{-# LANGUAGE QuasiQuotes       #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-6" data-line-number="6"&gt;&lt;span class="ot"&gt;{-# LANGUAGE TemplateHaskell   #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-7" data-line-number="7"&gt;&lt;span class="ot"&gt;{-# LANGUAGE TypeFamilies      #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-8" data-line-number="8"&gt;&lt;span class="kw"&gt;import&lt;/span&gt;           &lt;span class="dt"&gt;HelloSub&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-9" data-line-number="9"&gt;&lt;span class="kw"&gt;import&lt;/span&gt;           &lt;span class="dt"&gt;Yesod&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-10" data-line-number="10"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-11" data-line-number="11"&gt;&lt;span class="kw"&gt;data&lt;/span&gt; &lt;span class="dt"&gt;Master&lt;/span&gt; &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;Master&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-12" data-line-number="12"&gt;  {&lt;span class="ot"&gt; getHelloSub ::&lt;/span&gt; &lt;span class="dt"&gt;HelloSub&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-13" data-line-number="13"&gt;  }&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-14" data-line-number="14"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-15" data-line-number="15"&gt;mkYesod &lt;span class="st"&gt;&amp;quot;Master&amp;quot;&lt;/span&gt; [parseRoutes|&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-16" data-line-number="16"&gt;/ HomeR GET&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-17" data-line-number="17"&gt;/subsite SubsiteR HelloSub getHelloSub&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-18" data-line-number="18"&gt;|]&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-19" data-line-number="19"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-20" data-line-number="20"&gt;&lt;span class="kw"&gt;instance&lt;/span&gt; &lt;span class="dt"&gt;Yesod&lt;/span&gt; &lt;span class="dt"&gt;Master&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-21" data-line-number="21"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-22" data-line-number="22"&gt;&lt;span class="ot"&gt;getHomeR ::&lt;/span&gt; &lt;span class="dt"&gt;HandlerFor&lt;/span&gt; &lt;span class="dt"&gt;Master&lt;/span&gt; &lt;span class="dt"&gt;Html&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-23" data-line-number="23"&gt;getHomeR &lt;span class="fu"&gt;=&lt;/span&gt; defaultLayout&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-24" data-line-number="24"&gt;  [whamlet|&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-25" data-line-number="25"&gt;    &lt;span class="kw"&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;Welcome to the homepage&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-26" data-line-number="26"&gt;    &lt;span class="kw"&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-27" data-line-number="27"&gt;      Feel free to visit the #&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-28" data-line-number="28"&gt;      &lt;span class="kw"&gt;&amp;lt;a&lt;/span&gt;&lt;span class="ot"&gt; href=&lt;/span&gt;&lt;span class="kw"&gt;@{&lt;/span&gt;&lt;span class="dt"&gt;SubsiteR&lt;/span&gt; &lt;span class="dt"&gt;SubHomeR&lt;/span&gt;&lt;span class="kw"&gt;}&amp;gt;&lt;/span&gt;subsite&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-29" data-line-number="29"&gt;      \ as well.&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-30" data-line-number="30"&gt;  |]&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-31" data-line-number="31"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-32" data-line-number="32"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; warp &lt;span class="dv"&gt;3000&lt;/span&gt; &lt;span class="fu"&gt;$&lt;/span&gt; &lt;span class="dt"&gt;Master&lt;/span&gt; &lt;span class="dt"&gt;HelloSub&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;重要なポイントは以下の3点です。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Master&lt;/code&gt; ファウンデーション型にサブサイトの型を含ませる (さらにアクセサ &lt;code&gt;getHelloSub&lt;/code&gt; を定義)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/subsite SubsiteR HelloSub getHelloSub&lt;/code&gt; という形式でサブサイトへのルートを定義&lt;/li&gt;
+&lt;li&gt;サブサイトへの参照は &lt;code&gt;@{SubsiteR SubHomeR}&lt;/code&gt; という形式の型安全URLとなる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="実行"&gt;実行&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;stack interpreter&lt;/code&gt; 形式で実行します。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb5"&gt;&lt;pre class="sourceCode sh"&gt;&lt;code class="sourceCode bash"&gt;&lt;a class="sourceLine" id="cb5-1" data-line-number="1"&gt;$ &lt;span class="fu"&gt;chmod&lt;/span&gt; u+x Main.hs&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-2" data-line-number="2"&gt;$ &lt;span class="ex"&gt;./Main.hs&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-3" data-line-number="3"&gt;&lt;span class="ex"&gt;19/Mar&lt;/span&gt;/2018:&lt;span class="ex"&gt;00&lt;/span&gt;:37:27 +0900 [Info#yesod-core] Application launched @(yesod-core-1.6.2-JztYji0NiLuH8rcbB3eMBP:Yesod.Core.Dispatch ./Yesod/Core/Dispatch.hs:167:11)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;この状態で &lt;a href="http://localhost:3000/" class="uri"&gt;http://localhost:3000/&lt;/a&gt; にアクセスしてみましょう。以下のようなページが表示されるはずです。&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/images/2018/03-19/img01.png" alt="トップページ" /&gt;&lt;figcaption&gt;トップページ&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;サブサイトにアクセスするとこんな感じです。&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/images/2018/03-19/img02.png" alt="サブサイト" /&gt;&lt;figcaption&gt;サブサイト&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2 id="scaffolded-site"&gt;Scaffolded Site&lt;/h2&gt;
+&lt;p&gt;ここではさらに一歩踏み込んで &lt;code&gt;Scaffolded Site&lt;/code&gt; を利用する際、どのファイルに何を書いたら良いのか簡単に解説しておこうと思います。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Scaffolded Site&lt;/code&gt; は一番素朴な &lt;code&gt;yesod-simple&lt;/code&gt; を利用することとします。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb6"&gt;&lt;pre class="sourceCode sh"&gt;&lt;code class="sourceCode bash"&gt;&lt;a class="sourceLine" id="cb6-1" data-line-number="1"&gt;$ $ &lt;span class="ex"&gt;stack&lt;/span&gt; new example-subsite yesod-simple&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-2" data-line-number="2"&gt;$ &lt;span class="bu"&gt;cd&lt;/span&gt; example-subsite&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;サブサイトの内容は上記で定義した内容を再利用します。&lt;/p&gt;
+&lt;h3 id="stack.yaml"&gt;stack.yaml&lt;/h3&gt;
+&lt;div class="sourceCode" id="cb7"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb7-1" data-line-number="1"&gt;&lt;span class="fu"&gt;resolver:&lt;/span&gt;&lt;span class="at"&gt; lts-11.0&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-2" data-line-number="2"&gt;&lt;span class="fu"&gt;packages:&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-3" data-line-number="3"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; .&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;現状落ちてくるものは &lt;code&gt;yesod-1.6.0&lt;/code&gt; ではないので、書き換えます。&lt;/p&gt;
+&lt;h3 id="package.yaml"&gt;package.yaml&lt;/h3&gt;
+&lt;div class="sourceCode" id="cb8"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb8-1" data-line-number="1"&gt;&lt;span class="fu"&gt;dependencies:&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-2" data-line-number="2"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; base&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-3" data-line-number="3"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; classy-prelude-yesod&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-4" data-line-number="4"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; yesod&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-5" data-line-number="5"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; yesod-core&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-6" data-line-number="6"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; yesod-static&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-7" data-line-number="7"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; yesod-form&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-8" data-line-number="8"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; classy-prelude&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-9" data-line-number="9"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; classy-prelude-conduit&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-10" data-line-number="10"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; bytestring&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-11" data-line-number="11"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; text&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-12" data-line-number="12"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; template-haskell&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-13" data-line-number="13"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; shakespeare&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-14" data-line-number="14"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; hjsmin&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-15" data-line-number="15"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; monad-control&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-16" data-line-number="16"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; wai-extra&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-17" data-line-number="17"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; yaml&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-18" data-line-number="18"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; http-conduit&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-19" data-line-number="19"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; directory&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-20" data-line-number="20"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; warp&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-21" data-line-number="21"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; data-default&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-22" data-line-number="22"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; aeson&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-23" data-line-number="23"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; conduit&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-24" data-line-number="24"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; monad-logger&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-25" data-line-number="25"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; fast-logger&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-26" data-line-number="26"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; wai-logger&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-27" data-line-number="27"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; file-embed&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-28" data-line-number="28"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; safe&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-29" data-line-number="29"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; unordered-containers&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-30" data-line-number="30"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; containers&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-31" data-line-number="31"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; vector&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-32" data-line-number="32"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; time&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-33" data-line-number="33"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; case-insensitive&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-34" data-line-number="34"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; wai&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-35" data-line-number="35"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; foreign-store&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;バージョンを全部消しただけです。&lt;/p&gt;
+&lt;h3 id="srcfoundation.hs"&gt;src/Foundation.hs&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;App&lt;/code&gt; データ型にサブサイトを含め、さらに &lt;code&gt;import&lt;/code&gt; を追加します。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb9"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb9-1" data-line-number="1"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;HelloSub&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-3" data-line-number="3"&gt;&lt;span class="kw"&gt;data&lt;/span&gt; &lt;span class="dt"&gt;App&lt;/span&gt; &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;App&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-4" data-line-number="4"&gt;  {&lt;span class="ot"&gt; appSettings    ::&lt;/span&gt; &lt;span class="dt"&gt;AppSettings&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-5" data-line-number="5"&gt;  ,&lt;span class="ot"&gt; appStatic      ::&lt;/span&gt; &lt;span class="dt"&gt;Static&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-6" data-line-number="6"&gt;  ,&lt;span class="ot"&gt; appHttpManager ::&lt;/span&gt; &lt;span class="dt"&gt;Manager&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-7" data-line-number="7"&gt;  ,&lt;span class="ot"&gt; appLogger      ::&lt;/span&gt; &lt;span class="dt"&gt;Logger&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-8" data-line-number="8"&gt;  ,&lt;span class="ot"&gt; getHelloSub    ::&lt;/span&gt; &lt;span class="dt"&gt;HelloSub&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-9" data-line-number="9"&gt;  }&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;yesod-1.6.0&lt;/code&gt; した影響でコンパイルエラーが出るため、&lt;code&gt;shouldLog&lt;/code&gt; をコメントアウトします。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb10"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb10-1" data-line-number="1"&gt;    &lt;span class="co"&gt;-- shouldLog app _source level =&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb10-2" data-line-number="2"&gt;    &lt;span class="co"&gt;--     appShouldLogAll (appSettings app)&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb10-3" data-line-number="3"&gt;    &lt;span class="co"&gt;--         || level == LevelWarn&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb10-4" data-line-number="4"&gt;    &lt;span class="co"&gt;--         || level == LevelError&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="configroute"&gt;config/route&lt;/h3&gt;
+&lt;p&gt;サブサイトへのルートを追加します。&lt;/p&gt;
+&lt;pre class="txt"&gt;&lt;code&gt;/subsite SubsiteR HelloSub getHelloSub&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="srcapplication.hs"&gt;src/Application.hs&lt;/h3&gt;
+&lt;p&gt;以下の2点を追記します。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;import HelloSub&lt;/code&gt; を追加&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;makeFoundation&lt;/code&gt; 関数に &lt;code&gt;let getHelloSub = HelloSub&lt;/code&gt; を追記&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="sourceCode" id="cb12"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb12-1" data-line-number="1"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;HelloSub&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb12-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb12-3" data-line-number="3"&gt;&lt;span class="ot"&gt;makeFoundation ::&lt;/span&gt; &lt;span class="dt"&gt;AppSettings&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; &lt;span class="dt"&gt;App&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb12-4" data-line-number="4"&gt;makeFoundation appSettings &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb12-5" data-line-number="5"&gt;  &lt;span class="kw"&gt;let&lt;/span&gt; getHelloSub &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;HelloSub&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb12-6" data-line-number="6"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb12-7" data-line-number="7"&gt;  appHttpManager &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; newManager&lt;/a&gt;
+&lt;a class="sourceLine" id="cb12-8" data-line-number="8"&gt;  appLogger &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; newStdoutLoggerSet defaultBufSize &lt;span class="fu"&gt;&amp;gt;&amp;gt;=&lt;/span&gt; makeYesodLogger&lt;/a&gt;
+&lt;a class="sourceLine" id="cb12-9" data-line-number="9"&gt;  appStatic &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb12-10" data-line-number="10"&gt;    (&lt;span class="kw"&gt;if&lt;/span&gt; appMutableStatic appSettings &lt;span class="kw"&gt;then&lt;/span&gt; staticDevel &lt;span class="kw"&gt;else&lt;/span&gt; static)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb12-11" data-line-number="11"&gt;    (appStaticDir appSettings)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb12-12" data-line-number="12"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb12-13" data-line-number="13"&gt;  return &lt;span class="dt"&gt;App&lt;/span&gt; {&lt;span class="fu"&gt;..&lt;/span&gt;}&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;App {..}&lt;/code&gt; は &lt;code&gt;GHC&lt;/code&gt; の &lt;code&gt;RecordWildCards&lt;/code&gt; 言語拡張です。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb13"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb13-1" data-line-number="1"&gt;&lt;span class="kw"&gt;data&lt;/span&gt; &lt;span class="dt"&gt;Example&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-2" data-line-number="2"&gt;  { a &lt;span class="fu"&gt;=&lt;/span&gt; a&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-3" data-line-number="3"&gt;  , b &lt;span class="fu"&gt;=&lt;/span&gt; b&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-4" data-line-number="4"&gt;  , c &lt;span class="fu"&gt;=&lt;/span&gt; c&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-5" data-line-number="5"&gt;  }&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;僕はあまり使いませんが、雰囲気はこんな感じです。&lt;/p&gt;
+&lt;h3 id="実行-1"&gt;実行&lt;/h3&gt;
+&lt;div class="sourceCode" id="cb14"&gt;&lt;pre class="sourceCode sh"&gt;&lt;code class="sourceCode bash"&gt;&lt;a class="sourceLine" id="cb14-1" data-line-number="1"&gt;$ &lt;span class="ex"&gt;stack&lt;/span&gt; build&lt;/a&gt;
+&lt;a class="sourceLine" id="cb14-2" data-line-number="2"&gt;$ &lt;span class="ex"&gt;stack&lt;/span&gt; exec example-subsite&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href="http://localhost:3000/subsite" class="uri"&gt;http://localhost:3000/subsite&lt;/a&gt; にアクセスすると次のような画面が現れます。&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/images/2018/03-19/img03.png" alt="実行結果" /&gt;&lt;figcaption&gt;実行結果&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Yesod&lt;/code&gt; を使っていてもサブサイトについて知らないという人は多いと思いますが、&lt;code&gt;Yesod&lt;/code&gt; のアプリケーションが増えてきた時に使える、とても便利な仕組みだと思います。&lt;/p&gt;
+&lt;p&gt;サブサイトについて、もっと詳しく知りたい人は &lt;a href="https://www.stackage.org/lts-11.1/package/yesod-static-1.6.0"&gt;yesod-static&lt;/a&gt; パッケージの実装を見てみると良いでしょう。&lt;/p&gt;
+&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>http://d.hatena.ne.jp/kazu-yamamoto/20180316/1521169933</id><title type="text">TLS 1.3 開発日記 その27 ID 25/26</title><updated>2018-03-16T03:12:13Z</updated><author><name>kazu-yamamoto</name></author><link href="http://d.hatena.ne.jp/kazu-yamamoto/20180316/1521169933"/><summary type="html">
 &lt;div class="section"&gt;
 &lt;h4&gt;ドラフト25&lt;/h4&gt;
 &lt;p&gt;ドラフト24までは、AEADに使う additonal_data は空文字列だった。ドラフト25からは、&lt;a href="https://github.com/tlswg/tls13-spec/pull/1158" target="_blank"&gt;正しいレコードヘッダが使われることを遵守させるため&lt;/a&gt;に、additonal_dataが以下のように定義された。&lt;/p&gt;
@@ -3033,383 +3250,7 @@ True&lt;/code&gt;&lt;/pre&gt;
   &lt;/div&gt;
 &lt;/div&gt;
 &lt;/article&gt;
-</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/01-29-awesome-hlint.html</id><title type="text">素晴らしき HLint を使いこなす</title><updated>2018-01-29T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/01-29-awesome-hlint.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
-&lt;p&gt;&lt;a href="https://github.com/ndmitchell/hlint"&gt;HLint&lt;/a&gt; は &lt;a href="https://www.stackage.org/package/haskell-src-exts"&gt;haskell-src-exts&lt;/a&gt; を使って実装されている静的解析ツールです。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;HLint&lt;/code&gt; を使えば &lt;code&gt;github&lt;/code&gt; などを使って &lt;code&gt;PR&lt;/code&gt; ベースで開発する場合のコードレビューでこんな事を言わなくて済みます。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;fromJust&lt;/code&gt; とかの部分関数は使わないで！&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;maybe&lt;/code&gt; 関数って知ってる？&lt;/li&gt;
-&lt;li&gt;この言語拡張って本当に使ってるの？&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;undefined&lt;/code&gt; まだ残ってるじゃん！&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;嬉しいことに &lt;code&gt;Travis CI&lt;/code&gt; や &lt;code&gt;CircleCI&lt;/code&gt; などで一度設定するだけなので導入もお手軽です！ また、最近知ったのですが、プロジェクト内で使って欲しくない関数なども &lt;code&gt;HLint&lt;/code&gt; によって検出可能です。&lt;/p&gt;
-&lt;p&gt;さらに、独学で &lt;code&gt;Haskell&lt;/code&gt; の学習を進めている人は &lt;code&gt;HLint&lt;/code&gt; が素晴らしい教師役となってくれるでしょう。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/waddlaw/blog-example-hlint"&gt;利用したコード&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;!--more--&gt;
-&lt;h2 id="hlint-の参考記事"&gt;HLint の参考記事&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;HLint&lt;/code&gt; は割と有名なので日本語の解説記事がいくつかありました。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://qiita.com/suzuki-hoge/items/6d101e523620178c6f7b"&gt;Haskellの静的解析ツール HLint を使おう&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.ncaq.net/2017/10/07/"&gt;Haskellを書くときはstylish-haskellとhlintを使って労せずして綺麗なコードを書きましょう&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://qiita.com/VoQn/items/fe7953aec010d8f68a59"&gt;OverloadedStringsとANNプラグマが干渉する場合の回避方法&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;ちゃんと使おうとすると上記の解説記事では少し物足りません。具体的には以下の点が不足しています。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;カスタムヒントの設定方法&lt;/li&gt;
-&lt;li&gt;関数の利用制限方法&lt;/li&gt;
-&lt;li&gt;関数・モジュール・ファイル単位でヒントを無視する方法&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;CI&lt;/code&gt; で利用するための設定方法&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;本記事では、これらの内容について解説を行います。&lt;code&gt;HLint&lt;/code&gt; でどんなことが出来るかについては、上記の記事または&lt;a href="https://github.com/ndmitchell/hlint"&gt;公式リポジトリ&lt;/a&gt;をご参考ください。&lt;/p&gt;
-&lt;p&gt;また、内部の仕組みについては、作者の &lt;code&gt;Neil Mitchell&lt;/code&gt; さんの解説記事が参考になります。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://qiita.com/rounddelta/items/4584f5486c1061c93f0b"&gt;HLint のルールを理解する (和訳)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id="hlint-の導入"&gt;HLint の導入&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;HLint&lt;/code&gt; は以下のコマンドで簡単に導入できます。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ stack install hlint
-
-$ hlint --version
-HLint v2.0.15, (C) Neil Mitchell 2006-2018&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;現在の最新版は &lt;code&gt;v2.0.15&lt;/code&gt; となっています。&lt;code&gt;HLint&lt;/code&gt; のバージョンによって出力内容が異なることが良くありますのでご注意ください。&lt;/p&gt;
-&lt;p&gt;また、お試しで使ってみたい人は以下のコマンドを実行してみましょう。カレントディレクトリ以下のファイルが検査されます。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ curl -sL https://raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s .&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="hlint-の実行方法"&gt;HLint の実行方法&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;HLint&lt;/code&gt; はディレクトリを指定すると再帰的に解析を行ってくれます。&lt;/p&gt;
-&lt;h3 id="プロジェクト全体に対して再帰的に実行"&gt;プロジェクト全体に対して再帰的に実行&lt;/h3&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint .&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="特定のディレクトリ-src-に対して再帰的に実行"&gt;特定のディレクトリ (src) に対して再帰的に実行&lt;/h3&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint src&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="複数のディレクトリ-src-test-に対して再帰的に実行"&gt;複数のディレクトリ (src, test) に対して再帰的に実行&lt;/h3&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint src test&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="単一のファイル-appmain.hs-にのみ実行"&gt;単一のファイル (app/Main.hs) にのみ実行&lt;/h3&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint app/Main.hs&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="hlint-のヒント"&gt;HLint のヒント&lt;/h2&gt;
-&lt;p&gt;以下のように &lt;code&gt;stack new&lt;/code&gt; で新規プロジェクトを作ってすぐの状態では &lt;code&gt;HLint&lt;/code&gt; は何もヒントを出してくれません。&lt;/p&gt;
-&lt;p&gt;つまり、とても良い状態ということです。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ stacke new test-proj
-$ cd test-proj
-
-$ hlint .
-No hints&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;ここで、ファイルを少し修正して &lt;code&gt;HLint&lt;/code&gt; に働いてもらいましょう！&lt;/p&gt;
-&lt;div class="sourceCode" id="cb8"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb8-1" data-line-number="1"&gt;&lt;span class="co"&gt;-- src/Lib.hs&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb8-2" data-line-number="2"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Lib&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb8-3" data-line-number="3"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb8-4" data-line-number="4"&gt;&lt;span class="ot"&gt;someFunc ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb8-5" data-line-number="5"&gt;someFunc &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb8-6" data-line-number="6"&gt;  &lt;span class="kw"&gt;let&lt;/span&gt; x1 &lt;span class="fu"&gt;=&lt;/span&gt; concat (map toUpper [&lt;span class="ch"&gt;&amp;#39;a&amp;#39;&lt;/span&gt; &lt;span class="fu"&gt;..&lt;/span&gt; &lt;span class="ch"&gt;&amp;#39;z&amp;#39;&lt;/span&gt;])&lt;/a&gt;
-&lt;a class="sourceLine" id="cb8-7" data-line-number="7"&gt;      x2 &lt;span class="fu"&gt;=&lt;/span&gt; maybe &lt;span class="st"&gt;&amp;quot;&amp;quot;&lt;/span&gt; id &lt;span class="st"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb8-8" data-line-number="8"&gt;  putStrLn &lt;span class="st"&gt;&amp;quot;someFunc&amp;quot;&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;上記のコードは以下のようなヒントを2つ提案してくれます。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint .
-./src/Lib.hs:7:12: Warning: Use concatMap
-Found:
-  concat (map toUpper [&amp;#39;a&amp;#39; .. &amp;#39;z&amp;#39;])
-Why not:
-  concatMap toUpper [&amp;#39;a&amp;#39; .. &amp;#39;z&amp;#39;]
-
-./src/Lib.hs:8:12: Warning: Use fromMaybe
-Found:
-  maybe &amp;quot;&amp;quot; id
-Why not:
-  Data.Maybe.fromMaybe &amp;quot;&amp;quot;
-
-2 hints&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;これは、このような意味になります。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb10"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb10-1" data-line-number="1"&gt;&lt;span class="co"&gt;# 1つ目のヒント&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb10-2" data-line-number="2"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;ヒントレベル:&lt;/span&gt;&lt;span class="at"&gt; 警告&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb10-3" data-line-number="3"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;ヒント:&lt;/span&gt;&lt;span class="at"&gt; Use concatMap&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb10-4" data-line-number="4"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;出力の意味:&lt;/span&gt;&lt;span class="at"&gt; concat (map toUpper [&amp;#39;a&amp;#39; .. &amp;#39;z&amp;#39;]) を見つけたけど、どうして concatMap toUpper [&amp;#39;a&amp;#39; .. &amp;#39;z&amp;#39;] と書かないんだい？&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb10-5" data-line-number="5"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb10-6" data-line-number="6"&gt;&lt;span class="co"&gt;# 2つ目のヒント&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb10-7" data-line-number="7"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;ヒントレベル:&lt;/span&gt;&lt;span class="at"&gt; 警告&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb10-8" data-line-number="8"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;ヒント:&lt;/span&gt;&lt;span class="at"&gt; Use fromMaybe&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb10-9" data-line-number="9"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;出力の意味:&lt;/span&gt;&lt;span class="at"&gt; maybe &amp;quot;&amp;quot; id は Data.Maybe モジュールにある fromMaybe 関数を使えば fromMaybe &amp;quot;&amp;quot; と同じですよ&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;素晴らしいですね。とてもわかりやすいです。また、&lt;code&gt;--report&lt;/code&gt; オプションを利用することで結果を &lt;code&gt;HTML&lt;/code&gt; として出力することも可能です。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint . --report&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;とても素晴らしいのですが、&lt;code&gt;HLint&lt;/code&gt; の提案するヒントに賛成できない時はどうしましょう? もし &lt;code&gt;HLint&lt;/code&gt; の言うとおりにしかできないのであれば、とても使いづらいツールになってしまいます。&lt;/p&gt;
-&lt;p&gt;そういった場合のためにルールを無視する方法も用意されています。また、プロジェクト固有のカスタムヒントについても同様に設定方法が用意されています。&lt;/p&gt;
-&lt;h2 id="hlint-のヒントについて"&gt;HLint のヒントについて&lt;/h2&gt;
-&lt;p&gt;デフォルトで適用されるヒントの一覧は &lt;a href="https://github.com/ndmitchell/hlint/blob/master/data/hlint.yaml"&gt;hlint.yaml&lt;/a&gt; で確認できます。この中に無いヒントについては、自分でカスタムヒントを追加して対応することになります。&lt;/p&gt;
-&lt;h3 id="カスタムヒントファイルの生成"&gt;カスタムヒントファイルの生成&lt;/h3&gt;
-&lt;p&gt;まずは、カスタムヒントファイルの雛形を生成するために、プロジェクトのルートで以下のコマンドを実行しましょう。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint --default &amp;gt; .hlint.yaml&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;中身はこんな感じで、ヒントの書き方について具体例が載っています。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb13"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb13-1" data-line-number="1"&gt;&lt;span class="co"&gt;# HLint configuration file&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-2" data-line-number="2"&gt;&lt;span class="co"&gt;# https://github.com/ndmitchell/hlint&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-3" data-line-number="3"&gt;&lt;span class="co"&gt;##########################&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-4" data-line-number="4"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-5" data-line-number="5"&gt;&lt;span class="co"&gt;# This file contains a template configuration file, which is typically&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-6" data-line-number="6"&gt;&lt;span class="co"&gt;# placed as .hlint.yaml in the root of your project&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-7" data-line-number="7"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-8" data-line-number="8"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-9" data-line-number="9"&gt;&lt;span class="co"&gt;# Specify additional command line arguments&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-10" data-line-number="10"&gt;&lt;span class="co"&gt;#&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-11" data-line-number="11"&gt;&lt;span class="co"&gt;# - arguments: [--color, --cpp-simple, -XQuasiQuotes]&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-12" data-line-number="12"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-13" data-line-number="13"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-14" data-line-number="14"&gt;&lt;span class="co"&gt;# Control which extensions/flags/modules/functions can be used&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-15" data-line-number="15"&gt;&lt;span class="co"&gt;#&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-16" data-line-number="16"&gt;&lt;span class="co"&gt;# - extensions:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-17" data-line-number="17"&gt;&lt;span class="co"&gt;#   - default: false # all extension are banned by default&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-18" data-line-number="18"&gt;&lt;span class="co"&gt;#   - name: [PatternGuards, ViewPatterns] # only these listed extensions can be used&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-19" data-line-number="19"&gt;&lt;span class="co"&gt;#   - {name: CPP, within: CrossPlatform} # CPP can only be used in a given module&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-20" data-line-number="20"&gt;&lt;span class="co"&gt;#&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-21" data-line-number="21"&gt;&lt;span class="co"&gt;# - flags:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-22" data-line-number="22"&gt;&lt;span class="co"&gt;#   - {name: -w, within: []} # -w is allowed nowhere&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-23" data-line-number="23"&gt;&lt;span class="co"&gt;#&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-24" data-line-number="24"&gt;&lt;span class="co"&gt;# - modules:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-25" data-line-number="25"&gt;&lt;span class="co"&gt;#   - {name: [Data.Set, Data.HashSet], as: Set} # if you import Data.Set qualified, it must be as &amp;#39;Set&amp;#39;&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-26" data-line-number="26"&gt;&lt;span class="co"&gt;#   - {name: Control.Arrow, within: []} # Certain modules are banned entirely&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-27" data-line-number="27"&gt;&lt;span class="co"&gt;#&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-28" data-line-number="28"&gt;&lt;span class="co"&gt;# - functions:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-29" data-line-number="29"&gt;&lt;span class="co"&gt;#   - {name: unsafePerformIO, within: []} # unsafePerformIO can only appear in no modules&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-30" data-line-number="30"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-31" data-line-number="31"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-32" data-line-number="32"&gt;&lt;span class="co"&gt;# Add custom hints for this project&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-33" data-line-number="33"&gt;&lt;span class="co"&gt;#&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-34" data-line-number="34"&gt;&lt;span class="co"&gt;# Will suggest replacing &amp;quot;wibbleMany [myvar]&amp;quot; with &amp;quot;wibbleOne myvar&amp;quot;&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-35" data-line-number="35"&gt;&lt;span class="co"&gt;# - error: {lhs: &amp;quot;wibbleMany [x]&amp;quot;, rhs: wibbleOne x}&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-36" data-line-number="36"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-37" data-line-number="37"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-38" data-line-number="38"&gt;&lt;span class="co"&gt;# Turn on hints that are off by default&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-39" data-line-number="39"&gt;&lt;span class="co"&gt;#&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-40" data-line-number="40"&gt;&lt;span class="co"&gt;# Ban &amp;quot;module X(module X) where&amp;quot;, to require a real export list&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-41" data-line-number="41"&gt;&lt;span class="co"&gt;# - warn: {name: Use explicit module export list}&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-42" data-line-number="42"&gt;&lt;span class="co"&gt;#&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-43" data-line-number="43"&gt;&lt;span class="co"&gt;# Replace a $ b $ c with a . b $ c&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-44" data-line-number="44"&gt;&lt;span class="co"&gt;# - group: {name: dollar, enabled: true}&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-45" data-line-number="45"&gt;&lt;span class="co"&gt;#&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-46" data-line-number="46"&gt;&lt;span class="co"&gt;# Generalise map to fmap, ++ to &amp;lt;&amp;gt;&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-47" data-line-number="47"&gt;&lt;span class="co"&gt;# - group: {name: generalise, enabled: true}&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-48" data-line-number="48"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-49" data-line-number="49"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-50" data-line-number="50"&gt;&lt;span class="co"&gt;# Ignore some builtin hints&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-51" data-line-number="51"&gt;&lt;span class="co"&gt;# - ignore: {name: Use let}&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-52" data-line-number="52"&gt;&lt;span class="co"&gt;# - ignore: {name: Use const, within: SpecialModule} # Only within certain modules&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-53" data-line-number="53"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-54" data-line-number="54"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-55" data-line-number="55"&gt;&lt;span class="co"&gt;# Define some custom infix operators&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-56" data-line-number="56"&gt;&lt;span class="co"&gt;# - fixity: infixr 3 ~^#^~&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-57" data-line-number="57"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-58" data-line-number="58"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-59" data-line-number="59"&gt;&lt;span class="co"&gt;# To generate a suitable file for HLint do:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb13-60" data-line-number="60"&gt;&lt;span class="co"&gt;# $ hlint --default &amp;gt; .hlint.yaml&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;HLint&lt;/code&gt; はデフォルトヒントが記述されている &lt;code&gt;hlint.yaml&lt;/code&gt; と、カスタムヒントが記述されている &lt;code&gt;.hlint.yaml&lt;/code&gt; の両方のヒント使って検査を行うため、プロジェクト固有のヒントについては、&lt;code&gt;.hlint.yaml&lt;/code&gt; に記述していくことになります。&lt;/p&gt;
-&lt;h3 id="カスタムヒントの追加"&gt;カスタムヒントの追加&lt;/h3&gt;
-&lt;p&gt;ここでは説明のため以下のような &lt;code&gt;tshow&lt;/code&gt; という関数があるとしましょう。この関数は &lt;code&gt;show :: Show a =&amp;gt; a -&amp;gt; String&lt;/code&gt; の &lt;code&gt;Text&lt;/code&gt; バージョンです。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb14"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb14-1" data-line-number="1"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Data.Text&lt;/span&gt; (pack)&lt;/a&gt;
-&lt;a class="sourceLine" id="cb14-2" data-line-number="2"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb14-3" data-line-number="3"&gt;&lt;span class="ot"&gt;tshow ::&lt;/span&gt; &lt;span class="dt"&gt;Show&lt;/span&gt; a &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; a &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Text&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb14-4" data-line-number="4"&gt;tshow &lt;span class="fu"&gt;=&lt;/span&gt; pack &lt;span class="fu"&gt;.&lt;/span&gt; show&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;目的としてはプロジェクトのコード中で &lt;code&gt;pack . show&lt;/code&gt; となっている部分を &lt;code&gt;tshow&lt;/code&gt; に直すようにヒントを出させることです。まだヒントを追加していないため、当然ながら現時点では &lt;code&gt;pack . show&lt;/code&gt; というコードが使われていたとしても何も起こりません。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb15"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb15-1" data-line-number="1"&gt;&lt;span class="co"&gt;-- src/Lib.hs&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb15-2" data-line-number="2"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Lib&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb15-3" data-line-number="3"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb15-4" data-line-number="4"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Data.Text&lt;/span&gt; (pack)&lt;/a&gt;
-&lt;a class="sourceLine" id="cb15-5" data-line-number="5"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb15-6" data-line-number="6"&gt;&lt;span class="ot"&gt;intToText ::&lt;/span&gt; &lt;span class="dt"&gt;Int&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Text&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb15-7" data-line-number="7"&gt;intToText &lt;span class="fu"&gt;=&lt;/span&gt; pack &lt;span class="fu"&gt;.&lt;/span&gt; show&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint .
-No hints&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;それでは &lt;code&gt;.hlint.yaml&lt;/code&gt; に &lt;code&gt;tshow = pack . show&lt;/code&gt; を検出するためのヒントを追記しましょう。以下の1行を追記するだけです。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb17"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb17-1" data-line-number="1"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;error:&lt;/span&gt;&lt;span class="at"&gt; &lt;/span&gt;&lt;span class="kw"&gt;{&lt;/span&gt;&lt;span class="fu"&gt;lhs:&lt;/span&gt;&lt;span class="at"&gt; pack (show x)&lt;/span&gt;&lt;span class="kw"&gt;,&lt;/span&gt; &lt;span class="fu"&gt;rhs:&lt;/span&gt;&lt;span class="at"&gt; tshow x&lt;/span&gt;&lt;span class="kw"&gt;}&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;lhs&lt;/code&gt;, &lt;code&gt;rhs&lt;/code&gt; はそれぞれ &lt;code&gt;Left Hand Side (左辺)&lt;/code&gt;, &lt;code&gt;Right Hand Side (右辺)&lt;/code&gt; の略です。またヒントのレベルは &lt;code&gt;error&lt;/code&gt; 以外にも &lt;code&gt;warm&lt;/code&gt;, &lt;code&gt;suggest (hint キーワードはただのエイリアスです)&lt;/code&gt; も指定できるため、好きなレベルを指定しましょう。(ヒントレベルの使い分けについては &lt;a href="https://github.com/ndmitchell/hlint#what-is-the-difference-between-errorwarningsuggestion"&gt;What is the difference between error/warning/suggestion?&lt;/a&gt; をご参照ください)&lt;/p&gt;
-&lt;p&gt;では、実行してみましょう。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint .
-./src/Lib.hs:14:13: Error: Use tshow
-Found:
-  pack . show
-Why not:
-  tshow
-
-1 hint&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;無事に &lt;code&gt;Error&lt;/code&gt; として &lt;code&gt;tshow&lt;/code&gt; のためのヒントが表示されました！&lt;/p&gt;
-&lt;p&gt;ヒントの修正方法は、先程定義した &lt;code&gt;intToText&lt;/code&gt; 関数の実装をヒント通りに書き換えるだけです。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb19"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb19-1" data-line-number="1"&gt;&lt;span class="ot"&gt;intToText ::&lt;/span&gt; &lt;span class="dt"&gt;Int&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Text&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb19-2" data-line-number="2"&gt;intToText &lt;span class="fu"&gt;=&lt;/span&gt; tshow&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint .
-No hints&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="ヒントの定義方法について"&gt;ヒントの定義方法について&lt;/h3&gt;
-&lt;p&gt;さきほど定義したヒントはこのようにポイントフリー形式で書くこともできます。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb21"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb21-1" data-line-number="1"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;error:&lt;/span&gt;&lt;span class="at"&gt; &lt;/span&gt;&lt;span class="kw"&gt;{&lt;/span&gt;&lt;span class="fu"&gt;lhs:&lt;/span&gt;&lt;span class="at"&gt; pack . show&lt;/span&gt;&lt;span class="kw"&gt;,&lt;/span&gt; &lt;span class="fu"&gt;rhs:&lt;/span&gt;&lt;span class="at"&gt; tshow&lt;/span&gt;&lt;span class="kw"&gt;}&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;上記のヒント形式で次の内容を解析してみましょう。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb22"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb22-1" data-line-number="1"&gt;&lt;span class="co"&gt;-- src/Lib.hs&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb22-2" data-line-number="2"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Lib&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb22-3" data-line-number="3"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb22-4" data-line-number="4"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Data.Text&lt;/span&gt; (pack)&lt;/a&gt;
-&lt;a class="sourceLine" id="cb22-5" data-line-number="5"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb22-6" data-line-number="6"&gt;&lt;span class="ot"&gt;intToText ::&lt;/span&gt; &lt;span class="dt"&gt;Int&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Text&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb22-7" data-line-number="7"&gt;intToText &lt;span class="fu"&gt;=&lt;/span&gt; pack &lt;span class="fu"&gt;.&lt;/span&gt; show&lt;/a&gt;
-&lt;a class="sourceLine" id="cb22-8" data-line-number="8"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb22-9" data-line-number="9"&gt;&lt;span class="ot"&gt;intToText2  ::&lt;/span&gt; &lt;span class="dt"&gt;Int&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Text&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb22-10" data-line-number="10"&gt;intToText2 x &lt;span class="fu"&gt;=&lt;/span&gt; pack &lt;span class="fu"&gt;$&lt;/span&gt; show x&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint .
-./src/Lib.hs:6:13: Error: Use tshow
-Found:
-  pack . show
-Why not:
-  tshow
-
-1 hint&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;intToText&lt;/code&gt; と &lt;code&gt;intToText2&lt;/code&gt; どちらも検出して欲しいですが &lt;code&gt;intToText&lt;/code&gt; しか検出できていません。&lt;code&gt;HLint&lt;/code&gt; では自動的に η-簡約 (eta-reduction) が行われるため &lt;code&gt;error: {lhs: pack (show x), rhs: tshow x}&lt;/code&gt; というように定義しておいた方が良いです。&lt;/p&gt;
-&lt;h2 id="プロジェクトで利用を禁止している関数を検出する"&gt;プロジェクトで利用を禁止している関数を検出する&lt;/h2&gt;
-&lt;p&gt;プロジェクト内で部分関数 (例: &lt;code&gt;fromJust&lt;/code&gt;) を使わせないようにさせたり、&lt;code&gt;undefined&lt;/code&gt; が残っていないかなどのチェックをレビュー時に人間が行っていたりしませんか？&lt;/p&gt;
-&lt;p&gt;人間が介入するということは必ずミスが起こります。人間が気をつければミスは起こらないと思っていたり、精神力でなんとかしようとしている場合は能力不足を疑われても仕方がありません。&lt;/p&gt;
-&lt;p&gt;また、そのようなつまらない間違い探しのような非クリエイティブな作業に大切な時間を割いてしまうのはとても良くないことです。&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;HLint&lt;/code&gt; を使えば、そのような関数を検出することが可能です。実際には &lt;code&gt;関数&lt;/code&gt; だけでなく &lt;code&gt;言語拡張&lt;/code&gt;, &lt;code&gt;フラグ&lt;/code&gt;, &lt;code&gt;モジュール&lt;/code&gt; も指定することができます。&lt;/p&gt;
-&lt;h3 id="関数を指定する方法"&gt;関数を指定する方法&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;.hlint.yaml&lt;/code&gt; に以下の内容を追記します。今回は &lt;code&gt;undefined&lt;/code&gt; を検出してみたいと思います。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb24"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb24-1" data-line-number="1"&gt;&lt;span class="co"&gt;# .hlint.yaml&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb24-2" data-line-number="2"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;functions:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb24-3" data-line-number="3"&gt;  &lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="kw"&gt;{&lt;/span&gt;&lt;span class="fu"&gt;name:&lt;/span&gt;&lt;span class="at"&gt; undefined&lt;/span&gt;&lt;span class="kw"&gt;,&lt;/span&gt; &lt;span class="fu"&gt;within:&lt;/span&gt;&lt;span class="at"&gt; &lt;/span&gt;&lt;span class="kw"&gt;[]}&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;現状はどこにも使われていないためヒントは表示されません。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint .
-No hints&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;では、以下の関数を追加してみましょう。このように型レベルで設計して、実装を &lt;code&gt;undefined&lt;/code&gt; にしておくことは良くあります。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb26"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb26-1" data-line-number="1"&gt;&lt;span class="co"&gt;-- src/Lib.hs&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb26-2" data-line-number="2"&gt;&lt;span class="ot"&gt;doubleToText ::&lt;/span&gt; &lt;span class="dt"&gt;Double&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Text&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb26-3" data-line-number="3"&gt;doubleToText &lt;span class="fu"&gt;=&lt;/span&gt; undefined&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;忘れずに実装してしまえば問題無いのですが、たまには忘れることもあります。しかし、&lt;code&gt;HLint&lt;/code&gt; があれば安心です。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint .
-./src/Lib.hs:18:16: Warning: Avoid restricted function
-Found:
-  undefined
-Note: may break the code
-
-1 hint&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;Lib&lt;/code&gt; モジュールのみを検査対象とする場合は &lt;code&gt;within&lt;/code&gt; キーワードを次のようにします。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb28"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb28-1" data-line-number="1"&gt;&lt;span class="co"&gt;# .hlint.yaml&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb28-2" data-line-number="2"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;functions:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb28-3" data-line-number="3"&gt;  &lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="kw"&gt;{&lt;/span&gt;&lt;span class="fu"&gt;name:&lt;/span&gt;&lt;span class="at"&gt; undefined&lt;/span&gt;&lt;span class="kw"&gt;,&lt;/span&gt; &lt;span class="fu"&gt;within:&lt;/span&gt;&lt;span class="at"&gt; &lt;/span&gt;&lt;span class="kw"&gt;[&lt;/span&gt;Lib&lt;span class="kw"&gt;]}&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id="hlint-のヒントを無視する方法"&gt;HLint のヒントを無視する方法&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;HLint&lt;/code&gt; のヒントを無視する方法には以下の2種類があります。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;.hlint.yaml&lt;/code&gt; ファイルで指定する (&lt;strong&gt;全てのファイル&lt;/strong&gt;に影響)&lt;/li&gt;
-&lt;li&gt;ファイルに直接 &lt;code&gt;{-# ANN -#}&lt;/code&gt; アノテーションを記述する (&lt;strong&gt;アノテーションの範囲&lt;/strong&gt;にのみ影響)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;書式がちょっとわかりづらいので、実際に色々試してみましょう。&lt;/p&gt;
-&lt;h3 id="関数単位で全てのヒントを無視する"&gt;関数単位で全てのヒントを無視する&lt;/h3&gt;
-&lt;p&gt;最初に定義した &lt;code&gt;someFunc&lt;/code&gt; 関数はヒントを2つ提案してくれていました。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb29"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb29-1" data-line-number="1"&gt;&lt;span class="co"&gt;-- src/Lib.hs&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb29-2" data-line-number="2"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Lib&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb29-3" data-line-number="3"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb29-4" data-line-number="4"&gt;&lt;span class="ot"&gt;someFunc ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb29-5" data-line-number="5"&gt;someFunc &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb29-6" data-line-number="6"&gt;  &lt;span class="kw"&gt;let&lt;/span&gt; x1 &lt;span class="fu"&gt;=&lt;/span&gt; concat (map toUpper [&lt;span class="ch"&gt;&amp;#39;a&amp;#39;&lt;/span&gt; &lt;span class="fu"&gt;..&lt;/span&gt; &lt;span class="ch"&gt;&amp;#39;z&amp;#39;&lt;/span&gt;])&lt;/a&gt;
-&lt;a class="sourceLine" id="cb29-7" data-line-number="7"&gt;      x2 &lt;span class="fu"&gt;=&lt;/span&gt; maybe &lt;span class="st"&gt;&amp;quot;&amp;quot;&lt;/span&gt; id &lt;span class="st"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb29-8" data-line-number="8"&gt;  putStrLn &lt;span class="st"&gt;&amp;quot;someFunc&amp;quot;&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint .
-./src/Lib.hs:6:12: Warning: Use concatMap
-Found:
-  concat (map toUpper [&amp;#39;a&amp;#39; .. &amp;#39;z&amp;#39;])
-Why not:
-  concatMap toUpper [&amp;#39;a&amp;#39; .. &amp;#39;z&amp;#39;]
-
-./src/Lib.hs:7:12: Warning: Use fromMaybe
-Found:
-  maybe &amp;quot;&amp;quot; id
-Why not:
-  Data.Maybe.fromMaybe &amp;quot;&amp;quot;
-
-2 hints&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;提案されているヒントは以下の2つです。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Warning: &lt;code&gt;Use concatMap&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Warning: &lt;code&gt;Use fromMaybe&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;とりあえず &lt;code&gt;someFunc&lt;/code&gt; のヒントを全て無視するようにしてしまいましょう。&lt;/p&gt;
-&lt;p&gt;こんな感じで &lt;code&gt;{-# ANN someFunc &amp;quot;HLint: ignore&amp;quot; #-}&lt;/code&gt; というアノテーションをつけます。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb31"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb31-1" data-line-number="1"&gt;&lt;span class="co"&gt;-- src/Lib.hs&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb31-2" data-line-number="2"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Lib&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb31-3" data-line-number="3"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb31-4" data-line-number="4"&gt;&lt;span class="ot"&gt;{-# ANN someFunc &amp;quot;HLint: ignore&amp;quot; #-}&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb31-5" data-line-number="5"&gt;&lt;span class="ot"&gt;someFunc ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb31-6" data-line-number="6"&gt;someFunc &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb31-7" data-line-number="7"&gt;  &lt;span class="kw"&gt;let&lt;/span&gt; x1 &lt;span class="fu"&gt;=&lt;/span&gt; concat (map toUpper [&lt;span class="ch"&gt;&amp;#39;a&amp;#39;&lt;/span&gt; &lt;span class="fu"&gt;..&lt;/span&gt; &lt;span class="ch"&gt;&amp;#39;z&amp;#39;&lt;/span&gt;])&lt;/a&gt;
-&lt;a class="sourceLine" id="cb31-8" data-line-number="8"&gt;      x2 &lt;span class="fu"&gt;=&lt;/span&gt; maybe &lt;span class="st"&gt;&amp;quot;&amp;quot;&lt;/span&gt; id &lt;span class="st"&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb31-9" data-line-number="9"&gt;  putStrLn &lt;span class="st"&gt;&amp;quot;someFunc&amp;quot;&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ hlint .
-No hints&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;これで &lt;code&gt;src/Lib.hs&lt;/code&gt; に記述されている &lt;code&gt;someFunc&lt;/code&gt; 関数のみ &lt;code&gt;HLint&lt;/code&gt; のヒントを無視できるようになりました。&lt;/p&gt;
-&lt;h3 id="ヒントを無視する様々な方法"&gt;ヒントを無視する様々な方法&lt;/h3&gt;
-&lt;p&gt;ヒントレベルは &lt;code&gt;ignore&lt;/code&gt; 以外にも &lt;code&gt;suggest&lt;/code&gt;, &lt;code&gt;warn&lt;/code&gt;, &lt;code&gt;error&lt;/code&gt; が利用可能です。これらの値を利用した場合は出力時のヒントレベルが強制的にそのレベルに上書きされます。つまり、ヒントファイルに &lt;code&gt;warn&lt;/code&gt; で定義されていたとしても &lt;code&gt;error&lt;/code&gt; や &lt;code&gt;ignore&lt;/code&gt; として処理されることになります。&lt;/p&gt;
-&lt;h4 id="関数単位で全てのヒントを無視する方法"&gt;関数単位で全てのヒントを無視する方法&lt;/h4&gt;
-&lt;p&gt;&lt;code&gt;ANN&lt;/code&gt; のあとに対象の関数名を書きます。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb33"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb33-1" data-line-number="1"&gt;&lt;span class="ot"&gt;{-# ANN someFunc &amp;quot;HLint: ignore&amp;quot; #-}&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4 id="関数単位で特定のヒントのみを無視する方法"&gt;関数単位で特定のヒントのみを無視する方法&lt;/h4&gt;
-&lt;p&gt;&lt;code&gt;HLint: ignore&lt;/code&gt; の後にヒント名を書きます。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb34"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb34-1" data-line-number="1"&gt;&lt;span class="ot"&gt;{-# ANN someFunc &amp;quot;HLint: ignore Use fromMaybe&amp;quot; #-}&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb34-2" data-line-number="2"&gt;&lt;span class="ot"&gt;{-# ANN someFunc &amp;quot;HLint: ignore Use concatMap&amp;quot; #-}&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4 id="モジュール単位で無視する方法"&gt;モジュール単位で無視する方法&lt;/h4&gt;
-&lt;p&gt;&lt;code&gt;module&lt;/code&gt; キーワードを使う場合はアノテーションを &lt;code&gt;import&lt;/code&gt; 文の後に設置しないと上手く動かないので、その点のみ注意が必要です。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb35"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb35-1" data-line-number="1"&gt;&lt;span class="ot"&gt;{-# ANN module &amp;quot;HLint: ignore&amp;quot; #-}&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb35-2" data-line-number="2"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb35-3" data-line-number="3"&gt;&lt;span class="ot"&gt;{-# ANN module &amp;quot;HLint: ignore Use fromMaybe&amp;quot; #-}&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb35-4" data-line-number="4"&gt;&lt;span class="ot"&gt;{-# ANN module &amp;quot;HLint: ignore Use concatMap&amp;quot; #-}&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id="overloadedstrings-言語拡張"&gt;OverloadedStrings 言語拡張&lt;/h3&gt;
-&lt;p&gt;言語拡張の &lt;code&gt;OverloadedStrings&lt;/code&gt; を有効化している場合は上手く動かないため、明示的に &lt;code&gt;String&lt;/code&gt; の型注釈を指定する必要があります。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb36"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb36-1" data-line-number="1"&gt;&lt;span class="ot"&gt;{-# ANN someFunc (&amp;quot;HLint: ignore&amp;quot; :: String) #-}&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id="ヒントファイルを使って無視する方法"&gt;ヒントファイルを使って無視する方法&lt;/h3&gt;
-&lt;p&gt;プロジェクト全体で無視したいヒントについては &lt;code&gt;.hint.yaml&lt;/code&gt; に追記します。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb37"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb37-1" data-line-number="1"&gt;&lt;span class="co"&gt;# .hint.yaml&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb37-2" data-line-number="2"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;ignore:&lt;/span&gt;&lt;span class="at"&gt; &lt;/span&gt;&lt;span class="kw"&gt;{&lt;/span&gt;&lt;span class="fu"&gt;name:&lt;/span&gt;&lt;span class="at"&gt; Use fromMaybe&lt;/span&gt;&lt;span class="kw"&gt;}&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb37-3" data-line-number="3"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;ignore:&lt;/span&gt;&lt;span class="at"&gt; &lt;/span&gt;&lt;span class="kw"&gt;{&lt;/span&gt;&lt;span class="fu"&gt;name:&lt;/span&gt;&lt;span class="at"&gt; Use concatMap&lt;/span&gt;&lt;span class="kw"&gt;}&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;within&lt;/code&gt; キーワードでヒントを適用するモジュールを指定できます。&lt;/p&gt;
-&lt;p&gt;例として &lt;code&gt;Lib&lt;/code&gt; モジュールのみを対象とする場合は次のようになります。(この場合は &lt;code&gt;ignore&lt;/code&gt; が指定されているので &lt;code&gt;Lib&lt;/code&gt; モジュールのみヒントを無視します)&lt;/p&gt;
-&lt;div class="sourceCode" id="cb38"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb38-1" data-line-number="1"&gt;&lt;span class="co"&gt;# .hlint.yaml&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb38-2" data-line-number="2"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;ignore:&lt;/span&gt;&lt;span class="at"&gt; &lt;/span&gt;&lt;span class="kw"&gt;{&lt;/span&gt;&lt;span class="fu"&gt;name:&lt;/span&gt;&lt;span class="at"&gt; Use fromMaybe&lt;/span&gt;&lt;span class="kw"&gt;,&lt;/span&gt; &lt;span class="fu"&gt;within:&lt;/span&gt;&lt;span class="at"&gt; &lt;/span&gt;&lt;span class="kw"&gt;[&lt;/span&gt;Lib&lt;span class="kw"&gt;]}&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb38-3" data-line-number="3"&gt;&lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;ignore:&lt;/span&gt;&lt;span class="at"&gt; &lt;/span&gt;&lt;span class="kw"&gt;{&lt;/span&gt;&lt;span class="fu"&gt;name:&lt;/span&gt;&lt;span class="at"&gt; Use concatMap&lt;/span&gt;&lt;span class="kw"&gt;,&lt;/span&gt; &lt;span class="fu"&gt;within:&lt;/span&gt;&lt;span class="at"&gt; &lt;/span&gt;&lt;span class="kw"&gt;[&lt;/span&gt;Lib&lt;span class="kw"&gt;]}&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id="ci-を回す"&gt;CI を回す！&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;Haskell&lt;/code&gt; のプロジェクトでよく見る &lt;code&gt;CI&lt;/code&gt; ツールといえば以下の2つでしょう。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://travis-ci.org/"&gt;Travis CI&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://circleci.com/"&gt;CircleCI 2.0&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;個人的には以下の点で &lt;code&gt;CircleCI&lt;/code&gt; が好きです。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;プライベートリポジトリも無料で使える&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Docker&lt;/code&gt;, &lt;code&gt;docker-compose&lt;/code&gt; と親和性が高い&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;ここでは &lt;code&gt;HLint&lt;/code&gt; の内容にしか言及しませんが、機会があれば &lt;code&gt;CI&lt;/code&gt; については別途記事にしたいと思います。&lt;/p&gt;
-&lt;h3 id="travis-ci"&gt;Travis CI&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;.travis.yml&lt;/code&gt; に以下の内容を記述するだけです。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb39"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb39-1" data-line-number="1"&gt;&lt;span class="co"&gt;# .travis.yml&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb39-2" data-line-number="2"&gt;&lt;span class="fu"&gt;sudo:&lt;/span&gt;&lt;span class="at"&gt; false&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb39-3" data-line-number="3"&gt;&lt;span class="fu"&gt;language:&lt;/span&gt;&lt;span class="at"&gt; generic&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb39-4" data-line-number="4"&gt;&lt;span class="fu"&gt;jobs:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb39-5" data-line-number="5"&gt;  &lt;span class="fu"&gt;include:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb39-6" data-line-number="6"&gt;    &lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;stage:&lt;/span&gt;&lt;span class="at"&gt; Run hlint&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb39-7" data-line-number="7"&gt;      &lt;span class="fu"&gt;script:&lt;/span&gt;&lt;span class="at"&gt; curl -sL https://raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s .&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id="circleci-2.0"&gt;CircleCI 2.0&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;.circleci/config.yml&lt;/code&gt; に以下の内容を記述するだけです。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb40"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb40-1" data-line-number="1"&gt;&lt;span class="fu"&gt;version:&lt;/span&gt;&lt;span class="at"&gt; 2&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-2" data-line-number="2"&gt;&lt;span class="fu"&gt;jobs:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-3" data-line-number="3"&gt;  &lt;span class="fu"&gt;hlint:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-4" data-line-number="4"&gt;    &lt;span class="fu"&gt;docker:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-5" data-line-number="5"&gt;      &lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;image:&lt;/span&gt;&lt;span class="at"&gt; ubuntu:16.04&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-6" data-line-number="6"&gt;    &lt;span class="fu"&gt;steps:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-7" data-line-number="7"&gt;      &lt;span class="kw"&gt;-&lt;/span&gt; checkout&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-8" data-line-number="8"&gt;      &lt;span class="kw"&gt;-&lt;/span&gt; &lt;span class="fu"&gt;run:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-9" data-line-number="9"&gt;          &lt;span class="fu"&gt;name:&lt;/span&gt;&lt;span class="at"&gt; Run hlint&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-10" data-line-number="10"&gt;          &lt;span class="fu"&gt;command:&lt;/span&gt;&lt;span class="at"&gt; |&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-11" data-line-number="11"&gt;            apt update&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-12" data-line-number="12"&gt;            apt install -y curl&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-13" data-line-number="13"&gt;            &lt;span class="fu"&gt;curl -sL https:&lt;/span&gt;&lt;span class="at"&gt;//raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s .&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-14" data-line-number="14"&gt;&lt;span class="fu"&gt;workflows:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-15" data-line-number="15"&gt;  &lt;span class="fu"&gt;version:&lt;/span&gt;&lt;span class="at"&gt; 2&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-16" data-line-number="16"&gt;  &lt;span class="fu"&gt;hlint:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-17" data-line-number="17"&gt;    &lt;span class="fu"&gt;jobs:&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb40-18" data-line-number="18"&gt;      &lt;span class="kw"&gt;-&lt;/span&gt; hlint&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;今回は紹介していませんが &lt;code&gt;HLint&lt;/code&gt; のヒントを自動的に適用してくれる &lt;a href="https://github.com/mpickering/apply-refact"&gt;apply-refact&lt;/a&gt; というツールもあります。使い方については各種ドキュメントをご確認ください。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="https://github.com/ndmitchell/hlint#automatically-applying-hints"&gt;Automatically Applying Hints&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;今回は &lt;code&gt;Haskell&lt;/code&gt; の静的解析ツール &lt;code&gt;HLint&lt;/code&gt; について説明を行いました。需要があれば &lt;code&gt;LiquidHaskell&lt;/code&gt; などの他の静的解析ツールについても、チュートリアル的な解説記事を書いていきたいところです。&lt;/p&gt;</summary></entry><entry><id>http://d.hatena.ne.jp/kazu-yamamoto/20180116/1516075029</id><title type="text">[TLS][Haskell]TLS 1.3 開発日記 その24 ID23</title><updated>2018-01-16T03:57:09Z</updated><author><name>kazu-yamamoto</name></author><link href="http://d.hatena.ne.jp/kazu-yamamoto/20180116/1516075029"/><summary type="html">
+</summary></entry><entry><id>http://d.hatena.ne.jp/kazu-yamamoto/20180116/1516075029</id><title type="text">[TLS][Haskell]TLS 1.3 開発日記 その24 ID23</title><updated>2018-01-16T03:57:09Z</updated><author><name>kazu-yamamoto</name></author><link href="http://d.hatena.ne.jp/kazu-yamamoto/20180116/1516075029"/><summary type="html">
 &lt;div class="section"&gt;
 &lt;p&gt;ID23での変更点：&lt;/p&gt;
 &lt;h4&gt; key_share拡張&lt;/h4&gt;
