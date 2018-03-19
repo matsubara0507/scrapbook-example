@@ -115,7 +115,7 @@
 &lt;h2 id="scaffolded-site"&gt;Scaffolded Site&lt;/h2&gt;
 &lt;p&gt;ここではさらに一歩踏み込んで &lt;code&gt;Scaffolded Site&lt;/code&gt; を利用する際、どのファイルに何を書いたら良いのか簡単に解説しておこうと思います。&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;Scaffolded Site&lt;/code&gt; は一番素朴な &lt;code&gt;yesod-simple&lt;/code&gt; を利用することとします。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb6"&gt;&lt;pre class="sourceCode sh"&gt;&lt;code class="sourceCode bash"&gt;&lt;a class="sourceLine" id="cb6-1" data-line-number="1"&gt;$ $ &lt;span class="ex"&gt;stack&lt;/span&gt; new example-subsite yesod-simple&lt;/a&gt;
+&lt;div class="sourceCode" id="cb6"&gt;&lt;pre class="sourceCode sh"&gt;&lt;code class="sourceCode bash"&gt;&lt;a class="sourceLine" id="cb6-1" data-line-number="1"&gt;$ &lt;span class="ex"&gt;stack&lt;/span&gt; new example-subsite yesod-simple&lt;/a&gt;
 &lt;a class="sourceLine" id="cb6-2" data-line-number="2"&gt;$ &lt;span class="bu"&gt;cd&lt;/span&gt; example-subsite&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;サブサイトの内容は上記で定義した内容を再利用します。&lt;/p&gt;
 &lt;h3 id="stack.yaml"&gt;stack.yaml&lt;/h3&gt;
