@@ -1,4 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-03-25T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://haskell.e-bigmoon.com/posts/2018/03-25-quiz-2.html</id><title type="text">Haskell Quiz No.2 foldl と foldr</title><updated>2018-03-25T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/03-25-quiz-2.html"/><summary type="html">&lt;h2 id="haskell-quiz-no.2"&gt;Haskell Quiz No.2&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-03-26T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://haskell.e-bigmoon.com/posts/2018/03-26-hie-emacs.html</id><title type="text">Haskell IDE Engine を Emacs で使う</title><updated>2018-03-26T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/03-26-hie-emacs.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/haskell/haskell-ide-engine"&gt;HIE (Haskell IDE Engine)&lt;/a&gt; を &lt;code&gt;Emacs&lt;/code&gt; に導入する方法が &lt;code&gt;HIE&lt;/code&gt; の &lt;a href="https://github.com/haskell/haskell-ide-engine/pull/502/files"&gt;README.md&lt;/a&gt; に追記されたので、それに従いインストールしてみました。&lt;/p&gt;
+&lt;p&gt;本記事では、導入手順を紹介します。&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;h2 id="導入手順"&gt;導入手順&lt;/h2&gt;
+&lt;h3 id="hie-をインストールする"&gt;1. HIE をインストールする。&lt;/h3&gt;
+&lt;pre class="bssh"&gt;&lt;code&gt;$ git clone https://github.com/haskell/haskell-ide-engine.git
+$ cd haskell-ide-engine
+$ make
+
+...
+
+* Missing C libraries: icuuc, icui18n, icudata&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;make&lt;/code&gt; 実行時、以下のようにライブラリが足りなかったので、必要なパッケージをインストールして、もう一度 &lt;code&gt;make&lt;/code&gt; しました。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb2"&gt;&lt;pre class="sourceCode bash"&gt;&lt;code class="sourceCode bash"&gt;&lt;a class="sourceLine" id="cb2-1" data-line-number="1"&gt;$ &lt;span class="fu"&gt;sudo&lt;/span&gt; apt install libicu-dev&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-2" data-line-number="2"&gt;$ &lt;span class="fu"&gt;make&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;普通に &lt;code&gt;stack install&lt;/code&gt; で導入することもできますが、 &lt;code&gt;HIE&lt;/code&gt; はビルド時の &lt;code&gt;GHC&lt;/code&gt; バージョンでしか使えないという弱点があるため、&lt;code&gt;GHC&lt;/code&gt; の バージョンが異なるプロジェクトでは利用できません。&lt;/p&gt;
+&lt;p&gt;そのため &lt;code&gt;make&lt;/code&gt; を使って &lt;code&gt;hie-8.2.1&lt;/code&gt; のように &lt;code&gt;GHC&lt;/code&gt; のそれぞれのバージョンでビルドした &lt;code&gt;HIE&lt;/code&gt; のバイナリを用意して解決しています。&lt;/p&gt;
+&lt;h3 id="必要なパッケージを入手する"&gt;2. 必要なパッケージを入手する。&lt;/h3&gt;
+&lt;div class="sourceCode" id="cb3"&gt;&lt;pre class="sourceCode bash"&gt;&lt;code class="sourceCode bash"&gt;&lt;a class="sourceLine" id="cb3-1" data-line-number="1"&gt;$ &lt;span class="fu"&gt;git&lt;/span&gt; clone git@github.com:emacs-lsp/lsp-mode.git&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-2" data-line-number="2"&gt;$ &lt;span class="fu"&gt;git&lt;/span&gt; clone git@github.com:emacs-lsp/lsp-ui.git&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-3" data-line-number="3"&gt;$ &lt;span class="fu"&gt;git&lt;/span&gt; clone git@github.com:emacs-lsp/lsp-haskell.git&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="emacs-の設定ファイル-init.el-など-に以下を追加する"&gt;3. emacs の設定ファイル (init.el など) に以下を追加する。&lt;/h3&gt;
+&lt;pre class="elisp"&gt;&lt;code&gt;(add-to-list &amp;#39;load-path &amp;quot;/path/to/lsp-mode&amp;quot;)
+(add-to-list &amp;#39;load-path &amp;quot;/path/to/lsp-ui&amp;quot;)
+(add-to-list &amp;#39;load-path &amp;quot;/path/to/lsp-haskell&amp;quot;)
+
+(require &amp;#39;lsp-mode)
+(require &amp;#39;lsp-ui)
+(require &amp;#39;lsp-haskell)
+
+(add-hook &amp;#39;lsp-mode-hook &amp;#39;lsp-ui-mode)
+(add-hook &amp;#39;haskell-mode-hook #&amp;#39;lsp-haskell-enable)
+(add-hook &amp;#39;haskell-mode-hook &amp;#39;flycheck-mode)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;上記内容を記述した後で Emacs を起動したときに、依存するパッケージのインストールを要求される場合があるので、&lt;code&gt;Cask&lt;/code&gt; や &lt;code&gt;package-install&lt;/code&gt; などでインストールしましょう。&lt;/p&gt;
+&lt;p&gt;インストールが成功すると、&lt;code&gt;Haskell&lt;/code&gt; のファイルを読み込んだときに、カーソルを当てたところにある関数の型の表示、エラーの表示、補完、コマンド &lt;code&gt;M-.&lt;/code&gt; で定義のところにジャンプなどができるようになります。&lt;/p&gt;
+&lt;h2 id="おわりに"&gt;おわりに&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;HIE&lt;/code&gt; は &lt;code&gt;ghc-mod&lt;/code&gt; の実行ファイルを使っているかのように見えますが、実際はライブラリを通しているだけでバイナリは使っていないそうです。&lt;/p&gt;</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/03-25-quiz-2.html</id><title type="text">Haskell Quiz No.2 foldl と foldr</title><updated>2018-03-25T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/03-25-quiz-2.html"/><summary type="html">&lt;h2 id="haskell-quiz-no.2"&gt;Haskell Quiz No.2&lt;/h2&gt;
 &lt;p&gt;難易度: λλ&lt;/p&gt;
 &lt;div class="sourceCode" id="cb1"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb1-1" data-line-number="1"&gt;foldr (&lt;span class="fu"&gt;&amp;amp;&amp;amp;&lt;/span&gt;) &lt;span class="dt"&gt;True&lt;/span&gt; &lt;span class="fu"&gt;$&lt;/span&gt; cycle [&lt;span class="dt"&gt;True&lt;/span&gt;, &lt;span class="dt"&gt;False&lt;/span&gt;]&lt;/a&gt;
 &lt;a class="sourceLine" id="cb1-2" data-line-number="2"&gt;foldl (&lt;span class="fu"&gt;&amp;amp;&amp;amp;&lt;/span&gt;) &lt;span class="dt"&gt;True&lt;/span&gt; &lt;span class="fu"&gt;$&lt;/span&gt; cycle [&lt;span class="dt"&gt;True&lt;/span&gt;, &lt;span class="dt"&gt;False&lt;/span&gt;]&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -7,7 +44,7 @@
 &lt;p&gt;答えは次回。&lt;/p&gt;
 &lt;!--more--&gt;
 &lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
-&lt;p&gt;&lt;a href="./03-24-quiz-1.md"&gt;前回&lt;/a&gt;の問題と答えは以下の通りです。&lt;/p&gt;
+&lt;p&gt;&lt;a href="./03-24-quiz-1.html"&gt;前回&lt;/a&gt;の問題と答えは以下の通りです。&lt;/p&gt;
 &lt;h3 id="問題"&gt;問題&lt;/h3&gt;
 &lt;div class="sourceCode" id="cb2"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb2-1" data-line-number="1"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Foo&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
 &lt;a class="sourceLine" id="cb2-2" data-line-number="2"&gt;&lt;/a&gt;
@@ -297,7 +334,7 @@ O
 &lt;a class="sourceLine" id="cb2-6" data-line-number="6"&gt;y3   &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="fu"&gt;???&lt;/span&gt;&lt;/a&gt;
 &lt;a class="sourceLine" id="cb2-7" data-line-number="7"&gt;yInt &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="fu"&gt;???&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;全部正解できたら普通にすごいです。&lt;/p&gt;
-&lt;p&gt;答えは&lt;a href="./03-25-quiz-2.md"&gt;次回&lt;/a&gt;！&lt;/p&gt;
+&lt;p&gt;答えは&lt;a href="./03-25-quiz-2.html"&gt;次回&lt;/a&gt;！&lt;/p&gt;
 &lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>https://matsubara0507.github.io/posts/2018-03-24-poly-variant-with-haskell.html</id><title type="text">多相バリアントを使いこなそう with Haskell</title><updated>2018-03-24T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-03-24-poly-variant-with-haskell.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
  &lt;div class="card-content"&gt;
   &lt;header class="post-header"&gt;
@@ -2152,69 +2189,7 @@ Ok, 1 module loaded.
 stack install cryptoniteで以下のようなエラーが発生。
 % stack install cryptonite
 --  While building custom Setup.hs for package cryptonite-0.24 using:
-      /Users/xxx/.stack/setup-exe-cache/x86_64-osx/Cabal-simple_mPHDZzAJ_2.0.1.0_ghc-8.2.2 --builddir=.stack-work/dist/x86_64-osx/Cabal-2.0.1.0 build --ghc-options " </summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/02-25-SLURP.html</id><title type="text">SLURP (翻訳)</title><updated>2018-02-25T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/02-25-SLURP.html"/><summary type="html">&lt;h2 id="slurp"&gt;SLURP&lt;/h2&gt;
-&lt;p&gt;Great original post: &lt;a href="https://www.snoyman.com/blog/2018/01/slurp"&gt;SLURP&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;すでにコミュニティの多くの人々が SLURP の提案を見ていると思います。何人かの人たちに私の意見を聞かれたり、私が議論に参加しないことについて、まぁいろいろな意見をもらいました。この議題を私が避けてきた理由を今ここで書かせてください。作者はその提案をリリース前に教えてくれましたが、その時はサポートしないことを伝えました。私はまた、失礼にならないような形で SLURP へのコメントを控えていることも伝えました。残念ながら、その結果2つのことが起こりました。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;人によっては、とても良くない影響を与えてしまいました。&lt;/li&gt;
-&lt;li&gt;“fork” という用語の使い方の誤解、そして残念ながら作者はその間違いを訂正していません。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;つまりまとめると: 提案は私のものではなく、変更を頼んだわけでも、誰かの頭に銃を向けているわけでもありません。この説明は間違っています。他に出すことができるコメントはいくらでもありますが、正直価値はないでしょう。&lt;/p&gt;
-&lt;p&gt;間違ってはいないことは、私は日常的に多くの人や Haskell のコミュニティやエコシステムマネジメントチームと直面している問題についてコミュニケーションを取っています。仕事で幅広いユーザーと交流し、不満を聞けばそれを誰かに伝えます。私も不満を持つことがあって、それを誰かに聞いてもらいます。この不満の中には、全てが同じようなものを指しているものもあります。&lt;/p&gt;
-&lt;p&gt;私が公開できる情報というのは限られています。なぜなら、私に寄せられるかなり多くのコメントが、公にされることを嫌うようなプライベートなメールで書かれているからです。そして経験上、私のことを嘘つきだと誹謗中傷する人たちがいることも分かっています。この絶え間ない誹謗中傷を理由に発言を避けてきましたが、私はここに残しておくべきだと決断しました。わかったのは次の2つのことです。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;私のやること成すこと全てが悪だと信じている人は、私が何か根拠を持っていてもそれを見ようとはしません。&lt;/li&gt;
-&lt;li&gt;私が悪魔ではないという可能性を否定しない人は、もしかしたら私の声明をその通りに受け取ってくれるかもしれないということです。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;以前の私は、アーキテクチャとエコシステム開発についてオープンに議論していました。これはオープンソースコミュニティを作る唯一無二の方法だと私は信じています。Stack 対 cabal の時代の緊張が最も高まったときに、多くの人がオープンな議論に異論を唱えたため、私はより静かなコミュニケーションのチャネルに移ることにしました。これはとても残念なことだったと感じています。私はエコシステムの計画についてもっとオープンに、声高に議論をしたいと思っています。他の人たちが簡単に情報にたどり着けるようにしたいと思っています。私は閉じた扉の裏側で全てを議論することを強く反対します。オープンな議論が再開できるかどうかはいずれわかることでしょう。&lt;/p&gt;
-&lt;!--more--&gt;
-&lt;h2 id="fork-ってなに"&gt;“fork” ってなに?&lt;/h2&gt;
-&lt;p&gt;SLURP に関する議論の大部分が SLURP そのものとはなんの関係もないことは明らかですが、fork に関するコメントは関係があります。作者がドキュメントの中で fork という言葉を使うつもりだったのなら、まずは fork についてしっかりと説明することが望ましかったのではないでしょうか。これから Stackage と Stack の世界で使われている fork という言葉の意味について、私が知っていることをお話しようと思います。この話が本当に作者たちの意図を反映しているのかどうか、それは作者たちの発言を待って確認するしかありません。&lt;/p&gt;
-&lt;p&gt;ここでいう “fork” という用語は、「何かソフトウェアのプロジェクトを取ってきて、ソースコードを他の場所にホストして、別名で開発を続ける」といった文字通りの意味で使われているわけではありません (私の定義ですが)。この用語は、より一般的なものです。例えば、Stack はコードなんて何も共有していないのに、多くの人に cabal-install の fork だと言われています (もちろん、Cabal のようなベースとなるライブラリは共有していますが)。&lt;/p&gt;
-&lt;p&gt;誰もが固執していることについて、明確に言及しておきましょう。誰もが考えるような Hackage の直接の競争相手を作ろうとするやりとりには、全く関わっていません。私が知っている人で、こういうことをしたい人はいませんし、私もしたくありません。なぜなら、今日の Stackage と Stack は Hackage あってこそのものだからです。そして私の知人で、この構図を変えたい人は誰一人としていません。Hackage をコントロールしたいなどと考えている人はいないのです。&lt;/p&gt;
-&lt;p&gt;Hackage の “fork” というと、論理的にそういう結論に至るかもしれませんが、そうではないのです。&lt;/p&gt;
-&lt;p&gt;次に、この “fork” に関する具体的な頭痛のタネについてお話しましょう。&lt;/p&gt;
-&lt;h2 id="hackage-のリビジョン"&gt;Hackage のリビジョン&lt;/h2&gt;
-&lt;p&gt;多くの人が Hackage のリビジョンについて嫌悪感を示しています。私も Hackage リビジョンは嫌いです。そして、他の誰よりも嫌悪感を抱く理由を持っています。私は数週間から数ヶ月ほどの自分の人生を使って、いくつかのツールにリビジョンをサポートさせたことがあります。この凄惨な歴史を辿ることもできますが、プログラマの戦記になるだけで価値はないでしょう。それよりも今に向き合うことにします。&lt;/p&gt;
-&lt;p&gt;私はついに Stack 1.6 で、リビジョンの指定 (pinning) を完全にサポートしました。Stackage は既に長い間リビジョンの指定をサポートし続けています。Stackage にはいくつかのパッケージのリビジョンを無視しているものとしてリストアップする機能があります。&lt;/p&gt;
-&lt;p&gt;もし仮に、今聞かれたら私はリビジョンが悪いアイディアで、無効にすべきだと答えるでしょう。そして、依存関係の解決に関する問題について、より良い解決方法があると依然として答えるでしょう (これらについては、過去に長々と議論したことがあります)。同時に、そのコストは下がっています。ユーザーが extra-deps に特定のリビジョンを付けていないこと、そして Hackage におけるリビジョンのルールが緩すぎることについては実際、いまだに心配です。これについて懸念を抱いていることは確かですが、私の中の最優先事項ではありません。&lt;/p&gt;
-&lt;p&gt;ところが他の人は違う考えを持っているようです。私は Hackage Truestee が強制的に cabalファイルを編集することについて腹を立てている多くの人を知っています。彼らに反対することはありませんが、この話題に情熱を持っているわけでもありません。コミュニティのリーダーとの会話の中で、私はこの区別を明確に強調しました (少なくともそうしようとはしました)。&lt;/p&gt;
-&lt;p&gt;リビジョンに関する最大の懸念は、それの持つ社会的な影響です。すなわち、誰か別のものが自分のビルドの安定性を担うということです。これまでに何度も言及してきましたが、社会的緊張の原因の最たるものに、ビルドがいきなり止まったので上流の開発者に文句を言う、というものがあります。これは大惨事への第一歩で、PVP (Package Versioning Policy) + 依存解決という手法が持つ原理的な欠陥でした。そのため、固定ビルドプランに焦点を当てたツールが必要となるのです。私はこれを何年も主張してきましたが、結局は上流を説得することができなかったので Stack を大々的に作りました。&lt;/p&gt;
-&lt;p&gt;以上のことから、リビジョンとはフォークのような何かなのでしょうか? 違います。&lt;/p&gt;
-&lt;h2 id="キュレーション"&gt;キュレーション&lt;/h2&gt;
-&lt;p&gt;数週間前、私はこんなツイートをしました。&lt;/p&gt;
-&lt;blockquote class="twitter-tweet" data-lang="en"&gt;
-&lt;p lang="en" dir="ltr"&gt;
-I did that initially. When collaborating on GPS Haskell, I removed that functionality as a requirement of the Hackage, Cabal, and Haskell Platform teams. Then GPS died and we're stuck unable to work around upstream breakage like this.
-&lt;/p&gt;
-— Michael Snoyman (&lt;span class="citation" data-cites="snoyberg"&gt;@snoyberg&lt;/span&gt;) &lt;a href="https://twitter.com/snoyberg/status/949385673982730240?ref_src=twsrc%5Etfw"&gt;January 5, 2018&lt;/a&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Stackage のオリジナルデザインは、標準的な Linux ディストリビューションモデルに準拠していました。Hackage は私たちの上流でしたが、バージョンの境界が大きく壊れるのを防ぐために一連のパッチを整備し、あまりありませんでしたが時折 (たとえそうでも、正直覚えていませんが)、バグを修正するためにソースを編集したりしました。&lt;/p&gt;
-&lt;p&gt;2014年に Stackage を cabal と Haskell のプラットフォームに組み込む計画 (GPS Haskell のコードネームで開発していました。それが地面から飛び立つことは一度もありませんでしたが) について議論をしたとき、cabal, Hackage, そして Haskell Platform のメンテナに、ローカルの変更を Stackage が整備しないことを要求されました。なので私はその機能を削除したのですが、それは私たちが今までいた世界の話です。&lt;/p&gt;
-&lt;p&gt;この機能を復活させるかどうかは再検討中です。その理由を簡潔に説明しますと、これはフォークと捉えることができます。ソフトフォークと呼ぶ人もいるかもしれません。正直なところ、一連のパッチを整備するのは重労働なので Stackage に追加し直したい機能ではありません。しかし、多くのコミュニティがこの作業を必要としています。私がこのことを理解しているように、Nix も理解しています。もしもこれをフォークと言うのなら、私たちのエコシステムに広く浸透しているフォークなんでしょう。&lt;/p&gt;
-&lt;p&gt;このキュレーションで扱う理由としては、新しい依存バージョンへの更新が遅いパッケージを避けるため、というものがあります。Stackage のパッケージメンテナにとって、誰か他の人がその上限に満足しないからといって、自分のパッケージのバージョンを下げるのはかなりイライラするものがあるでしょう。キュレーションはこの辺の問題を何とかできるかもしれません。私はこれをおまけの特典のように考えていますが、必要なものではないです。&lt;/p&gt;
-&lt;p&gt;しかし、キュレーションには cabal-install 界隈では問題になっていないものの、Stackage や Stack 界隈で問題を引き起こしているパッケージをどうにかする、というもっと重要な理由があります。ここ数ヶ月の間に何回も問題が起こるまで、私は本当の問題だとは認識していませんでした。&lt;a href="https://github.com/haskell-hvr/cassava/pull/155"&gt;例えばこんな例があります&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;私はこの記事で、作者の誰かに何かを要求するつもりはありません。でも私は結局、これらの類の問題に多くの自分の時間を費やして対処してきています。これが現実です。私の友達や同僚は、緊急のリリースポイントを切ったり、様々な持ち越し作業に巻き込まれています。Cabal のライブラリの仕様に明記されているべきだが文書化されていないような何かのために、多くの時間を割いて Stack を変更しなければならないような現状に私の人生を浪費したくはありません。&lt;/p&gt;
-&lt;p&gt;Hackage は cabal-install を壊さないために、既に大きな苦労をしています。多くの人が、 &lt;code&gt;^&amp;gt;=&lt;/code&gt; 演算子の導入がどのように Stack 1.5 を破壊したか聞いたことがあるのではないでしょうか。しかし、実はこの演算子の導入は cabal-install 1.24 も壊していたのです。この事実を知っている人がいないのは、&lt;a href="https://github.com/haskell/cabal/issues/4624"&gt;Hackage がこれらのファイルを古いバージョンの cabal-install から隠すような措置を導入した&lt;/a&gt;からです。このキュレーションのアイディアは Stack の破壊に対応する術を Stackage に対して提供するものです。Hackage も同じ方法で cabal-install へのダメージに対処するでしょう。&lt;/p&gt;
-&lt;p&gt;そして、私は同じ類の処置を、Hackage から Stack へしてもらえないかとお願いしました。このお願いは、優先的な処置を求める声に後押しされています。この記事の読者は、各々の判断で自分がどう感じるか考えてください。&lt;/p&gt;
-&lt;p&gt;まとめると: 私は Stackage に上流のパッケージのパッチを当てられるようにしようとしています。他の人はフォークという言葉を使うかもしれませんが、私はこれをフォークではなくキュレーションだと考えています。&lt;/p&gt;
-&lt;h2 id="hackage-へのアップロードを避ける"&gt;Hackage へのアップロードを避ける&lt;/h2&gt;
-&lt;p&gt;まず、これは私の好みですが、私のパッケージは Hackage に上げ続けたいと考えています。conduit や yesod, その他鋭意 Hackage でメンテ中の 80 を超えるパッケージの更新をやめるつもりも、そうしたいという願望もありません。そうは言っても、全員が全員同じように感じているわけではありません。&lt;/p&gt;
-&lt;p&gt;現在 Stackage は Hackage の下流になっています。最初にパッケージが Hackage にアップロードされない限り、そのパッケージを Stackage に入れることはできません。しかし、この状況は終わりを告げようとしています。およそ、現状を変えようとしているグループは以下の 3 パターンに分けられるでしょう。&lt;/p&gt;
-&lt;ol type="1"&gt;
-&lt;li&gt;少なくとも一部の PVP 支持者は、PVP に従わないパッケージ作成者に対して、そのパッケージを Hackage にアップロードしないように要請 (要求) しています。これは私が幾度となく指摘してきたように、Hackage 公式のガイドラインと完全に矛盾しているにも関わらず、彼らはしつこく同じ趣旨の発言を続けています。&lt;/li&gt;
-&lt;li&gt;PVP に反対する人の中には、基本的に (1) の理由で、Hackage にアップロードしたくない、という人もいます。PVP の遵守という観点で、たくさんの張りつめた議論がありました。これを避けるための最も簡単な方法は Hackage にアップロードしない、というものでした。私はこういった事情があって Hackage や Stackage にコードをリリースしない人たちを知っています。しぶしぶこうしている人もいますが、その全員が同じ理由で Hackage を避けたがっています。&lt;/li&gt;
-&lt;li&gt;技術的に見て、中央リポジトリに手作業で tarball をアップロードするようなモデルは、時代遅れになってきていると感じる人もいます。そういった人たちは、タグやリリースブランチを使って自動化された、Git ベースのリリースに基づいたワークフローを考えています。これによる社会的な影響は何もなく、どちらかと言うと Hackage が現在サポートしていない、技術的に違うものを探してみたいという願望です。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ol type="1"&gt;
-&lt;li&gt;番目の状況は、私の大きな頭痛の種でした。私は Hackage Trustee のガイドラインと Hackage のルールを変更して、彼らの言動 (Hackage にアップロードしないように私的なメールで要求したり、個人や企業に対して PVP に従っていないことを公に批判したり) について明確に禁止するように要望を出していました。実際、私が思うに、この要望は究極的には SLURP に結びつくものです。私は変更しなければフォークするぞと脅したりしたでしょうか? あー、そう思いたいならそれでもいいでしょう。私は Hackage を使うのをやめようと言い続けてきました。完全にです。私はこのような Hackage の使い方が許可されるように、公式のポリシーに対して変更を求めました。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;現状を見たらわかりますが、Hackage のポリシーにそんな変更はされませんでした。私は (2) と (3) のグループに対して何を思うのか、言及していませんでしたね。しかし (3) の主張からもわかるように、Hackage とは別の代替パッケージリポジトリをホストしたりするのは全くもって意味がありません。なので、私はまたここで保証します。最も文字通りの Hackage の fork は、私も私が話しかけているあなたも誰も望んでいないものになるでしょう。&lt;/p&gt;
-&lt;p&gt;また他の選択肢は Stackage に Hackage に加え、Git リポジトリから直接パッケージをプルできるようにする、というものです。これは先に挙げた 問題 (1) に対するワークアラウンドとして議論されています。あることを主張して、一度離れてもう一度それを主張するようになる… なんてことはありません。私はむしろ、Hackage が全員からパッケージのアップロードを受け付けることを明確にすることを望んでいますし、それと比べれば Stackage を別のソースに対して解放するような要求は少なくなります (3 番目のグループは純粋に技術的な観点から実験したいと思っているようですが)。&lt;/p&gt;
-&lt;p&gt;私は銃で誰かの頭を狙っているでしょうか? それはあなたが決めることです。これが私が知る限りの本当の物語です。&lt;/p&gt;
-&lt;p&gt;まとめると、これは潜在的な fork に最も近いもので、Git リポジトリが Hackage の代替のソースとして許可されたらこうなります。&lt;/p&gt;
-&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;私は上記の問題を解決するための努力をするにあたって、複数の人と長く非公開な議論をしてきました。先ほども話したように、私はいつも公の場で行われる議論が好きです。SLURP の提案がどうなったかを鑑み、私はやはり公の議論はより良いという立場を取ろうと思います。“fork” という言葉を使って、とても多くの人を怖がらせてしまったことは申し訳なく思っています。本当に怖がっていた人に対して、私は鬼のようなことをしてしまっていたようです。説明に 2 日間待たせてしまい、申し訳ありませんでした。&lt;/p&gt;</summary></entry><entry><id>https://matsubara0507.github.io/posts/2018-02-22-fun-of-extensible-3.html</id><title type="text">拡張可能タングルでDo記法レスプログラミング♪ (Haskell)</title><updated>2018-02-22T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-02-22-fun-of-extensible-3.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
+      /Users/xxx/.stack/setup-exe-cache/x86_64-osx/Cabal-simple_mPHDZzAJ_2.0.1.0_ghc-8.2.2 --builddir=.stack-work/dist/x86_64-osx/Cabal-2.0.1.0 build --ghc-options " </summary></entry><entry><id>https://matsubara0507.github.io/posts/2018-02-22-fun-of-extensible-3.html</id><title type="text">拡張可能タングルでDo記法レスプログラミング♪ (Haskell)</title><updated>2018-02-22T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-02-22-fun-of-extensible-3.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
  &lt;div class="card-content"&gt;
   &lt;header class="post-header"&gt;
     &lt;h1 class="post-title" itemprop="name headline"&gt;拡張可能タングルでDo記法レスプログラミング♪ (Haskell)&lt;/h1&gt;
