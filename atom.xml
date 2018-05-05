@@ -1062,7 +1062,7 @@ commit
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;特に &lt;code&gt;Hakyll&lt;/code&gt; や &lt;code&gt;Pandoc&lt;/code&gt; (依存しているライブラリも同様に影響を受ける) を使う場合に踏み抜く可能性があるたため、影響を受けている人はアップグレード推奨です。&lt;/p&gt;
+&lt;p&gt;特に &lt;code&gt;Hakyll&lt;/code&gt; や &lt;code&gt;Pandoc&lt;/code&gt; (依存しているライブラリも同様に影響を受ける) を使う場合に踏み抜く可能性があるため、影響を受けている人はアップグレード推奨です。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;get-stack.sh&lt;/code&gt; インストールスクリプトにおいて Debian/Fedora/CentOS の依存関係のインストールをドキュメントの手動で行う場合と一致するように修正しました。&lt;/li&gt;
 &lt;/ul&gt;
