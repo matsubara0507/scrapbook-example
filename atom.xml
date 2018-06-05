@@ -1,4 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-05-23T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://haskell.e-bigmoon.com/posts/2018/05-23-extended-prelude.html</id><title type="text">Prelude を カスタムPrelude で置き換える</title><updated>2018-05-23T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/05-23-extended-prelude.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-06-06T01:11:48.468+09:00</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>http://kurokawh.blogspot.com/2018/06/linuxcygwin-unzip-error-invalid.html</id><title type="text">[linux][cygwin] unzipコマンドで "error:  invalid compressed data to inflate" というエラーメッセージがでたら？</title><updated>2018-06-06T01:11:48.468+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/06/linuxcygwin-unzip-error-invalid.html"/><summary type="text">zipアーカイブの中に長さが0のファイルが含まれていると、unzipコマンドでは以下のようなエラーメッセージが表示されて、解凍することができません。アーカイブが壊れていなくてもエラーになります。
+% unzip hoge.zip
+  error:  invalid compressed data to inflate
+
+このような場合には、-tzipオプションを指定して7zコマンドを実行することで、エラーを回避して解凍できます。パスワード保護されているzipアーカイブも問題なく解凍できました。
+
+% 7z x -tzip hoge.zip
+
+
+manページによると、以下のフォーマットがサポートされていて、デフォルトは7zとのこと。
+
+The program supports 7z (that implements  LZMA  compression  algorithm),  
+ZIP</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/05-23-extended-prelude.html</id><title type="text">Prelude を カスタムPrelude で置き換える</title><updated>2018-05-23T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/05-23-extended-prelude.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
 &lt;p&gt;つい最近 haskell-jp で &lt;strong&gt;皆さんPreludeは何を使っていますか？&lt;/strong&gt; という話がありました。&lt;/p&gt;
 &lt;p&gt;まとめるとだいたこんな感じです。&lt;/p&gt;
 &lt;table&gt;
@@ -5001,16 +5013,4 @@ Haskell Platformのアンインストール
 
 ユーザー領域に作成されたパッケージ関連ファイルの削除
 
-手動（エクスプローラ、rmコマンドなど）で次の２つのディレクトリ以下を完全に削除</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/03/cygwin-cygwingit.html</id><title type="text">[cygwin] cygwin版のgitコマンドでサーバーとの通信に失敗する問題の対処</title><updated>2015-03-27T00:35:59.717+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/03/cygwin-cygwingit.html"/><summary type="text">cygwin上でgitコマンドを使用しているのですが、ある環境でのみgit pull/pushで以下のようなエラーが発生する問題に遭遇しました。調子よく動作している別の環境との比較で原因が判明したので、同じ問題にハマってしまった人向けに情報を残しておきます。
-
-
-問題の現象：
-問題の環境ではgit pull/pushを実行すると、以下のようなエラーが出力されていました。
-% git pull origin master
-fatal: 'pull' appears to be a git command, but we were not
-able to execute it. Maybe git-pull is broken?
-
-% git push origin master
-fatal: Full write to remote helper failed: Broken pipe
-
-</summary></entry></feed>
+手動（エクスプローラ、rmコマンドなど）で次の２つのディレクトリ以下を完全に削除</summary></entry></feed>
