@@ -1,4 +1,90 @@
-<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-07-21T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://haskell.e-bigmoon.com/posts/2018/07-21-circleci-2.html</id><title type="text">Circle CI 2.0 の設定</title><updated>2018-07-21T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/07-21-circleci-2.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-07-24T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://haskell.e-bigmoon.com/posts/2018/07-24-quiz-15.html</id><title type="text">二分木 (Haskell Quiz No.15)</title><updated>2018-07-24T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/07-24-quiz-15.html"/><summary type="html">&lt;h2 id="haskell-quiz-no.15"&gt;Haskell Quiz No.15&lt;/h2&gt;
+&lt;p&gt;難易度: λ&lt;/p&gt;
+&lt;p&gt;葉に&lt;strong&gt;だけ&lt;/strong&gt;値を持つような&lt;strong&gt;二分木&lt;/strong&gt;を定義してみてください！&lt;/p&gt;
+&lt;p&gt;図で書くとこんな感じです。&lt;/p&gt;
+&lt;p&gt;&lt;img src="/images/2018/07-24/tree.svg" alt="木の図" width="50%"&gt;&lt;/p&gt;
+&lt;p&gt;答えは次回。&lt;/p&gt;
+&lt;p&gt;この図は &lt;strong&gt;mermaid&lt;/strong&gt; というツールを使って書きました。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://mermaidjs.github.io/"&gt;mermaid&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://mermaidjs.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoiZ3JhcGggVERcbkEoKE5vZGUpKVxuQSAtLT4gQjEoKE5vZGUpKVxuQjEgLS0-IEMxW0xlYWYgMV1cbkIxIC0tPiBEMSgoTm9kZSkpXG5EMSAtLT4gRTFbTGVhZiAyXVxuRDEgLS0-IEUyW0xlYWYgM11cblxuQSAtLT4gQjIoKE5vZGUpKVxuQjIgLS0-IEMyW0xlYWYgNF1cbkIyIC0tPiBDM1tMZWFmIDVdIiwibWVybWFpZCI6eyJ0aGVtZSI6ImZvcmVzdCJ9fQ"&gt;Mermaid Live Editor&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!--more--&gt;
+&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;&lt;a href="./07-16-quiz-14.html"&gt;前回&lt;/a&gt;の問題と答えは以下の通りです。&lt;/p&gt;
+&lt;h3 id="問題"&gt;問題&lt;/h3&gt;
+&lt;p&gt;難易度: λ&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;utf8.txt&lt;/code&gt; と &lt;code&gt;shift-jis.txt&lt;/code&gt; はそれぞれ &lt;code&gt;utf8&lt;/code&gt; と &lt;code&gt;shift-jis&lt;/code&gt; で保存されたテキストファイルです。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb1"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb1-1" data-line-number="1"&gt;&lt;span class="ot"&gt;bad ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-2" data-line-number="2"&gt;bad &lt;span class="fu"&gt;=&lt;/span&gt; readFile &lt;span class="st"&gt;&amp;quot;./shift-jis.txt&amp;quot;&lt;/span&gt; &lt;span class="fu"&gt;&amp;gt;&amp;gt;=&lt;/span&gt; putStrLn&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-3" data-line-number="3"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-4" data-line-number="4"&gt;&lt;span class="ot"&gt;good ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-5" data-line-number="5"&gt;good &lt;span class="fu"&gt;=&lt;/span&gt; readFile &lt;span class="st"&gt;&amp;quot;./utf8.txt&amp;quot;&lt;/span&gt; &lt;span class="fu"&gt;&amp;gt;&amp;gt;=&lt;/span&gt; putStrLn&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上記のプログラムを実行すると、こんな感じでエラーになってしまいます。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb2"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb2-1" data-line-number="1"&gt;&lt;span class="fu"&gt;*&lt;/span&gt;&lt;span class="dt"&gt;Main&lt;/span&gt;&lt;span class="fu"&gt;&amp;gt;&lt;/span&gt; good&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-2" data-line-number="2"&gt;はすける&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-3" data-line-number="3"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-4" data-line-number="4"&gt;&lt;span class="fu"&gt;*&lt;/span&gt;&lt;span class="dt"&gt;Main&lt;/span&gt;&lt;span class="fu"&gt;&amp;gt;&lt;/span&gt; bad&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-5" data-line-number="5"&gt;&lt;span class="fu"&gt;***&lt;/span&gt; &lt;span class="dt"&gt;Exception&lt;/span&gt;&lt;span class="fu"&gt;:&lt;/span&gt; &lt;span class="fu"&gt;./&lt;/span&gt;shift&lt;span class="fu"&gt;-&lt;/span&gt;jis&lt;span class="fu"&gt;.&lt;/span&gt;txt&lt;span class="fu"&gt;:&lt;/span&gt; hGetContents&lt;span class="fu"&gt;:&lt;/span&gt; invalid argument (invalid byte sequence)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;shift-jis&lt;/code&gt; で保存されたテキストファイルを読むにはどうしたら良いでしょうか？&lt;/p&gt;
+&lt;h3 id="こたえ"&gt;こたえ&lt;/h3&gt;
+&lt;p&gt;色々ありそうですが、ここでは &lt;a href="https://www.stackage.org/haddock/lts-12.2/base-4.11.1.0/GHC-IO-Handle.html#v:hSetEncoding"&gt;hSetEncoding&lt;/a&gt; を使う方法を解答の一例としておきます。&lt;/p&gt;
+&lt;p&gt;ここでは Windows で保存された &lt;strong&gt;shift-jis&lt;/strong&gt; を扱うために &lt;code&gt;cp932&lt;/code&gt; にしていますが、通常の &lt;strong&gt;shift-jis&lt;/strong&gt; であれば &lt;code&gt;mkTextEncoding &amp;quot;shift-jis&amp;quot;&lt;/code&gt; で大丈夫です。(たぶん)&lt;/p&gt;
+&lt;div class="sourceCode" id="cb3"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb3-1" data-line-number="1"&gt;&lt;span class="ot"&gt;#!/usr/bin/env stack&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-2" data-line-number="2"&gt;&lt;span class="co"&gt;-- stack script --resolver lts-12.2&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-3" data-line-number="3"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-4" data-line-number="4"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;System.IO&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-5" data-line-number="5"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-6" data-line-number="6"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-7" data-line-number="7"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-8" data-line-number="8"&gt;  h &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; openFile &lt;span class="st"&gt;&amp;quot;./shift-jis.txt&amp;quot;&lt;/span&gt; &lt;span class="dt"&gt;ReadMode&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-9" data-line-number="9"&gt;  cp932 &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; mkTextEncoding &lt;span class="st"&gt;&amp;quot;cp932&amp;quot;&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-10" data-line-number="10"&gt;  hSetEncoding h cp932&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-11" data-line-number="11"&gt;  content &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; hGetContents h&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-12" data-line-number="12"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-13" data-line-number="13"&gt;  putStrLn content&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;$ ./Ans1.hs
+はすける&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href="https://www.stackage.org/package/extra"&gt;extra&lt;/a&gt; パッケージの &lt;a href="https://www.stackage.org/haddock/lts-12.2/extra-1.6.9/System-IO-Extra.html#v:readFileEncoding"&gt;readFileEncoding&lt;/a&gt; を使えばもっとすっきり書くことができます。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb5"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb5-1" data-line-number="1"&gt;&lt;span class="ot"&gt;#!/usr/bin/env stack&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-2" data-line-number="2"&gt;&lt;span class="co"&gt;-- stack script --resolver lts-12.2&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-3" data-line-number="3"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-4" data-line-number="4"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;System.IO.Extra&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-5" data-line-number="5"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-6" data-line-number="6"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-7" data-line-number="7"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-8" data-line-number="8"&gt;  cp932 &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; mkTextEncoding &lt;span class="st"&gt;&amp;quot;cp932&amp;quot;&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-9" data-line-number="9"&gt;  content &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; readFileEncoding cp932 &lt;span class="st"&gt;&amp;quot;./shift-jis.txt&amp;quot;&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-10" data-line-number="10"&gt;  putStrLn content&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="解説"&gt;解説&lt;/h3&gt;
+&lt;p&gt;理解を深めるために &lt;a href="https://www.stackage.org/haddock/lts-12.2/base-4.11.1.0/Prelude.html#v:readFile"&gt;readFile&lt;/a&gt; 関数がどのように定義されているか確認してみましょう！&lt;/p&gt;
+&lt;div class="sourceCode" id="cb6"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb6-1" data-line-number="1"&gt;readFile&lt;span class="ot"&gt; ::&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; &lt;span class="dt"&gt;String&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-2" data-line-number="2"&gt;readFile name &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-3" data-line-number="3"&gt;  h &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; openFile name &lt;span class="dt"&gt;ReadMode&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-4" data-line-number="4"&gt;  hGetContents h&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;なるほど。&lt;a href="https://www.stackage.org/haddock/lts-12.2/base-4.11.1.0/System-IO.html#v:ReadMode"&gt;ReadMode&lt;/a&gt; でファイルハンドルを取得し、&lt;a href="https://www.stackage.org/haddock/lts-12.2/base-4.11.1.0/System-IO.html#v:hGetContents"&gt;hGetContents&lt;/a&gt; でファイルの内容を返しているようです。&lt;/p&gt;
+&lt;p&gt;解答例ではこの処理の間に &lt;a href="https://www.stackage.org/haddock/lts-12.2/base-4.11.1.0/System-IO.html#v:mkTextEncoding"&gt;mkTextEncoding&lt;/a&gt; と &lt;a href="https://www.stackage.org/haddock/lts-12.2/base-4.11.1.0/System-IO.html#v:hSetEncoding"&gt;hSetEncoding&lt;/a&gt; を使った処理を挟んでいましたね。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb7"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb7-1" data-line-number="1"&gt;  cp932 &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; mkTextEncoding &lt;span class="st"&gt;&amp;quot;cp932&amp;quot;&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-2" data-line-number="2"&gt;  hSetEncoding h cp932&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;この処理によって、&lt;strong&gt;shift-jis&lt;/strong&gt; で保存されたファイルの内容を &lt;strong&gt;String&lt;/strong&gt; 型の文字列として扱うことができるようになります。&lt;/p&gt;
+&lt;h4 id="readfileencoding"&gt;readFileEncoding&lt;/h4&gt;
+&lt;p&gt;&lt;a href="https://www.stackage.org/package/extra"&gt;extra&lt;/a&gt; パッケージの &lt;a href="https://www.stackage.org/haddock/lts-12.2/extra-1.6.9/System-IO-Extra.html#v:readFileEncoding"&gt;readFileEncoding&lt;/a&gt; の定義は以下のようになっています。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb8"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb8-1" data-line-number="1"&gt;&lt;span class="ot"&gt;readFileEncoding ::&lt;/span&gt; &lt;span class="dt"&gt;TextEncoding&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; &lt;span class="dt"&gt;String&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-2" data-line-number="2"&gt;readFileEncoding enc file &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-3" data-line-number="3"&gt;  h &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; openFile file &lt;span class="dt"&gt;ReadMode&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-4" data-line-number="4"&gt;  hSetEncoding h enc&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-5" data-line-number="5"&gt;  hGetContents h&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;便利ですね！&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;mkTextEncoding&lt;/strong&gt; で &lt;strong&gt;TextEncoding&lt;/strong&gt; 型の値を作ることができる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;hSetEncoding&lt;/strong&gt; を利用すればエンコードを指定してファイルの内容を読み込むことができる&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;extra&lt;/strong&gt; パッケージで提供されている &lt;strong&gt;readFileEncoding&lt;/strong&gt; はそれらの処理を良い感じにまとめてくれる&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;実際の開発において &lt;strong&gt;readFile&lt;/strong&gt; のような (&lt;strong&gt;getContents&lt;/strong&gt; 系の関数) を使うことは少ないと思います。しかし、何か動くものを &lt;strong&gt;Haskell&lt;/strong&gt; で作ってみたいと思っている人は、とりあえず気にせず使いましょう。(ストリーミングライブラリの知識があればそっちを使った方が良いです)&lt;/p&gt;
+&lt;p&gt;Haskell はリファクタリングの得意な言語ですから、問題として認識したときに修正すれば良いと思います。&lt;/p&gt;
+&lt;p&gt;IO の処理については &lt;a href="http://gihyo.jp/book/2017/978-4-7741-9237-6"&gt;Haskell入門 関数型プログラミング言語の基礎と実践&lt;/a&gt; の4章, &lt;a href="https://www.oreilly.co.jp/books/9784873114231/"&gt;Read World Haskell&lt;/a&gt; の7章で詳しく解説されているので、興味を持った方はそちらも参照してみると良いかもしれません。&lt;/p&gt;
+&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/07-21-circleci-2.html</id><title type="text">Circle CI 2.0 の設定</title><updated>2018-07-21T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/07-21-circleci-2.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;Haskell&lt;/strong&gt; プロジェクトの多くは &lt;strong&gt;Travis CI&lt;/strong&gt; を使って CI を回しています。&lt;/p&gt;
 &lt;p&gt;しかしここ最近、いくつかのプロジェクトで &lt;strong&gt;Circle CI&lt;/strong&gt; の利用が進んでいるように思います。&lt;/p&gt;
 &lt;p&gt;僕も社内のプロジェクトでは &lt;strong&gt;Circle CI&lt;/strong&gt; を使っています。実際に &lt;strong&gt;Circle CI&lt;/strong&gt; を使っていて個人的に良いなと感じたのは以下の4点です。&lt;/p&gt;
@@ -329,7 +415,7 @@
 &lt;a class="sourceLine" id="cb2-4" data-line-number="4"&gt;&lt;span class="fu"&gt;*&lt;/span&gt;&lt;span class="dt"&gt;Main&lt;/span&gt;&lt;span class="fu"&gt;&amp;gt;&lt;/span&gt; bad&lt;/a&gt;
 &lt;a class="sourceLine" id="cb2-5" data-line-number="5"&gt;&lt;span class="fu"&gt;***&lt;/span&gt; &lt;span class="dt"&gt;Exception&lt;/span&gt;&lt;span class="fu"&gt;:&lt;/span&gt; &lt;span class="fu"&gt;./&lt;/span&gt;shift&lt;span class="fu"&gt;-&lt;/span&gt;jis&lt;span class="fu"&gt;.&lt;/span&gt;txt&lt;span class="fu"&gt;:&lt;/span&gt; hGetContents&lt;span class="fu"&gt;:&lt;/span&gt; invalid argument (invalid byte sequence)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;code&gt;shift-jis&lt;/code&gt; で保存されたテキストファイルを読むにはどうしたら良いでしょうか？&lt;/p&gt;
-&lt;p&gt;答えは次回。&lt;/p&gt;
+&lt;p&gt;答えは&lt;a href="./07-24-quiz-15.html"&gt;次回&lt;/a&gt;。&lt;/p&gt;
 &lt;!--more--&gt;
 &lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
 &lt;p&gt;&lt;a href="./07-11-quiz-13.html"&gt;前回&lt;/a&gt;の問題と答えは以下の通りです。&lt;/p&gt;
@@ -950,36 +1036,7 @@ category:            {{category}}{{^category}}Web{{/category}}&lt;/code&gt;&lt;/
 &lt;a class="sourceLine" id="cb2-13" data-line-number="13"&gt;    &lt;span class="dt"&gt;Just&lt;/span&gt; a  &lt;span class="fu"&gt;!?&lt;/span&gt; _ &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;ContT&lt;/span&gt; (&lt;span class="fu"&gt;$&lt;/span&gt; a)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;感動しましたね。継続すごいな！って。&lt;/p&gt;
 &lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;継続勉強しよ。&lt;/p&gt;</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/06-25-stack-run.html</id><title type="text">stack run コマンド</title><updated>2018-06-25T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/06-25-stack-run.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
-&lt;p&gt;先日 stack の master ブランチに &lt;a href="https://github.com/commercialhaskell/stack/pull/3952"&gt;Introduce stack run command line option #3952&lt;/a&gt; がマージされました。とても便利なので紹介したいと思います。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;stack run&lt;/strong&gt; コマンドについて簡単に説明するとこんな感じです。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;cabal run&lt;/strong&gt; の &lt;strong&gt;stack&lt;/strong&gt; バージョンです。&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;stack build &amp;amp;&amp;amp; stack exec foo&lt;/code&gt; の短縮形です。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="sourceCode" id="cb1"&gt;&lt;pre class="sourceCode sh"&gt;&lt;code class="sourceCode bash"&gt;&lt;a class="sourceLine" id="cb1-1" data-line-number="1"&gt;$ &lt;span class="ex"&gt;stack&lt;/span&gt; --version&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-2" data-line-number="2"&gt;&lt;span class="ex"&gt;Version&lt;/span&gt; 1.8.0, Git revision 466da22ce21cddc20323fc2611cd2a2d3cc56ec6 (dirty) &lt;span class="kw"&gt;(&lt;/span&gt;&lt;span class="ex"&gt;5998&lt;/span&gt; commits&lt;span class="kw"&gt;)&lt;/span&gt; &lt;span class="ex"&gt;x86_64&lt;/span&gt; hpack-0.28.2&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;現在の &lt;strong&gt;stack&lt;/strong&gt; の最新バージョンは &lt;strong&gt;1.7.1&lt;/strong&gt; です。&lt;/p&gt;
-&lt;!--more--&gt;
-&lt;h2 id="stack-run-コマンド"&gt;stack run コマンド&lt;/h2&gt;
-&lt;p&gt;実際にプロジェクトを作って試してみましょう。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ stack new stack-run-test
-$ cd stack-run-test&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;初回は通常通りビルドが実行され、その後に someFunc が出力されます。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ stack run
-Building all executables for `stack-run-test&amp;#39; once. After a successful build of all of them, only specified executables
-
-...
-
-Registering library for stack-run-test-0.1.0.0..
-someFunc&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;2回目以降はビルド結果がキャッシュされているので、ファイルを変更しなれければ再ビルドされることはありません。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ stack run
-someFunc&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
-&lt;p&gt;&lt;code&gt;stack run&lt;/code&gt; コマンドは &lt;a href="https://github.com/commercialhaskell/stack/issues/233"&gt;Wishlist: stack run #233&lt;/a&gt; によって2015年6月に提案されているので3年越しの実装ということになります。この調子で色々と便利なコマンドが増えると良いですね。&lt;/p&gt;
-&lt;p&gt;実行ファイル名の指定を省略できるのは、非常に便利なので僕も使っていこうと思います。&lt;/p&gt;
-&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>https://matsubara0507.github.io/posts/2018-06-21-challenge-rust-reversi.html</id><title type="text">rust-reversi やってみた</title><updated>2018-06-21T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-06-21-challenge-rust-reversi.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
+&lt;p&gt;継続勉強しよ。&lt;/p&gt;</summary></entry><entry><id>https://matsubara0507.github.io/posts/2018-06-21-challenge-rust-reversi.html</id><title type="text">rust-reversi やってみた</title><updated>2018-06-21T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-06-21-challenge-rust-reversi.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
  &lt;div class="card-content"&gt;
   &lt;header class="post-header"&gt;
     &lt;h1 class="post-title" itemprop="name headline"&gt;rust-reversi やってみた&lt;/h1&gt;
@@ -3957,7 +4014,7 @@ stack install cryptoniteで以下のようなエラーが発生。
 &lt;pre&gt;
 % rm ticket
 % cli -s ticket 127.0.0.1 443
-% cat early-data.txt - | cli -s ticket 127.0.0.1 443
+% cat early-data.txt - | cli -s ticket -e 127.0.0.1 443
 &lt;/pre&gt;
 
 &lt;/div&gt;
