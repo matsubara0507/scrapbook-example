@@ -1,4 +1,423 @@
-<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-08-18T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://matsubara0507.github.io/posts/2018-08-18-haskell-github-webhook.html</id><title type="text">Haskell Servant で GitHub Webhook</title><updated>2018-08-18T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-08-18-haskell-github-webhook.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
+<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-08-26T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://haskell.e-bigmoon.com/posts/2018/08-26-recordwildcards.html</id><title type="text">RecordWildCards と Reader モナド</title><updated>2018-08-26T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/08-26-recordwildcards.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Twitter&lt;/code&gt; で &lt;code&gt;RecordWildCards&lt;/code&gt; の話が流れて来たので &lt;code&gt;Reader&lt;/code&gt; モナドと組み合わせた例を1つご紹介します。&lt;/p&gt;
+&lt;p&gt;この書き方は &lt;span class="citation" data-cites="fumieval"&gt;@fumieval&lt;/span&gt; さんが使っていてカッコイイ書き方だなぁと思った記憶があります。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb1"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb1-1" data-line-number="1"&gt;&lt;span class="ot"&gt;{-# LANGUAGE RecordWildCards #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-3" data-line-number="3"&gt;&lt;span class="kw"&gt;data&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt; &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-4" data-line-number="4"&gt;  {&lt;span class="ot"&gt; personName ::&lt;/span&gt; &lt;span class="dt"&gt;String&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-5" data-line-number="5"&gt;  ,&lt;span class="ot"&gt; personAge  ::&lt;/span&gt; &lt;span class="dt"&gt;Int&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-6" data-line-number="6"&gt;  }&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-7" data-line-number="7"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-8" data-line-number="8"&gt;&lt;span class="ot"&gt;func ::&lt;/span&gt; &lt;span class="dt"&gt;Reader&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-9" data-line-number="9"&gt;func &lt;span class="fu"&gt;=&lt;/span&gt; ask &lt;span class="fu"&gt;&amp;gt;&amp;gt;=&lt;/span&gt; \&lt;span class="dt"&gt;Person&lt;/span&gt; {&lt;span class="fu"&gt;..&lt;/span&gt;} &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="fu"&gt;$&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-10" data-line-number="10"&gt;  &lt;span class="fu"&gt;...&lt;/span&gt; &lt;span class="co"&gt;-- personName, personAge という名前でそのまま値を利用できる&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;RecordWildCards&lt;/code&gt; に関しては既に色んな方が記事にしてくれているので、そちらをご参照ください。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://haskell.jp/blog/posts/2018/about-ghc-exts-1.html"&gt;GHC拡張ノック(Part 1)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://rf0444.hatenablog.jp/entry/20120617/1339910411"&gt;Haskellの言語拡張たち 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://fumieval.hatenablog.com/entry/2016/12/18/181540"&gt;波打たせるものの正体(エクステンシブル・タングル)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/glasgow_exts.html#record-wildcards"&gt;GHC user guide 10.5.5. Record wildcards&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!--more--&gt;
+&lt;h2 id="具体例"&gt;具体例&lt;/h2&gt;
+&lt;p&gt;あまり良い例が思いつかなかったのですが、 &lt;code&gt;Env&lt;/code&gt; に必要な情報を持たせておけば任意のタイミングで利用できて便利です。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb2"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb2-1" data-line-number="1"&gt;&lt;span class="ot"&gt;#!/usr/bin/env stack&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-2" data-line-number="2"&gt;&lt;span class="co"&gt;-- stack script --resolver lts-12.7&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-3" data-line-number="3"&gt;&lt;span class="ot"&gt;{-# LANGUAGE RecordWildCards #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-4" data-line-number="4"&gt;&lt;span class="ot"&gt;{-# LANGUAGE TemplateHaskell #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-5" data-line-number="5"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-6" data-line-number="6"&gt;&lt;span class="kw"&gt;import&lt;/span&gt;           &lt;span class="dt"&gt;Control.Monad.IO.Class&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-7" data-line-number="7"&gt;&lt;span class="kw"&gt;import&lt;/span&gt;           &lt;span class="dt"&gt;Control.Monad.Trans.Reader&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-8" data-line-number="8"&gt;&lt;span class="kw"&gt;import&lt;/span&gt;           &lt;span class="dt"&gt;Data.IORef&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-9" data-line-number="9"&gt;&lt;span class="kw"&gt;import&lt;/span&gt;           &lt;span class="dt"&gt;Data.Time.LocalTime&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-10" data-line-number="10"&gt;&lt;span class="kw"&gt;import&lt;/span&gt;           &lt;span class="dt"&gt;Path&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-11" data-line-number="11"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-12" data-line-number="12"&gt;&lt;span class="kw"&gt;data&lt;/span&gt; &lt;span class="dt"&gt;Env&lt;/span&gt; &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;Env&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-13" data-line-number="13"&gt;  {&lt;span class="ot"&gt; envCounter  ::&lt;/span&gt; &lt;span class="dt"&gt;IORef&lt;/span&gt; &lt;span class="dt"&gt;Int&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-14" data-line-number="14"&gt;  ,&lt;span class="ot"&gt; envLogPath  ::&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; &lt;span class="dt"&gt;File&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-15" data-line-number="15"&gt;  ,&lt;span class="ot"&gt; envUserName ::&lt;/span&gt; &lt;span class="dt"&gt;String&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-16" data-line-number="16"&gt;  }&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-17" data-line-number="17"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-18" data-line-number="18"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-19" data-line-number="19"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-20" data-line-number="20"&gt;  counter &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; newIORef &lt;span class="dv"&gt;0&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-21" data-line-number="21"&gt;  &lt;span class="kw"&gt;let&lt;/span&gt; env &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;Env&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-22" data-line-number="22"&gt;        { envCounter  &lt;span class="fu"&gt;=&lt;/span&gt; counter&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-23" data-line-number="23"&gt;        , envLogPath  &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="fu"&gt;$&lt;/span&gt;(mkRelFile &lt;span class="st"&gt;&amp;quot;./output.log&amp;quot;&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-24" data-line-number="24"&gt;        , envUserName &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="st"&gt;&amp;quot;wado&amp;quot;&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-25" data-line-number="25"&gt;        }&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-26" data-line-number="26"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-27" data-line-number="27"&gt;  runReaderT (access &lt;span class="fu"&gt;&amp;gt;&amp;gt;&lt;/span&gt; access &lt;span class="fu"&gt;&amp;gt;&amp;gt;&lt;/span&gt; access) env&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-28" data-line-number="28"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-29" data-line-number="29"&gt;  n &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; readIORef counter&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-30" data-line-number="30"&gt;  putStrLn &lt;span class="fu"&gt;$&lt;/span&gt; mconcat [&lt;span class="st"&gt;&amp;quot;counter = &amp;quot;&lt;/span&gt;, show n]&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-31" data-line-number="31"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-32" data-line-number="32"&gt;&lt;span class="ot"&gt;access ::&lt;/span&gt; &lt;span class="dt"&gt;ReaderT&lt;/span&gt; &lt;span class="dt"&gt;Env&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-33" data-line-number="33"&gt;access &lt;span class="fu"&gt;=&lt;/span&gt; ask &lt;span class="fu"&gt;&amp;gt;&amp;gt;=&lt;/span&gt; \&lt;span class="dt"&gt;Env&lt;/span&gt; {&lt;span class="fu"&gt;..&lt;/span&gt;} &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; liftIO &lt;span class="fu"&gt;$&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-34" data-line-number="34"&gt;  modifyIORef envCounter (&lt;span class="fu"&gt;+&lt;/span&gt; &lt;span class="dv"&gt;1&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-35" data-line-number="35"&gt;  now &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; getZonedTime&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-36" data-line-number="36"&gt;  appendFile (toFilePath envLogPath)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-37" data-line-number="37"&gt;    &lt;span class="fu"&gt;$&lt;/span&gt; mconcat [envUserName, &lt;span class="st"&gt;&amp;quot;: &amp;quot;&lt;/span&gt;, &lt;span class="st"&gt;&amp;quot;access&amp;quot;&lt;/span&gt;, &lt;span class="st"&gt;&amp;quot; (&amp;quot;&lt;/span&gt;, show now, &lt;span class="st"&gt;&amp;quot;)&amp;quot;&lt;/span&gt;, &lt;span class="st"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;]&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-38" data-line-number="38"&gt;  return ()&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="実行結果"&gt;実行結果&lt;/h3&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;$ ./Sample.hs
+counter = 3
+
+$ cat ./output.log
+wado: access (2018-08-26 14:04:07.132813451 JST)
+wado: access (2018-08-26 14:04:07.133330363 JST)
+wado: access (2018-08-26 14:04:07.133389916 JST)&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="missing-fields-警告"&gt;missing-fields 警告&lt;/h2&gt;
+&lt;div class="sourceCode" id="cb4"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb4-1" data-line-number="1"&gt;&lt;span class="ot"&gt;{-# LANGUAGE RecordWildCards #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-3" data-line-number="3"&gt;&lt;span class="kw"&gt;data&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt; &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-4" data-line-number="4"&gt;  {&lt;span class="ot"&gt; personName ::&lt;/span&gt; &lt;span class="dt"&gt;String&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-5" data-line-number="5"&gt;  ,&lt;span class="ot"&gt; personAge  ::&lt;/span&gt; &lt;span class="dt"&gt;Int&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-6" data-line-number="6"&gt;  } &lt;span class="kw"&gt;deriving&lt;/span&gt; &lt;span class="dt"&gt;Show&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-7" data-line-number="7"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-8" data-line-number="8"&gt;&lt;span class="ot"&gt;f ::&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-9" data-line-number="9"&gt;f &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt; { &lt;span class="fu"&gt;..&lt;/span&gt; }&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-10" data-line-number="10"&gt;  &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-11" data-line-number="11"&gt;    personName &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="st"&gt;&amp;quot;bigmoon&amp;quot;&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上記のようにフィールドが全て初期化されていないコードはコンパイル時に &lt;code&gt;missing-fields&lt;/code&gt; 警告が出ます。&lt;/p&gt;
+&lt;p&gt;この警告を無視すると実行時エラーになる可能性があります。無視せずにしっかり修正しましょう。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb5"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb5-1" data-line-number="1"&gt;warning&lt;span class="fu"&gt;:&lt;/span&gt; [&lt;span class="fu"&gt;-&lt;/span&gt;&lt;span class="dt"&gt;Wmissing&lt;/span&gt;&lt;span class="fu"&gt;-&lt;/span&gt;fields]&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-2" data-line-number="2"&gt;    • &lt;span class="dt"&gt;Fields&lt;/span&gt; &lt;span class="kw"&gt;of&lt;/span&gt; ‘&lt;span class="dt"&gt;Person&lt;/span&gt;’ not initialised&lt;span class="fu"&gt;:&lt;/span&gt; personAge&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-3" data-line-number="3"&gt;    • &lt;span class="dt"&gt;In&lt;/span&gt; the expression&lt;span class="fu"&gt;:&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt; {&lt;span class="fu"&gt;..&lt;/span&gt;}&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-4" data-line-number="4"&gt;      &lt;span class="dt"&gt;In&lt;/span&gt; an equation for ‘f’&lt;span class="fu"&gt;:&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-5" data-line-number="5"&gt;          f &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt; {&lt;span class="fu"&gt;..&lt;/span&gt;}&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-6" data-line-number="6"&gt;            &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-7" data-line-number="7"&gt;                personName &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="st"&gt;&amp;quot;bigmoon&amp;quot;&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-8" data-line-number="8"&gt;   &lt;span class="fu"&gt;|&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-9" data-line-number="9"&gt;&lt;span class="dv"&gt;46&lt;/span&gt; &lt;span class="fu"&gt;|&lt;/span&gt; f &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt; { &lt;span class="fu"&gt;..&lt;/span&gt; }&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-10" data-line-number="10"&gt;   &lt;span class="fu"&gt;|&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;ちなみに、通常のレコード構文でもフィールドが部分的にしか初期化されていない場合は、同様の警告がでます。(&lt;span class="citation" data-cites="fumieval"&gt;@fumieval&lt;/span&gt; さん、ご指摘ありがとうございます)&lt;/p&gt;
+&lt;div class="sourceCode" id="cb6"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb6-1" data-line-number="1"&gt;&lt;span class="kw"&gt;data&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt; &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-2" data-line-number="2"&gt;  {&lt;span class="ot"&gt; personName ::&lt;/span&gt; &lt;span class="dt"&gt;String&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-3" data-line-number="3"&gt;  ,&lt;span class="ot"&gt; personAge  ::&lt;/span&gt; &lt;span class="dt"&gt;Int&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-4" data-line-number="4"&gt;  } &lt;span class="kw"&gt;deriving&lt;/span&gt; &lt;span class="dt"&gt;Show&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-5" data-line-number="5"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-6" data-line-number="6"&gt;&lt;span class="ot"&gt;f ::&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-7" data-line-number="7"&gt;f &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;Person&lt;/span&gt; { personName &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="st"&gt;&amp;quot;bigmoon&amp;quot;&lt;/span&gt; }&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://ghc.haskell.org/trac/ghc/ticket/5334"&gt;record wildcards: field not initialised reported as type error&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;RecordWildCards 言語拡張は現実世界ではとても便利 (レコードのフィールドがかなり沢山あったりするので)&lt;/li&gt;
+&lt;li&gt;Reader とかと組み合わせるとオシャレ&lt;/li&gt;
+&lt;li&gt;GHC の &lt;code&gt;missing-fields&lt;/code&gt; 警告は絶対に無視しない (実行時エラーが発生する可能性がある)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/02/windows-windows10.html</id><title type="text">[windows] Windows10セットアップ・設定項目のメモ</title><updated>2018-08-24T19:26:37.875+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/02/windows-windows10.html"/><summary type="text">Windows10セットアップ時の設定項目、インストールアプリの備忘録。
+
+
+スタートメニュー・タスクバーの設定
+
+タスクバーの設定 
+
+小さいタスクバーボタンを使う：オン 
+[スタート]ボタンを右クリックするかWindowsキー＋Xキーを押したときに表示されるメニューで、コマンドプロンプトをWindows PowerShellに置き換える：オフ
+タスクバーボタンを結合する
+
+「タスクバーに入りきらない場合」を選択
+
+タスクバーをすべての ディスプレイに表示する：オフ
+
+
+
+ Quick Launcherを表示する
+
+クイック起動を復活する 
+Windows 10 タスクバーにクイック起動を表示する
+
+スタートメニューにコントロールパネルを表示する
+
+「Windows 10」のコントロールパネルを表示する方法について
+
+スタートメニューにピン止めするアプリ：
+
+Windowsシステム</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/08-21-path-and-path-io.html</id><title type="text">path ＆ path-io パッケージ</title><updated>2018-08-21T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/08-21-path-and-path-io.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;Haskell でファイルやディレクトリを扱うプログラムを書く時によく使うパッケージとして &lt;a href="https://www.stackage.org/lts-12.7/package/filepath-1.4.2"&gt;filepath&lt;/a&gt; パッケージや &lt;a href="https://www.stackage.org/lts-12.7/package/directory-1.3.1.5"&gt;directory&lt;/a&gt; パッケージがあります。(Haskell入門の「4.4 ファイルシステム」に &lt;strong&gt;directory&lt;/strong&gt; パッケージの話が少し載っています。)&lt;/p&gt;
+&lt;p&gt;これらのパッケージは結局のところただの文字列操作なので、バグを出さないためにはパッケージ利用者がかなり注意深く使わなければなりません。&lt;/p&gt;
+&lt;p&gt;例えば、以下のようなパスは型レベルでは同じ文字列 (&lt;strong&gt;FilePath&lt;/strong&gt;) ですが&lt;/p&gt;
+&lt;div class="sourceCode" id="cb1"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb1-1" data-line-number="1"&gt;&lt;span class="co"&gt;-- 相対パス&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-2" data-line-number="2"&gt;&lt;span class="ot"&gt;pathRel ::&lt;/span&gt; FilePath&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-3" data-line-number="3"&gt;pathRel &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="fu"&gt;./&lt;/span&gt;aaa&lt;span class="fu"&gt;/&lt;/span&gt;bbb&lt;span class="fu"&gt;/&lt;/span&gt;ccc&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-4" data-line-number="4"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-5" data-line-number="5"&gt;&lt;span class="co"&gt;-- 絶対パス&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-6" data-line-number="6"&gt;&lt;span class="ot"&gt;pathAbs ::&lt;/span&gt; FilePath&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-7" data-line-number="7"&gt;pathAbs &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="fu"&gt;/&lt;/span&gt;home&lt;span class="fu"&gt;/&lt;/span&gt;user&lt;span class="fu"&gt;/&lt;/span&gt;aaa&lt;span class="fu"&gt;/&lt;/span&gt;bbb&lt;span class="fu"&gt;/&lt;/span&gt;ccc&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-8" data-line-number="8"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-9" data-line-number="9"&gt;&lt;span class="co"&gt;-- ファイルへのパス&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-10" data-line-number="10"&gt;&lt;span class="ot"&gt;pathFile ::&lt;/span&gt; FilePath&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-11" data-line-number="11"&gt;pathFile &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="fu"&gt;./&lt;/span&gt;aaa&lt;span class="fu"&gt;/&lt;/span&gt;a&lt;span class="fu"&gt;.&lt;/span&gt;png&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-12" data-line-number="12"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-13" data-line-number="13"&gt;&lt;span class="co"&gt;-- ディレクトリへのパス&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-14" data-line-number="14"&gt;&lt;span class="ot"&gt;pathDir ::&lt;/span&gt; FilePath&lt;/a&gt;
+&lt;a class="sourceLine" id="cb1-15" data-line-number="15"&gt;pathDir &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="fu"&gt;./&lt;/span&gt;aaa&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;このように、&lt;strong&gt;FilePath&lt;/strong&gt; 型では&lt;strong&gt;相対パス&lt;/strong&gt;なのか&lt;strong&gt;絶対パス&lt;/strong&gt;なのか型レベルで判断する方法が無かったり、そもそもパスが&lt;strong&gt;ファイル&lt;/strong&gt;なのか&lt;strong&gt;ディレクトリ&lt;/strong&gt;なのかすらわからなかったりします。&lt;/p&gt;
+&lt;p&gt;今回紹介するのは、型レベルでこれらをちゃんと分類できるようにしている &lt;a href="https://github.com/commercialhaskell/path"&gt;path&lt;/a&gt; と &lt;a href="https://github.com/mrkkrp/path-io"&gt;path-io&lt;/a&gt; パッケージです。&lt;/p&gt;
+&lt;p&gt;型レベルで &lt;strong&gt;相対パス&lt;/strong&gt; or &lt;strong&gt;絶対パス&lt;/strong&gt; と &lt;strong&gt;ファイル&lt;/strong&gt; or &lt;strong&gt;ディレクトリ&lt;/strong&gt; を表現するため、不正な操作はコンパイル時にチェックできるようになります。&lt;/p&gt;
+&lt;p&gt;また、&lt;strong&gt;stack&lt;/strong&gt; の内部でも利用していたので、実用しても大丈夫だと思います。&lt;/p&gt;
+&lt;p&gt;パッケージのバージョンは以下のとおりです&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;path-0.6.1&lt;/li&gt;
+&lt;li&gt;path-io-1.3.3&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;まだまだ更新が活発なパッケージなので、path-0.7 では破壊的変更を含む更新があるようです。(&lt;a href="https://github.com/commercialhaskell/path/blob/master/CHANGELOG"&gt;CHANGELOG&lt;/a&gt;)&lt;/p&gt;
+&lt;!--more--&gt;
+&lt;h2 id="path-パッケージ"&gt;path パッケージ&lt;/h2&gt;
+&lt;p&gt;ドキュメントが充実しているので &lt;a href="https://github.com/commercialhaskell/path/blob/master/README.md"&gt;Readme&lt;/a&gt; を読めば使い方はすぐにわかると思います。&lt;/p&gt;
+&lt;h3 id="データ型"&gt;データ型&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;Path&lt;/code&gt; の型は &lt;code&gt;FilePath&lt;/code&gt; を幽霊型 (Phantom type) を使ってラップしているだけです。(幽霊型については &lt;a href="https://qiita.com/nobkz/items/5926257a375a4a181dde"&gt;ElmでPhantom Type (幽霊型)入門&lt;/a&gt; や &lt;a href="https://qiita.com/HirotoShioi/items/3444e215070144b8ca0f"&gt;で、出たー！幽霊型だー！(Phantom Type)&lt;/a&gt; などが日本語のわかりやすい解説だと思います)&lt;/p&gt;
+&lt;div class="sourceCode" id="cb2"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb2-1" data-line-number="1"&gt;&lt;span class="kw"&gt;newtype&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b t &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; FilePath&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-2" data-line-number="2"&gt;  &lt;span class="kw"&gt;deriving&lt;/span&gt; (&lt;span class="dt"&gt;Data&lt;/span&gt;, &lt;span class="dt"&gt;Typeable&lt;/span&gt;, &lt;span class="dt"&gt;Generic&lt;/span&gt;)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;ここで2つの型変数の意味は以下の通りです。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;b&lt;/code&gt; - 相対パス or 絶対パス&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;t&lt;/code&gt; - ファイル or ディレクトリ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;型変数 &lt;code&gt;b&lt;/code&gt; は実際には以下の型のどちらかを取ります。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb3"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb3-1" data-line-number="1"&gt;&lt;span class="kw"&gt;data&lt;/span&gt; &lt;span class="dt"&gt;Abs&lt;/span&gt; &lt;span class="kw"&gt;deriving&lt;/span&gt; (&lt;span class="dt"&gt;Typeable&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-2" data-line-number="2"&gt;&lt;span class="kw"&gt;data&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; &lt;span class="kw"&gt;deriving&lt;/span&gt; (&lt;span class="dt"&gt;Typeable&lt;/span&gt;)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;同様に型変数 &lt;code&gt;t&lt;/code&gt; は以下の型を取ります。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb4"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb4-1" data-line-number="1"&gt;&lt;span class="kw"&gt;data&lt;/span&gt; &lt;span class="dt"&gt;File&lt;/span&gt; &lt;span class="kw"&gt;deriving&lt;/span&gt; (&lt;span class="dt"&gt;Typeable&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb4-2" data-line-number="2"&gt;&lt;span class="kw"&gt;data&lt;/span&gt; &lt;span class="dt"&gt;Dir&lt;/span&gt; &lt;span class="kw"&gt;deriving&lt;/span&gt; (&lt;span class="dt"&gt;Typeable&lt;/span&gt;)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;具体的なパスの型は以下の4種類のどれかになります。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb5"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb5-1" data-line-number="1"&gt;&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Abs&lt;/span&gt; &lt;span class="dt"&gt;File&lt;/span&gt; &lt;span class="co"&gt;-- ファイルへの絶対パス&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-2" data-line-number="2"&gt;&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Abs&lt;/span&gt; &lt;span class="dt"&gt;Dir&lt;/span&gt;  &lt;span class="co"&gt;-- ディレクトリへの絶対パス&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-3" data-line-number="3"&gt;&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; &lt;span class="dt"&gt;File&lt;/span&gt; &lt;span class="co"&gt;-- ファイルへの相対パス&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-4" data-line-number="4"&gt;&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; &lt;span class="dt"&gt;Dir&lt;/span&gt;  &lt;span class="co"&gt;-- ディレクトリへの相対パス&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;型を見るだけでどんなパスなのか一目瞭然なので、めっちゃ良いですね。&lt;/p&gt;
+&lt;h3 id="値の作り方"&gt;値の作り方&lt;/h3&gt;
+&lt;p&gt;型については説明したので、次は実際に &lt;code&gt;Path&lt;/code&gt; 型の値を作っていきましょう！&lt;/p&gt;
+&lt;h4 id="パースする方法"&gt;パースする方法&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;Path&lt;/code&gt; 型は4種類あるので、パーズする関数も4種類あります。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb6"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb6-1" data-line-number="1"&gt;&lt;span class="ot"&gt;parseAbsDir  ::&lt;/span&gt; &lt;span class="dt"&gt;MonadThrow&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Abs&lt;/span&gt; &lt;span class="dt"&gt;Dir&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-2" data-line-number="2"&gt;&lt;span class="ot"&gt;parseRelDir  ::&lt;/span&gt; &lt;span class="dt"&gt;MonadThrow&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; &lt;span class="dt"&gt;Dir&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-3" data-line-number="3"&gt;&lt;span class="ot"&gt;parseAbsFile ::&lt;/span&gt; &lt;span class="dt"&gt;MonadThrow&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Abs&lt;/span&gt; &lt;span class="dt"&gt;File&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb6-4" data-line-number="4"&gt;&lt;span class="ot"&gt;parseRelFile ::&lt;/span&gt; &lt;span class="dt"&gt;MonadThrow&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; &lt;span class="dt"&gt;File&lt;/span&gt;)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;MonadThrow m&lt;/code&gt; がついていますが、この &lt;code&gt;m&lt;/code&gt; は &lt;code&gt;IO&lt;/code&gt; だと思えば以下の型と同じですし&lt;/p&gt;
+&lt;div class="sourceCode" id="cb7"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb7-1" data-line-number="1"&gt;&lt;span class="ot"&gt;parseAbsDir  ::&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Abs&lt;/span&gt; &lt;span class="dt"&gt;Dir&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-2" data-line-number="2"&gt;&lt;span class="ot"&gt;parseRelDir  ::&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; &lt;span class="dt"&gt;Dir&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-3" data-line-number="3"&gt;&lt;span class="ot"&gt;parseAbsFile ::&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Abs&lt;/span&gt; &lt;span class="dt"&gt;File&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-4" data-line-number="4"&gt;&lt;span class="ot"&gt;parseRelFile ::&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; &lt;span class="dt"&gt;File&lt;/span&gt;)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;Maybe&lt;/code&gt; であれば、以下の型と同じです。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb8"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb8-1" data-line-number="1"&gt;&lt;span class="ot"&gt;parseAbsDir  ::&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Maybe&lt;/span&gt; (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Abs&lt;/span&gt; &lt;span class="dt"&gt;Dir&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-2" data-line-number="2"&gt;&lt;span class="ot"&gt;parseRelDir  ::&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Maybe&lt;/span&gt; (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; &lt;span class="dt"&gt;Dir&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-3" data-line-number="3"&gt;&lt;span class="ot"&gt;parseAbsFile ::&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Maybe&lt;/span&gt; (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Abs&lt;/span&gt; &lt;span class="dt"&gt;File&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb8-4" data-line-number="4"&gt;&lt;span class="ot"&gt;parseRelFile ::&lt;/span&gt; FilePath &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Maybe&lt;/span&gt; (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; &lt;span class="dt"&gt;File&lt;/span&gt;)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;難しいことはあまり気にせず、(&lt;a href="https://www.stackage.org/haddock/lts-12.7/exceptions-0.10.0/Control-Monad-Catch.html#t:MonadThrow"&gt;MonadThrow&lt;/a&gt; 型クラスのインスタンスになっている) 色んなモナドで使えるんだなと思えば良いと思います。&lt;/p&gt;
+&lt;p&gt;実際に &lt;code&gt;ghci&lt;/code&gt; を使って動作を確認してみましょう！&lt;/p&gt;
+&lt;pre class="shel"&gt;&lt;code&gt;$ stack repl --package path
+&amp;gt; import Path
+
+# 型のチェック
+&amp;gt; :t parseAbsDir &amp;quot;/&amp;quot;
+parseAbsDir &amp;quot;/&amp;quot; :: MonadThrow m =&amp;gt; m (Path Abs Dir)
+&amp;gt; :t parseAbsDir &amp;quot;./&amp;quot;
+parseAbsDir &amp;quot;./&amp;quot; :: MonadThrow m =&amp;gt; m (Path Abs Dir)
+
+# IO モナドの文脈
+&amp;gt; parseAbsDir &amp;quot;/&amp;quot;
+&amp;quot;/&amp;quot;
+&amp;gt; parseAbsDir &amp;quot;./&amp;quot;
+*** Exception: InvalidAbsDir &amp;quot;./&amp;quot;
+
+# Maybe モナドの文脈
+&amp;gt; parseAbsDir &amp;quot;/&amp;quot; :: Maybe (Path Abs Dir)
+Just &amp;quot;/&amp;quot;
+&amp;gt; parseAbsDir &amp;quot;./&amp;quot; :: Maybe (Path Abs Dir)
+Nothing
+
+# 以下のような &amp;quot;../&amp;quot; を含むパスはパーズできない
+&amp;gt; parseAbsDir &amp;quot;./../a/b/&amp;quot;
+*** Exception: InvalidAbsDir &amp;quot;./../a/b/&amp;quot;
+&amp;gt; parseRelDir &amp;quot;./../a/b/&amp;quot;
+*** Exception: InvalidAbsDir &amp;quot;./../a/b/&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;これで文字列から &lt;code&gt;Path&lt;/code&gt; 型に変換する方法がわかりましたね！結構簡単です。&lt;/p&gt;
+&lt;h4 id="template-haskell-quasiquotes"&gt;Template Haskell &amp;amp; QuasiQuotes&lt;/h4&gt;
+&lt;p&gt;コンパイル時にすでにファイルパスが決まっている時はテンプレートHaskellや準クォートを使うこともできます。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb10"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb10-1" data-line-number="1"&gt;&lt;span class="fu"&gt;$&lt;/span&gt;(mkAbsDir &lt;span class="st"&gt;&amp;quot;/home/chris&amp;quot;&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb10-2" data-line-number="2"&gt;&lt;span class="fu"&gt;$&lt;/span&gt;(mkRelDir &lt;span class="st"&gt;&amp;quot;chris&amp;quot;&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb10-3" data-line-number="3"&gt;&lt;span class="fu"&gt;$&lt;/span&gt;(mkAbsFile &lt;span class="st"&gt;&amp;quot;/home/chris/x.txt&amp;quot;&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb10-4" data-line-number="4"&gt;&lt;span class="fu"&gt;$&lt;/span&gt;(mkRelFile &lt;span class="st"&gt;&amp;quot;chris/x.txt&amp;quot;&lt;/span&gt;)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="sourceCode" id="cb11"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb11-1" data-line-number="1"&gt;[absdir|/home/chris|]&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-2" data-line-number="2"&gt;[reldir|chris|]&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-3" data-line-number="3"&gt;[absfile|/home/chris/x.txt|]&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-4" data-line-number="4"&gt;[relfile|chris/x.txt|]&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;これで不正なパスはコンパイル時エラーとなるため、かなり安全ですね。&lt;/p&gt;
+&lt;h3 id="path-から-filepath-への変換"&gt;Path から FilePath への変換&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;Path&lt;/code&gt; 型の値を &lt;code&gt;FilePath&lt;/code&gt; に変換するためには &lt;code&gt;toFilePath&lt;/code&gt; 関数を利用します。&lt;/p&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;&amp;gt; toFilePath &amp;lt;$&amp;gt; parseRelDir &amp;quot;./a/b&amp;quot;
+&amp;quot;a/b/&amp;quot;
+
+&amp;gt; toFilePath &amp;lt;$&amp;gt; parseRelDir &amp;quot;./a/b/&amp;quot;
+&amp;quot;a/b/&amp;quot;
+
+&amp;gt; toFilePath &amp;lt;$&amp;gt; parseRelDir &amp;quot;./a////b//////&amp;quot;
+&amp;quot;a/b/&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;こんな感じで期待している文字列に変換されているか確かめることができます。&lt;/p&gt;
+&lt;h3 id="パスの等価性"&gt;パスの等価性&lt;/h3&gt;
+&lt;p&gt;2つの &lt;code&gt;Path&lt;/code&gt; の等しさは単純に文字列の等価性として定義されています。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb13"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb13-1" data-line-number="1"&gt;&lt;span class="kw"&gt;instance&lt;/span&gt; &lt;span class="dt"&gt;Eq&lt;/span&gt; (&lt;span class="dt"&gt;Path&lt;/span&gt; b t) &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-2" data-line-number="2"&gt;  (&lt;span class="fu"&gt;==&lt;/span&gt;) (&lt;span class="dt"&gt;Path&lt;/span&gt; x) (&lt;span class="dt"&gt;Path&lt;/span&gt; y) &lt;span class="fu"&gt;=&lt;/span&gt; x &lt;span class="fu"&gt;==&lt;/span&gt; y&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;実際にいくつか試してみます。&lt;/p&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;&amp;gt; (==) &amp;lt;$&amp;gt; parseRelDir &amp;quot;./a/b&amp;quot; &amp;lt;*&amp;gt; parseRelDir &amp;quot;./a/b&amp;quot;
+True
+
+&amp;gt; (==) &amp;lt;$&amp;gt; parseRelDir &amp;quot;./a/b&amp;quot; &amp;lt;*&amp;gt; parseRelDir &amp;quot;./a/b/c&amp;quot;
+False
+
+&amp;gt; (==) &amp;lt;$&amp;gt; parseRelDir &amp;quot;./a/b&amp;quot; &amp;lt;*&amp;gt; parseRelDir &amp;quot;./a/b/&amp;quot;
+True&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="パスの操作"&gt;パスの操作&lt;/h3&gt;
+&lt;p&gt;関数と実行結果のみを紹介していきます。&lt;/p&gt;
+&lt;h4 id="つのパスの結合"&gt;2つのパスの結合&lt;/h4&gt;
+&lt;div class="sourceCode" id="cb15"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb15-1" data-line-number="1"&gt;&lt;span class="ot"&gt;(&amp;lt;/&amp;gt;) ::&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;Dir&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; t &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b t&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;第一引数は &lt;strong&gt;Dir&lt;/strong&gt; で第二引数は &lt;strong&gt;Rel&lt;/strong&gt; が指定されている点に注意してください。そのため、第一引数にファイルへのパスを与えようとするとコンパイルエラーになります。&lt;/p&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;&amp;gt; (&amp;lt;/&amp;gt;) &amp;lt;$&amp;gt; parseRelDir &amp;quot;a/b/c&amp;quot; &amp;lt;*&amp;gt; parseRelFile &amp;quot;a.png&amp;quot;
+&amp;quot;a/b/c/a.png&amp;quot;
+
+&amp;gt; (&amp;lt;/&amp;gt;) &amp;lt;$&amp;gt; parseRelDir &amp;quot;a/b/c&amp;quot; &amp;lt;*&amp;gt; parseRelDir &amp;quot;d&amp;quot;
+&amp;quot;a/b/c/d/&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="パスの先頭部分からディレクトリパスを除去"&gt;パスの先頭部分から、ディレクトリパスを除去&lt;/h4&gt;
+&lt;p&gt;Data.List の &lt;a href="https://www.stackage.org/haddock/lts-12.7/base-4.11.1.0/Data-List.html#v:stripPrefix"&gt;stripPrefix&lt;/a&gt; 関数と同じように利用できます。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb17"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb17-1" data-line-number="1"&gt;&lt;span class="ot"&gt;stripProperPrefix ::&lt;/span&gt; &lt;span class="dt"&gt;MonadThrow&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;Dir&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b t &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m (&lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; t)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;&amp;gt; join $ stripProperPrefix &amp;lt;$&amp;gt; parseAbsDir &amp;quot;/usr/local/bin/&amp;quot; &amp;lt;*&amp;gt; parseAbsFile &amp;quot;/usr/local/bin/stack&amp;quot;
+&amp;quot;stack&amp;quot;
+
+&amp;gt; join $ stripProperPrefix &amp;lt;$&amp;gt; parseAbsDir &amp;quot;/local/bin/&amp;quot; &amp;lt;*&amp;gt; parseAbsFile &amp;quot;/usr/local/bin/stack&amp;quot;
+*** Exception: NotAProperPrefix &amp;quot;/local/bin/&amp;quot; &amp;quot;/usr/local/bin/stack&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="パスから親ディレクトリパスを取得"&gt;パスから親ディレクトリパスを取得&lt;/h4&gt;
+&lt;div class="sourceCode" id="cb19"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb19-1" data-line-number="1"&gt;&lt;span class="ot"&gt;parent ::&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b t &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;Dir&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;&amp;gt; parent &amp;lt;$&amp;gt; parseRelFile &amp;quot;ab&amp;quot;
+&amp;quot;./&amp;quot;
+
+&amp;gt; parent &amp;lt;$&amp;gt; parseRelFile &amp;quot;./a/b/c/d&amp;quot;
+&amp;quot;a/b/c/&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="ディレクトリパスから相対ディレクトリパスを取得"&gt;ディレクトリパスから、相対ディレクトリパスを取得&lt;/h4&gt;
+&lt;div class="sourceCode" id="cb21"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb21-1" data-line-number="1"&gt;&lt;span class="ot"&gt;dirname ::&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;Dir&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; &lt;span class="dt"&gt;Dir&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;&amp;gt; dirname &amp;lt;$&amp;gt; parseAbsDir &amp;quot;/a/b/c/d&amp;quot;
+&amp;quot;d/&amp;quot;
+
+&amp;gt; dirname &amp;lt;$&amp;gt; parseRelDir &amp;quot;./a/b/c/d&amp;quot;
+&amp;quot;d/&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="ファイルパスから相対ファイルパスを取得"&gt;ファイルパスから相対ファイルパスを取得&lt;/h4&gt;
+&lt;div class="sourceCode" id="cb23"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb23-1" data-line-number="1"&gt;&lt;span class="ot"&gt;filename ::&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;File&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; &lt;span class="dt"&gt;Rel&lt;/span&gt; &lt;span class="dt"&gt;File&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;&amp;gt; filename &amp;lt;$&amp;gt; parseAbsFile &amp;quot;/a/b/c/d.png&amp;quot;
+&amp;quot;d.png&amp;quot;
+
+&amp;gt; filename &amp;lt;$&amp;gt; parseRelFile &amp;quot;./a/b/c/d.png&amp;quot;
+&amp;quot;d.png&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="ファイルパスから拡張子を取得"&gt;ファイルパスから拡張子を取得&lt;/h4&gt;
+&lt;div class="sourceCode" id="cb25"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb25-1" data-line-number="1"&gt;&lt;span class="ot"&gt;fileExtension ::&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;File&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;String&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;&amp;gt; fileExtension &amp;lt;$&amp;gt; parseAbsFile &amp;quot;/a/b/c.png&amp;quot;
+&amp;quot;.png&amp;quot;
+
+&amp;gt; fileExtension &amp;lt;$&amp;gt; parseRelFile &amp;quot;a/b/c.png&amp;quot;
+&amp;quot;.png&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id="ファイルパスに拡張子を追加"&gt;ファイルパスに拡張子を追加&lt;/h4&gt;
+&lt;div class="sourceCode" id="cb27"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb27-1" data-line-number="1"&gt;&lt;span class="ot"&gt;addFileExtension ::&lt;/span&gt; &lt;span class="dt"&gt;MonadThrow&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;String&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;File&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m (&lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;File&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb27-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb27-3" data-line-number="3"&gt;&lt;span class="co"&gt;-- 演算子バージョンとして (&amp;lt;.&amp;gt;) が定義されている&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb27-4" data-line-number="4"&gt;&lt;span class="ot"&gt;(&amp;lt;.&amp;gt;) ::&lt;/span&gt; &lt;span class="dt"&gt;MonadThrow&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;File&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;String&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m (&lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;File&lt;/span&gt;)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;&amp;gt; join $ addFileExtension &amp;quot;hs&amp;quot; &amp;lt;$&amp;gt; parseAbsFile &amp;quot;/a/b/c&amp;quot;
+&amp;quot;/a/b/c.hs&amp;quot;
+
+&amp;gt; join $ addFileExtension &amp;quot;.hs&amp;quot; &amp;lt;$&amp;gt; parseAbsFile &amp;quot;/a/b/c&amp;quot;
+&amp;quot;/a/b/c.hs&amp;quot;
+
+&amp;gt; join $ addFileExtension &amp;quot;.hs&amp;quot; &amp;lt;$&amp;gt; parseRelFile &amp;quot;a/b/c&amp;quot;
+&amp;quot;a/b/c.hs&amp;quot;
+
+&amp;gt; join $ addFileExtension &amp;quot;.hs&amp;quot; &amp;lt;$&amp;gt; parseRelFile &amp;quot;a/b/c.rs&amp;quot;
+&amp;quot;a/b/c.rs.hs&amp;quot;
+
+&amp;gt; join $ (&amp;lt;.&amp;gt; &amp;quot;.hs&amp;quot;) &amp;lt;$&amp;gt; parseRelFile &amp;quot;a/b/c.rs&amp;quot;
+&amp;quot;a/b/c.rs.hs&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;既に拡張子があっても、追加する点に注意。&lt;/p&gt;
+&lt;h4 id="ファイルパスに拡張子を追加-既に拡張子がある場合は置き換える"&gt;ファイルパスに拡張子を追加 (既に拡張子がある場合は置き換える)&lt;/h4&gt;
+&lt;div class="sourceCode" id="cb29"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb29-1" data-line-number="1"&gt;&lt;span class="ot"&gt;setFileExtension ::&lt;/span&gt; &lt;span class="dt"&gt;MonadThrow&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;String&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;File&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m (&lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;File&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb29-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb29-3" data-line-number="3"&gt;&lt;span class="co"&gt;-- 演算子バージョンとして (-&amp;lt;.&amp;gt;) が定義されている&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb29-4" data-line-number="4"&gt;&lt;span class="ot"&gt;(-&amp;lt;.&amp;gt;) ::&lt;/span&gt; &lt;span class="dt"&gt;MonadThrow&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;File&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;String&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m (&lt;span class="dt"&gt;Path&lt;/span&gt; b &lt;span class="dt"&gt;File&lt;/span&gt;)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;&amp;gt; join $ setFileExtension &amp;quot;hs&amp;quot; &amp;lt;$&amp;gt; parseAbsFile &amp;quot;/a/b/c&amp;quot;
+&amp;quot;/a/b/c.hs&amp;quot;
+
+&amp;gt; join $ setFileExtension &amp;quot;.hs&amp;quot; &amp;lt;$&amp;gt; parseAbsFile &amp;quot;/a/b/c&amp;quot;
+&amp;quot;/a/b/c.hs&amp;quot;
+
+&amp;gt; join $ setFileExtension &amp;quot;.hs&amp;quot; &amp;lt;$&amp;gt; parseRelFile &amp;quot;a/b/c&amp;quot;
+&amp;quot;a/b/c.hs&amp;quot;
+
+&amp;gt; join $ setFileExtension &amp;quot;.hs&amp;quot; &amp;lt;$&amp;gt; parseRelFile &amp;quot;a/b/c.rs&amp;quot;
+&amp;quot;a/b/c.hs&amp;quot;
+
+&amp;gt; join $ (-&amp;lt;.&amp;gt; &amp;quot;.hs&amp;quot;) &amp;lt;$&amp;gt; parseRelFile &amp;quot;a/b/c.rs&amp;quot;
+&amp;quot;a/b/c.hs&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="path-io"&gt;path-io&lt;/h2&gt;
+&lt;p&gt;ここまでで &lt;code&gt;Path&lt;/code&gt; 型の定義や値の作り方、操作する関数などを見てきました。&lt;/p&gt;
+&lt;p&gt;しかしながら、これだけでは実際にファイルを作ったり削除したりすることはできません。文字列に変換して &lt;code&gt;directory&lt;/code&gt; パッケージを利用することもできますが、やはり &lt;code&gt;Path&lt;/code&gt; 型のまま使いたいですよね。&lt;/p&gt;
+&lt;p&gt;そのためには &lt;a href="https://github.com/mrkkrp/path-io"&gt;path-io&lt;/a&gt; パッケージを利用すると良いです。内部的には &lt;code&gt;directory&lt;/code&gt; パッケージを再利用していますが、&lt;code&gt;Path&lt;/code&gt; 型で使えるようにラップしてくれています。(また、便利な関数もいくつか追加されています)&lt;/p&gt;
+&lt;h3 id="サンプルプログラム"&gt;サンプルプログラム&lt;/h3&gt;
+&lt;p&gt;例えばこんな感じで使えます。以下の例はコマンドライン引数から受け取った文字列に拡張子 &lt;code&gt;.hs&lt;/code&gt; を追加して適当な内容で保存し、最後にディレクトリを再帰的にコピーする例です。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb31"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb31-1" data-line-number="1"&gt;&lt;span class="ot"&gt;#!/usr/bin/env stack&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-2" data-line-number="2"&gt;&lt;span class="co"&gt;-- stack script --resolver lts-12.7&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-3" data-line-number="3"&gt;&lt;span class="ot"&gt;{-# LANGUAGE TemplateHaskell #-}&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-4" data-line-number="4"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-5" data-line-number="5"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Path&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-6" data-line-number="6"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Path.IO&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-7" data-line-number="7"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-8" data-line-number="8"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Control.Monad&lt;/span&gt; (when)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-9" data-line-number="9"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;System.Environment&lt;/span&gt; (getArgs)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-10" data-line-number="10"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-11" data-line-number="11"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-12" data-line-number="12"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-13" data-line-number="13"&gt;  args &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; getArgs&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-14" data-line-number="14"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-15" data-line-number="15"&gt;  when (length args &lt;span class="fu"&gt;==&lt;/span&gt; &lt;span class="dv"&gt;1&lt;/span&gt;) &lt;span class="fu"&gt;$&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-16" data-line-number="16"&gt;    &lt;span class="kw"&gt;let&lt;/span&gt; src  &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="fu"&gt;$&lt;/span&gt;(mkRelDir &lt;span class="st"&gt;&amp;quot;./src&amp;quot;&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-17" data-line-number="17"&gt;        dest &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="fu"&gt;$&lt;/span&gt;(mkRelDir &lt;span class="st"&gt;&amp;quot;./.backup&amp;quot;&lt;/span&gt;)&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-18" data-line-number="18"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-19" data-line-number="19"&gt;    &lt;span class="co"&gt;-- 安全にディレクトリを作成&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-20" data-line-number="20"&gt;    mapM_ ensureDir [src, dest]&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-21" data-line-number="21"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-22" data-line-number="22"&gt;    rawName &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; parseRelFile &lt;span class="fu"&gt;$&lt;/span&gt; head args&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-23" data-line-number="23"&gt;    fn &lt;span class="ot"&gt;&amp;lt;-&lt;/span&gt; (src &lt;span class="fu"&gt;&amp;lt;/&amp;gt;&lt;/span&gt; rawName) &lt;span class="fu"&gt;-&amp;lt;.&amp;gt;&lt;/span&gt; &lt;span class="st"&gt;&amp;quot;hs&amp;quot;&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-24" data-line-number="24"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-25" data-line-number="25"&gt;    writeFile (toFilePath fn) &lt;span class="st"&gt;&amp;quot;main :: IO ()\nmain = undefined\n&amp;quot;&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-26" data-line-number="26"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-27" data-line-number="27"&gt;    &lt;span class="co"&gt;-- ディレクトリを再帰的にコピー&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb31-28" data-line-number="28"&gt;    copyDirRecur&amp;#39; src dest&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;実行結果&lt;/p&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;$ ./Sample.hs aaa
+
+$ tree -a .
+.
+├── .backup
+│   └── aaa.hs
+├── Sample.hs
+└── src
+    └── aaa.hs
+
+2 directories, 3 files
+
+$ cat src/aaa.hs
+main :: IO ()
+main = undefined
+
+$ cat .backup/aaa.hs
+main :: IO ()
+main = undefined&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;動いているようです。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;filepath&lt;/code&gt; や &lt;code&gt;directory&lt;/code&gt; パッケージでは文字列の操作となってしまうため、コンパイル時に不正な利用方法をチェックできない&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;path&lt;/code&gt; や &lt;code&gt;path-io&lt;/code&gt; は幽霊型を使って不正な利用をコンパイル時にチェックする&lt;/li&gt;
+&lt;li&gt;実際に &lt;code&gt;stack&lt;/code&gt; でも利用されているパッケージ&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>https://matsubara0507.github.io/posts/2018-08-18-haskell-github-webhook.html</id><title type="text">Haskell Servant で GitHub Webhook</title><updated>2018-08-18T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-08-18-haskell-github-webhook.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
  &lt;div class="card-content"&gt;
   &lt;header class="post-header"&gt;
     &lt;h1 class="post-title" itemprop="name headline"&gt;Haskell Servant で GitHub Webhook&lt;/h1&gt;
@@ -295,35 +714,7 @@ less, lv, manコマンド終了時に画面をクリアしない
 &lt;a class="sourceLine" id="cb8-9" data-line-number="9"&gt;    (&lt;span class="dt"&gt;Node&lt;/span&gt;&lt;/a&gt;
 &lt;a class="sourceLine" id="cb8-10" data-line-number="10"&gt;      (&lt;span class="dt"&gt;Leaf&lt;/span&gt; &lt;span class="dv"&gt;4&lt;/span&gt;)&lt;/a&gt;
 &lt;a class="sourceLine" id="cb8-11" data-line-number="11"&gt;      (&lt;span class="dt"&gt;Leaf&lt;/span&gt; &lt;span class="dv"&gt;5&lt;/span&gt;))&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/02/windows-windows10.html</id><title type="text">[windows] Windows10セットアップ・設定項目のメモ</title><updated>2018-08-08T17:28:43.942+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/02/windows-windows10.html"/><summary type="text">Windows10セットアップ時の設定項目、インストールアプリの備忘録。
-
-
-スタートメニュー・タスクバーの設定
-
-タスクバーの設定 
-
-小さいタスクバーボタンを使う：オン 
-[スタート]ボタンを右クリックするかWindowsキー＋Xキーを押したときに表示されるメニューで、コマンドプロンプトをWindows PowerShellに置き換える：オフ
-タスクバーボタンを結合する
-
-「タスクバーに入りきらない場合」を選択
-
-タスクバーをすべての ディスプレイに表示する：オフ
-
-
-
- Quick Launcherを表示する
-
-クイック起動を復活する 
-Windows 10 タスクバーにクイック起動を表示する
-
-スタートメニューにコントロールパネルを表示する
-
-「Windows 10」のコントロールパネルを表示する方法について
-
-スタートメニューにピン止めするアプリ：
-
-Windowsシステム</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/08-07-arrow-operators.html</id><title type="text">(^&gt;&gt;) と (&gt;&gt;^)</title><updated>2018-08-07T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/08-07-arrow-operators.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/08-07-arrow-operators.html</id><title type="text">(^&gt;&gt;) と (&gt;&gt;^)</title><updated>2018-08-07T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/08-07-arrow-operators.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://www.stackage.org/haddock/lts-12.5/base-4.11.1.0/Control-Arrow.html#"&gt;Control.Arrow&lt;/a&gt; モジュールに &lt;a href="https://www.stackage.org/haddock/lts-12.5/base-4.11.1.0/Control-Arrow.html#v:-94--62--62-"&gt;(^&amp;gt;&amp;gt;)&lt;/a&gt; と &lt;a href="https://www.stackage.org/haddock/lts-12.5/base-4.11.1.0/Control-Arrow.html#v:-62--62--94-"&gt;(&amp;gt;&amp;gt;^)&lt;/a&gt; という演算子が定義されています。&lt;/p&gt;
 &lt;p&gt;ちょっとだけ面白かったので紹介しようと思います。&lt;/p&gt;
 &lt;!--more--&gt;
@@ -1072,134 +1463,6 @@ False&lt;/code&gt;&lt;/pre&gt;
 &lt;ul&gt;
 &lt;li&gt;半角アルファベットだけバリデーションしたい場合は &lt;code&gt;isAsciiUpper&lt;/code&gt; 等の関数を使う&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;kanji&lt;/code&gt; パッケージが便利&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/07-09-quiz-11.html</id><title type="text">Haskell Quiz No.11 isUpper と isAsciiUpper</title><updated>2018-07-09T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/07-09-quiz-11.html"/><summary type="html">&lt;h2 id="haskell-quiz-no.11"&gt;Haskell Quiz No.11&lt;/h2&gt;
-&lt;p&gt;難易度: λ&lt;/p&gt;
-&lt;p&gt;以下のプログラムの実行結果はどうなるでしょうか？&lt;/p&gt;
-&lt;div class="sourceCode" id="cb1"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb1-1" data-line-number="1"&gt;&lt;span class="ot"&gt;#!/usr/bin/env stack&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-2" data-line-number="2"&gt;&lt;span class="co"&gt;-- stack script --resolver lts-11.17&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-3" data-line-number="3"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Data.Char&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-4" data-line-number="4"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-5" data-line-number="5"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-6" data-line-number="6"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-7" data-line-number="7"&gt;  print &lt;span class="fu"&gt;$&lt;/span&gt; isUpper &lt;span class="ch"&gt;&amp;#39;あ&amp;#39;&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-8" data-line-number="8"&gt;  print &lt;span class="fu"&gt;$&lt;/span&gt; isAsciiUpper &lt;span class="ch"&gt;&amp;#39;あ&amp;#39;&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;答えは&lt;a href="./07-10-quiz-12.html"&gt;次回&lt;/a&gt;。&lt;/p&gt;
-&lt;!--more--&gt;
-&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
-&lt;p&gt;&lt;a href="./07-08-quiz-10.html"&gt;前回&lt;/a&gt;の問題と答えは以下の通りです。&lt;/p&gt;
-&lt;h3 id="問題"&gt;問題&lt;/h3&gt;
-&lt;p&gt;難易度: λ&lt;/p&gt;
-&lt;p&gt;以下の実行結果はどうなるでしょう！&lt;/p&gt;
-&lt;div class="sourceCode" id="cb2"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb2-1" data-line-number="1"&gt;&lt;span class="ot"&gt;#!/usr/bin/env stack&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-2" data-line-number="2"&gt;&lt;span class="co"&gt;-- stack script --resolver lts-11.17&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-3" data-line-number="3"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Conduit&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-4" data-line-number="4"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-5" data-line-number="5"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-6" data-line-number="6"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; runConduit &lt;span class="fu"&gt;$&lt;/span&gt; yieldMany [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;] &lt;span class="fu"&gt;.|&lt;/span&gt; iterMC print &lt;span class="fu"&gt;.|&lt;/span&gt; return ()&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id="こたえ"&gt;こたえ&lt;/h3&gt;
-&lt;p&gt;何も表示されない。&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ ./Quiz10.hs&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="解説"&gt;解説&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;yieldMany&lt;/code&gt; 関数があるので &lt;code&gt;iterMC print&lt;/code&gt; によって &lt;code&gt;1 〜 10&lt;/code&gt; が表示されるように思うかもしれません。&lt;/p&gt;
-&lt;p&gt;しかし、最後のパイプが &lt;code&gt;return ()&lt;/code&gt; となっているため、何も起きません。&lt;/p&gt;
-&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Conduit は値が上流から自然に流れてくるのではなく、必要な時に下流から引っ張っているイメージで考えると良い。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/07-08-quiz-10.html</id><title type="text">Haskell Quiz No.10 Conduit Part.6</title><updated>2018-07-08T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/07-08-quiz-10.html"/><summary type="html">&lt;h2 id="haskell-quiz-no.10"&gt;Haskell Quiz No.10&lt;/h2&gt;
-&lt;p&gt;難易度: λ&lt;/p&gt;
-&lt;p&gt;以下の実行結果はどうなるでしょう！&lt;/p&gt;
-&lt;div class="sourceCode" id="cb1"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb1-1" data-line-number="1"&gt;&lt;span class="ot"&gt;#!/usr/bin/env stack&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-2" data-line-number="2"&gt;&lt;span class="co"&gt;-- stack script --resolver lts-11.17&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-3" data-line-number="3"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Conduit&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-4" data-line-number="4"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-5" data-line-number="5"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-6" data-line-number="6"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; runConduit &lt;span class="fu"&gt;$&lt;/span&gt; yieldMany [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;] &lt;span class="fu"&gt;.|&lt;/span&gt; iterMC print &lt;span class="fu"&gt;.|&lt;/span&gt; return ()&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;答えは&lt;a href="./07-09-quiz-11.html"&gt;次回&lt;/a&gt;。&lt;/p&gt;
-&lt;!--more--&gt;
-&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
-&lt;p&gt;&lt;a href="./07-06-quiz-9.html"&gt;前回&lt;/a&gt;の問題と答えは以下の通りです。&lt;/p&gt;
-&lt;h3 id="問題"&gt;問題&lt;/h3&gt;
-&lt;p&gt;難易度: λλ&lt;/p&gt;
-&lt;p&gt;以下の2つのコードのうち、1つめはコンパイルできますが、2つめはコンパイルできません。&lt;/p&gt;
-&lt;p&gt;なぜでしょう！&lt;/p&gt;
-&lt;div class="sourceCode" id="cb2"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb2-1" data-line-number="1"&gt;&lt;span class="ot"&gt;#!/usr/bin/env stack&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-2" data-line-number="2"&gt;&lt;span class="co"&gt;-- stack script --resolver lts-11.16&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-3" data-line-number="3"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Conduit&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-4" data-line-number="4"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-5" data-line-number="5"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-6" data-line-number="6"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; print &lt;span class="fu"&gt;$&lt;/span&gt; runConduitPure &lt;span class="fu"&gt;$&lt;/span&gt; return () &lt;span class="fu"&gt;.|&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-7" data-line-number="7"&gt;  mapM_ leftover [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;]&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-8" data-line-number="8"&gt;  sinkList&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="sourceCode" id="cb3"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb3-1" data-line-number="1"&gt;&lt;span class="ot"&gt;#!/usr/bin/env stack&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb3-2" data-line-number="2"&gt;&lt;span class="co"&gt;-- stack script --resolver lts-11.16&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb3-3" data-line-number="3"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Conduit&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb3-4" data-line-number="4"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb3-5" data-line-number="5"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb3-6" data-line-number="6"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; print &lt;span class="fu"&gt;$&lt;/span&gt; runConduitPure &lt;span class="fu"&gt;$&lt;/span&gt; &lt;span class="kw"&gt;do&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb3-7" data-line-number="7"&gt;  mapM_ leftover [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;]&lt;/a&gt;
-&lt;a class="sourceLine" id="cb3-8" data-line-number="8"&gt;  sinkList&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;エラーメッセージ&lt;/p&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;error:
-    • No instance for (Num ()) arising from the literal ‘1’
-    • In the expression: 1
-      In the second argument of ‘mapM_’, namely ‘[1 .. 10]’
-      In a stmt of a &amp;#39;do&amp;#39; block: mapM_ leftover [1 .. 10]
-
-    mapM_ leftover [1..10]&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="解説"&gt;解説&lt;/h3&gt;
-&lt;p&gt;先に2つ目の例がエラーとなってしまう理由を確認します。&lt;/p&gt;
-&lt;p&gt;まずは関数の型を確認しておきましょう。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb5"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb5-1" data-line-number="1"&gt;&lt;span class="ot"&gt;runConduitPure ::&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; () &lt;span class="dt"&gt;Void&lt;/span&gt; &lt;span class="dt"&gt;Identity&lt;/span&gt; r &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; r&lt;/a&gt;
-&lt;a class="sourceLine" id="cb5-2" data-line-number="2"&gt;&lt;span class="ot"&gt;leftover ::&lt;/span&gt; i &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i o m ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb5-3" data-line-number="3"&gt;&lt;span class="ot"&gt;sinkList ::&lt;/span&gt; &lt;span class="dt"&gt;Monad&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; a o m [a]&lt;/a&gt;
-&lt;a class="sourceLine" id="cb5-4" data-line-number="4"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb5-5" data-line-number="5"&gt;mapM_&lt;span class="ot"&gt; ::&lt;/span&gt; (&lt;span class="dt"&gt;Foldable&lt;/span&gt; t, &lt;span class="dt"&gt;Monad&lt;/span&gt; m) &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; (a &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m b) &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; t a &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb5-6" data-line-number="6"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb5-7" data-line-number="7"&gt;mapM_&lt;span class="ot"&gt; leftover ::&lt;/span&gt; t i &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i o m ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb5-8" data-line-number="8"&gt;mapM_ leftover [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;]&lt;span class="ot"&gt; ::&lt;/span&gt; (&lt;span class="dt"&gt;Enum&lt;/span&gt; i, &lt;span class="dt"&gt;Num&lt;/span&gt; i) &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i o m ()&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;次にモナドの型クラスも一応確認しておきます。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb6"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb6-1" data-line-number="1"&gt;&lt;span class="kw"&gt;class&lt;/span&gt; &lt;span class="dt"&gt;Applicative&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;Monad&lt;/span&gt; (&lt;span class="ot"&gt;m ::&lt;/span&gt; &lt;span class="fu"&gt;*&lt;/span&gt; &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="fu"&gt;*&lt;/span&gt;) &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb6-2" data-line-number="2"&gt;&lt;span class="ot"&gt;  return ::&lt;/span&gt; a &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m a&lt;/a&gt;
-&lt;a class="sourceLine" id="cb6-3" data-line-number="3"&gt;&lt;span class="ot"&gt;  (&amp;gt;&amp;gt;=)  ::&lt;/span&gt; m a &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; (a &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m b) &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m b&lt;/a&gt;
-&lt;a class="sourceLine" id="cb6-4" data-line-number="4"&gt;&lt;span class="ot"&gt;  (&amp;gt;&amp;gt;)   ::&lt;/span&gt; m a &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m b &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m b&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;さらに型を確認していきます。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb7"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb7-1" data-line-number="1"&gt;mapM_ leftover [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;] &lt;span class="fu"&gt;&amp;gt;&amp;gt;&lt;/span&gt; sinkList&lt;/a&gt;
-&lt;a class="sourceLine" id="cb7-2" data-line-number="2"&gt;&lt;span class="ot"&gt;  ::&lt;/span&gt; (&lt;span class="dt"&gt;Monad&lt;/span&gt; m, &lt;span class="dt"&gt;Enum&lt;/span&gt; i, &lt;span class="dt"&gt;Num&lt;/span&gt; i) &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt;  &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i o m [i]&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;さて、ここまで確認するとなぜ2つ目の結果がエラーとなることがわかります。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb8"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb8-1" data-line-number="1"&gt;&lt;span class="ot"&gt;runConduitPure ::&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; () &lt;span class="dt"&gt;Void&lt;/span&gt; &lt;span class="dt"&gt;Identity&lt;/span&gt; r &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; r&lt;/a&gt;
-&lt;a class="sourceLine" id="cb8-2" data-line-number="2"&gt;mapM_ leftover [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;] &lt;span class="fu"&gt;&amp;gt;&amp;gt;&lt;/span&gt; sinkList&lt;/a&gt;
-&lt;a class="sourceLine" id="cb8-3" data-line-number="3"&gt;&lt;span class="ot"&gt;  ::&lt;/span&gt; (&lt;span class="dt"&gt;Monad&lt;/span&gt; m, &lt;span class="dt"&gt;Enum&lt;/span&gt; i, &lt;span class="dt"&gt;Num&lt;/span&gt; i) &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt;  &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i o m [i]&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;ConduitT&lt;/code&gt; のパラメータはそれぞれ以下のような具体的な型になります。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;i&lt;/code&gt; = &lt;code&gt;()&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;o&lt;/code&gt; = &lt;code&gt;Void&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;m&lt;/code&gt; = &lt;code&gt;Identity&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;r&lt;/code&gt; = &lt;code&gt;[i]&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;さらに &lt;code&gt;m&lt;/code&gt; と &lt;code&gt;i&lt;/code&gt; にはクラス制約があるため以下のインスタンス定義が要求されます。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;instance Monad Identity&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;instance Enum ()&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;instance Num ()&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;ここで &lt;a href="https://www.stackage.org/haddock/lts-11.17/base-4.10.1.0/Prelude.html#t:Num"&gt;Num&lt;/a&gt; クラスのインスタンス定義には &lt;code&gt;()&lt;/code&gt; が含まれないため、エラーとなってしまいました。&lt;/p&gt;
-&lt;h4 id="つ目の例がエラーにならない理由"&gt;１つ目の例がエラーにならない理由&lt;/h4&gt;
-&lt;p&gt;ではなぜ &lt;code&gt;return () .|&lt;/code&gt; が追加されるとエラーにならないのでしょうか？&lt;/p&gt;
-&lt;p&gt;型を確認してみます。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb9"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb9-1" data-line-number="1"&gt;&lt;span class="ot"&gt;(.|)   ::&lt;/span&gt; &lt;span class="dt"&gt;Monad&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; a b m () &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; b c m r &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; a c m r&lt;/a&gt;
-&lt;a class="sourceLine" id="cb9-2" data-line-number="2"&gt;return&lt;span class="ot"&gt; ::&lt;/span&gt; &lt;span class="dt"&gt;Monad&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; a &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; m a&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="sourceCode" id="cb10"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb10-1" data-line-number="1"&gt;return&lt;span class="ot"&gt; ()      ::&lt;/span&gt; &lt;span class="dt"&gt;Monad&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i o m ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb10-2" data-line-number="2"&gt;(return () &lt;span class="fu"&gt;.|&lt;/span&gt;)&lt;span class="ot"&gt; ::&lt;/span&gt; &lt;span class="dt"&gt;Monad&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; o c m r &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i c m r&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;div class="sourceCode" id="cb11"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb11-1" data-line-number="1"&gt;mapM_ leftover [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;] &lt;span class="fu"&gt;&amp;gt;&amp;gt;&lt;/span&gt; sinkList&lt;/a&gt;
-&lt;a class="sourceLine" id="cb11-2" data-line-number="2"&gt;&lt;span class="ot"&gt;  ::&lt;/span&gt; (&lt;span class="dt"&gt;Monad&lt;/span&gt; m, &lt;span class="dt"&gt;Enum&lt;/span&gt; i, &lt;span class="dt"&gt;Num&lt;/span&gt; i) &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt;  &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i o m [i]&lt;/a&gt;
-&lt;a class="sourceLine" id="cb11-3" data-line-number="3"&gt;(return () &lt;span class="fu"&gt;.|&lt;/span&gt; mapM_ leftover [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;] &lt;span class="fu"&gt;&amp;gt;&amp;gt;&lt;/span&gt; sinkList)&lt;/a&gt;
-&lt;a class="sourceLine" id="cb11-4" data-line-number="4"&gt;&lt;span class="ot"&gt;  ::&lt;/span&gt; &lt;span class="dt"&gt;Monad&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i o m [i]&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;2つ目の例では &lt;code&gt;runConduitPure&lt;/code&gt; に直接適用してしまったため、型クラス制約が必要になりましたが、今回は &lt;code&gt;return ()&lt;/code&gt; と合成した結果を &lt;code&gt;runConduitPure&lt;/code&gt; に適用するため、この問題を回避することができています。&lt;/p&gt;
-&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;runConduitPure&lt;/code&gt; に適用する時に今回のようなエラーが出てしまう場合は &lt;code&gt;return () .|&lt;/code&gt; として合成してから適用すると良い。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>https://matsubara0507.github.io/posts/2018-07-01-join-ruby-hack-challenge4.html</id><title type="text">Ruby Hack Challenge ＃4 に参加してきた</title><updated>2018-07-01T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-07-01-join-ruby-hack-challenge4.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
  &lt;div class="card-content"&gt;
