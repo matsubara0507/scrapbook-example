@@ -1,4 +1,178 @@
-<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-08-31T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://haskell.e-bigmoon.com/posts/2018/08-31-stack-extradep-legacy-syntax.html</id><title type="text">stack-1.11 から location に extra-dep を指定できなくなります。</title><updated>2018-08-31T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/08-31-stack-extradep-legacy-syntax.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2018-09-01T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://haskell.e-bigmoon.com/posts/2018/09-01-stack-profile-build.html</id><title type="text">stack でアプリケーションのバックトレースを取得する (デバッグ)</title><updated>2018-09-01T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/09-01-stack-profile-build.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;Haskell のデバッグ手法については、以下の記事がとても詳しく参考になります。素晴らしい記事です。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://blog.miz-ar.info/2018/01/debugging-haskell-program"&gt;Haskell でのデバッグ手法あれこれ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;今回はHaskellアプリケーションをデバックする際に、バックトレースのとても簡単な取得方法があったのでご紹介したいと思います。&lt;/p&gt;
+&lt;p&gt;まとめると以下の2行です。&lt;/p&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;$ stack build --profile
+$ stack exec -- &amp;lt;exe_name&amp;gt; +RTS -xc&lt;/code&gt;&lt;/pre&gt;
+&lt;!--more--&gt;
+&lt;h2 id="バックトレースの取得方法"&gt;バックトレースの取得方法&lt;/h2&gt;
+&lt;p&gt;まず、バックトレースを取得するために &lt;a href="https://www.stackage.org/haddock/lts-12.8/base-4.11.1.0/GHC-Stack.html"&gt;GHC.Stack&lt;/a&gt; で定義されている &lt;a href="https://www.stackage.org/haddock/lts-12.8/base-4.11.1.0/GHC-Stack.html#t:HasCallStack"&gt;HasCallStack&lt;/a&gt; をクラス制約として追加します。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb2"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb2-1" data-line-number="1"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Lib&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-3" data-line-number="3"&gt;&lt;span class="ot"&gt;f1 ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-4" data-line-number="4"&gt;f1 &lt;span class="fu"&gt;=&lt;/span&gt; f2&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-5" data-line-number="5"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-6" data-line-number="6"&gt;&lt;span class="ot"&gt;f2 ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-7" data-line-number="7"&gt;f2 &lt;span class="fu"&gt;=&lt;/span&gt; f3&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-8" data-line-number="8"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-9" data-line-number="9"&gt;&lt;span class="ot"&gt;f3 ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb2-10" data-line-number="10"&gt;f3 &lt;span class="fu"&gt;=&lt;/span&gt; error &lt;span class="st"&gt;&amp;quot;f3&amp;quot;&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上記の例を雛形として、&lt;strong&gt;HasCallStack&lt;/strong&gt; を追加するとどうなるのか確認していきましょう。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Main.hs&lt;/code&gt; はこんな感じで &lt;strong&gt;f1&lt;/strong&gt; を呼び出します。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb3"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb3-1" data-line-number="1"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Main&lt;/span&gt; (main) &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-3" data-line-number="3"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Lib&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-4" data-line-number="4"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-5" data-line-number="5"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb3-6" data-line-number="6"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; f1&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;HasCallStack&lt;/strong&gt; を追加しない場合は以下のような出力となります。&lt;/p&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;$ stack build
+...
+$ stack exec example
+example: f3
+CallStack (from HasCallStack):
+  error, called at src/Lib.hs:10:6 in backtrace-example-0.1.0.0-hgO68xdg85BUcmGsdFId:Lib&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;f3&lt;/strong&gt; でエラーが発生したことはわかりますが、それ以外は何もわかりません。&lt;/p&gt;
+&lt;h3 id="f1-f2-f3-に-hascallstack-を追加した場合"&gt;f1, f2, f3 に HasCallStack を追加した場合&lt;/h3&gt;
+&lt;div class="sourceCode" id="cb5"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb5-1" data-line-number="1"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Lib&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-3" data-line-number="3"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;GHC.Stack&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-4" data-line-number="4"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-5" data-line-number="5"&gt;&lt;span class="ot"&gt;f1 ::&lt;/span&gt; &lt;span class="dt"&gt;HasCallStack&lt;/span&gt; &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-6" data-line-number="6"&gt;f1 &lt;span class="fu"&gt;=&lt;/span&gt; f2&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-7" data-line-number="7"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-8" data-line-number="8"&gt;&lt;span class="ot"&gt;f2 ::&lt;/span&gt; &lt;span class="dt"&gt;HasCallStack&lt;/span&gt; &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-9" data-line-number="9"&gt;f2 &lt;span class="fu"&gt;=&lt;/span&gt; f3&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-10" data-line-number="10"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-11" data-line-number="11"&gt;&lt;span class="ot"&gt;f3 ::&lt;/span&gt; &lt;span class="dt"&gt;HasCallStack&lt;/span&gt; &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb5-12" data-line-number="12"&gt;f3 &lt;span class="fu"&gt;=&lt;/span&gt; error &lt;span class="st"&gt;&amp;quot;f3&amp;quot;&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;ビルドしてみます。&lt;/p&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;$ stack build
+...
+$ stack exec example
+example: f3
+CallStack (from HasCallStack):
+  error, called at src/Lib.hs:12:6 in backtrace-example-0.1.0.0-hgO68xdg85BUcmGsdFId:Lib
+  f3, called at src/Lib.hs:9:6 in backtrace-example-0.1.0.0-hgO68xdg85BUcmGsdFId:Lib
+  f2, called at src/Lib.hs:6:6 in backtrace-example-0.1.0.0-hgO68xdg85BUcmGsdFId:Lib
+  f1, called at app/Main.hs:6:8 in main:Main&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;ちゃんと呼び出しの関係が &lt;code&gt;error&lt;/code&gt; -&amp;gt; &lt;code&gt;f3&lt;/code&gt; -&amp;gt; &lt;code&gt;f2&lt;/code&gt; -&amp;gt; &lt;code&gt;f1&lt;/code&gt; と表示されていますね！&lt;/p&gt;
+&lt;h3 id="f2-f3-にのみ-hascallstack-を追加する"&gt;f2, f3 にのみ HasCallStack を追加する&lt;/h3&gt;
+&lt;p&gt;では、ここで &lt;code&gt;f1&lt;/code&gt; の &lt;strong&gt;HasCallStack&lt;/strong&gt; 制約を取り除くとどうなるか確認してみます。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb7"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb7-1" data-line-number="1"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Lib&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-3" data-line-number="3"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;GHC.Stack&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-4" data-line-number="4"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-5" data-line-number="5"&gt;&lt;span class="ot"&gt;f1 ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-6" data-line-number="6"&gt;f1 &lt;span class="fu"&gt;=&lt;/span&gt; f2&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-7" data-line-number="7"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-8" data-line-number="8"&gt;&lt;span class="ot"&gt;f2 ::&lt;/span&gt; &lt;span class="dt"&gt;HasCallStack&lt;/span&gt; &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-9" data-line-number="9"&gt;f2 &lt;span class="fu"&gt;=&lt;/span&gt; f3&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-10" data-line-number="10"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-11" data-line-number="11"&gt;&lt;span class="ot"&gt;f3 ::&lt;/span&gt; &lt;span class="dt"&gt;HasCallStack&lt;/span&gt; &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb7-12" data-line-number="12"&gt;f3 &lt;span class="fu"&gt;=&lt;/span&gt; error &lt;span class="st"&gt;&amp;quot;f3&amp;quot;&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;実行してみます。&lt;/p&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;$ stack build
+...
+$ stack exec example
+example: f3
+CallStack (from HasCallStack):
+  error, called at src/Lib.hs:12:6 in backtrace-example-0.1.0.0-hgO68xdg85BUcmGsdFId:Lib
+  f3, called at src/Lib.hs:9:6 in backtrace-example-0.1.0.0-hgO68xdg85BUcmGsdFId:Lib
+  f2, called at src/Lib.hs:6:6 in backtrace-example-0.1.0.0-hgO68xdg85BUcmGsdFId:Lib&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;f1&lt;/strong&gt; の &lt;strong&gt;HasCallStack&lt;/strong&gt; 制約を取り除いた影響により、先程出力されていた &lt;code&gt;f1, called at app/Main.hs:6:8 in main:Main&lt;/code&gt; が出なくなりました。&lt;/p&gt;
+&lt;p&gt;しかし、依然として &lt;strong&gt;f2&lt;/strong&gt; と &lt;strong&gt;f3&lt;/strong&gt; のバックトレースは取得できています。そのため、本当に全てのバックトレースを取得したい場合は全ての関数に &lt;strong&gt;HasCallStack&lt;/strong&gt; 制約を追加しなけばなりません。&lt;/p&gt;
+&lt;h3 id="f1-と-f3-にのみ-hascallstack-制約を追加する"&gt;f1 と f3 にのみ HasCallStack 制約を追加する&lt;/h3&gt;
+&lt;p&gt;次に中間の &lt;strong&gt;f2&lt;/strong&gt; の &lt;strong&gt;HasCallStack&lt;/strong&gt; 制約を取り除いてみましょう。&lt;/p&gt;
+&lt;div class="sourceCode" id="cb9"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb9-1" data-line-number="1"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Lib&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-3" data-line-number="3"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;GHC.Stack&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-4" data-line-number="4"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-5" data-line-number="5"&gt;&lt;span class="ot"&gt;f1 ::&lt;/span&gt; &lt;span class="dt"&gt;HasCallStack&lt;/span&gt; &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-6" data-line-number="6"&gt;f1 &lt;span class="fu"&gt;=&lt;/span&gt; f2&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-7" data-line-number="7"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-8" data-line-number="8"&gt;&lt;span class="ot"&gt;f2 ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-9" data-line-number="9"&gt;f2 &lt;span class="fu"&gt;=&lt;/span&gt; f3&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-10" data-line-number="10"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-11" data-line-number="11"&gt;&lt;span class="ot"&gt;f3 ::&lt;/span&gt; &lt;span class="dt"&gt;HasCallStack&lt;/span&gt; &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb9-12" data-line-number="12"&gt;f3 &lt;span class="fu"&gt;=&lt;/span&gt; error &lt;span class="st"&gt;&amp;quot;f3&amp;quot;&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;実行してみます。&lt;/p&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;$ stack build
+...
+$ stack exec example
+example: f3
+CallStack (from HasCallStack):
+  error, called at src/Lib.hs:12:6 in backtrace-example-0.1.0.0-hgO68xdg85BUcmGsdFId:Lib
+  f3, called at src/Lib.hs:9:6 in backtrace-example-0.1.0.0-hgO68xdg85BUcmGsdFId:Lib&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;今度は &lt;strong&gt;f2&lt;/strong&gt; と &lt;strong&gt;f1&lt;/strong&gt; の両方の情報がが抜け落ちてしまいました。&lt;strong&gt;f2&lt;/strong&gt; で &lt;strong&gt;HasCallStack&lt;/strong&gt; の伝搬がストップしてしまったということです。&lt;/p&gt;
+&lt;h3 id="f1-と-f2-のみに-hascallstack-を追加する"&gt;f1 と f2 のみに HasCallStack を追加する&lt;/h3&gt;
+&lt;div class="sourceCode" id="cb11"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb11-1" data-line-number="1"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Lib&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-3" data-line-number="3"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;GHC.Stack&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-4" data-line-number="4"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-5" data-line-number="5"&gt;&lt;span class="ot"&gt;f1 ::&lt;/span&gt; &lt;span class="dt"&gt;HasCallStack&lt;/span&gt; &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-6" data-line-number="6"&gt;f1 &lt;span class="fu"&gt;=&lt;/span&gt; f2&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-7" data-line-number="7"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-8" data-line-number="8"&gt;&lt;span class="ot"&gt;f2 ::&lt;/span&gt; &lt;span class="dt"&gt;HasCallStack&lt;/span&gt; &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-9" data-line-number="9"&gt;f2 &lt;span class="fu"&gt;=&lt;/span&gt; f3&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-10" data-line-number="10"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-11" data-line-number="11"&gt;&lt;span class="ot"&gt;f3 ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb11-12" data-line-number="12"&gt;f3 &lt;span class="fu"&gt;=&lt;/span&gt; error &lt;span class="st"&gt;&amp;quot;f3&amp;quot;&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;$ stack build
+$ stack exec example
+example: f3
+CallStack (from HasCallStack):
+  error, called at src/Lib.hs:12:6 in backtrace-example-0.1.0.0-hgO68xdg85BUcmGsdFId:Lib
+...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;予想通り &lt;strong&gt;f1&lt;/strong&gt;, &lt;strong&gt;f2&lt;/strong&gt;, &lt;strong&gt;f3&lt;/strong&gt; の全ての情報が途絶えましたね・・・。&lt;/p&gt;
+&lt;h2 id="hascallstack-を省略したままバックトレースを取りたい"&gt;HasCallStack を省略したままバックトレースを取りたい&lt;/h2&gt;
+&lt;p&gt;先程の結果を見たとおり、正確な情報を取得するためには全ての関数に &lt;strong&gt;HasCallStack&lt;/strong&gt; 制約を追加する必要がありそうです。&lt;/p&gt;
+&lt;p&gt;しかしながら、規模が大きくなってくるとそんなの不可能ですよね。&lt;/p&gt;
+&lt;p&gt;そんな時には &lt;code&gt;stack&lt;/code&gt; の &lt;code&gt;--profile&lt;/code&gt; オプションと &lt;code&gt;+RTS -xc&lt;/code&gt; オプションを利用します。(&lt;code&gt;--profile&lt;/code&gt; オプションは &lt;strong&gt;ghc&lt;/strong&gt; のオプションを良い感じに追加してくれます)&lt;/p&gt;
+&lt;div class="sourceCode" id="cb13"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb13-1" data-line-number="1"&gt;&lt;span class="kw"&gt;module&lt;/span&gt; &lt;span class="dt"&gt;Lib&lt;/span&gt; &lt;span class="kw"&gt;where&lt;/span&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-2" data-line-number="2"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-3" data-line-number="3"&gt;&lt;span class="ot"&gt;f1 ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-4" data-line-number="4"&gt;f1 &lt;span class="fu"&gt;=&lt;/span&gt; f2&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-5" data-line-number="5"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-6" data-line-number="6"&gt;&lt;span class="ot"&gt;f2 ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-7" data-line-number="7"&gt;f2 &lt;span class="fu"&gt;=&lt;/span&gt; f3&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-8" data-line-number="8"&gt;&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-9" data-line-number="9"&gt;&lt;span class="ot"&gt;f3 ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
+&lt;a class="sourceLine" id="cb13-10" data-line-number="10"&gt;f3 &lt;span class="fu"&gt;=&lt;/span&gt; error &lt;span class="st"&gt;&amp;quot;f3&amp;quot;&lt;/span&gt;&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上記のような素のコードに対しても、同様にバックトレースが取得できるようになります。&lt;/p&gt;
+&lt;pre class="shell"&gt;&lt;code&gt;$ stack build --profile
+...
+$ stack exec -- example +RTS -xc
+*** Exception (reporting due to +RTS -xc): (THUNK_2_0), stack trace:
+  Lib.f3,
+  called from Lib.CAF:f3
+  --&amp;gt; evaluated by: Lib.CAF:f2
+  --&amp;gt; evaluated by: Lib.CAF:f1
+  --&amp;gt; evaluated by: Main.CAF:main
+example: f3
+CallStack (from HasCallStack):
+  error, called at src/Lib.hs:10:6 in backtrace-example-0.1.0.0-hgO68xdg85BUcmGsdFId:Lib
+CallStack (from -prof):
+  Lib.f3 (src/Lib.hs:10:1-15)
+  Lib.CAF:f3 (src/Lib.hs:10:1-2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;なんか沢山表示されますが、&lt;code&gt;reporting due to +RTS -xc&lt;/code&gt; の部分を見ると、しっかりとバックトレースが取得できています。&lt;/p&gt;
+&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;HasCallStack&lt;/strong&gt; を使うとバックトレースが取得できる&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;stack build --profile&lt;/code&gt; でビルドする&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;stack exec -- &amp;lt;exe&amp;gt; +RTS -xc&lt;/code&gt; を使えば、明示的に &lt;strong&gt;HasCallStack&lt;/strong&gt; を追加しなくても、バックトレースが取得できる&lt;/li&gt;
+&lt;li&gt;アプリケーションのコードに対して有効&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;参考&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://blog.miz-ar.info/2018/01/debugging-haskell-program/#HasCallStack"&gt;Haskell でのデバッグ手法あれこれ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/commercialhaskell/stack/blob/master/doc/GUIDE.md#debugging"&gt;Debugging – stack document&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/runtime_control.html#rts-flag--xc"&gt;-xc option – GHC Users Guide&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/08-31-stack-extradep-legacy-syntax.html</id><title type="text">stack-1.11 から location に extra-dep を指定できなくなります。</title><updated>2018-08-31T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/08-31-stack-extradep-legacy-syntax.html"/><summary type="html">&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
 &lt;p&gt;まだまだ先の話ですが、&lt;code&gt;extra-dep&lt;/code&gt; の書き方が &lt;strong&gt;Legacy syntax&lt;/strong&gt; になりました。&lt;code&gt;stack-1.11&lt;/code&gt; からはビルドできなくなります。&lt;/p&gt;
 &lt;p&gt;以下の設定例は&lt;a href="https://github.com/commercialhaskell/stack/blob/master/doc/yaml_configuration.md#packages"&gt;公式ドキュメント&lt;/a&gt;の例を少し変更したものです。&lt;/p&gt;
 &lt;div class="sourceCode" id="cb1"&gt;&lt;pre class="sourceCode yaml"&gt;&lt;code class="sourceCode yaml"&gt;&lt;a class="sourceLine" id="cb1-1" data-line-number="1"&gt;&lt;span class="fu"&gt;packages:&lt;/span&gt;&lt;/a&gt;
@@ -1369,71 +1543,6 @@ less, lv, manコマンド終了時に画面をクリアしない
 &lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;await&lt;/code&gt; はパイプごとに伝搬して上流に伝わるため、途中で途切れている場合は何も起こらない&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2018/07-11-quiz-13.html</id><title type="text">Haskell Quiz No.13 Conduit Part.8</title><updated>2018-07-11T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2018/07-11-quiz-13.html"/><summary type="html">&lt;h2 id="haskell-quiz-no.13"&gt;Haskell Quiz No.13&lt;/h2&gt;
-&lt;p&gt;難易度: λλ&lt;/p&gt;
-&lt;p&gt;以下のプログラムの実行結果はどうなるでしょうか？&lt;/p&gt;
-&lt;div class="sourceCode" id="cb1"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb1-1" data-line-number="1"&gt;&lt;span class="ot"&gt;#!/usr/bin/env stack&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-2" data-line-number="2"&gt;&lt;span class="co"&gt;-- stack script --resolver lts-12.0&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-3" data-line-number="3"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Conduit&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-4" data-line-number="4"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-5" data-line-number="5"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb1-6" data-line-number="6"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; runConduit &lt;span class="fu"&gt;$&lt;/span&gt; yieldMany [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;] &lt;span class="fu"&gt;.|&lt;/span&gt; iterMC print &lt;span class="fu"&gt;.|&lt;/span&gt; return () &lt;span class="fu"&gt;.|&lt;/span&gt; sinkNull&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;答えは&lt;a href="./07-16-quiz-14.html"&gt;次回&lt;/a&gt;。&lt;/p&gt;
-&lt;!--more--&gt;
-&lt;h2 id="はじめに"&gt;はじめに&lt;/h2&gt;
-&lt;p&gt;&lt;a href="./07-10-quiz-12.html"&gt;前回&lt;/a&gt;の問題と答えは以下の通りです。&lt;/p&gt;
-&lt;h3 id="問題"&gt;問題&lt;/h3&gt;
-&lt;p&gt;難易度: λ&lt;/p&gt;
-&lt;p&gt;以下のプログラムの実行結果はどうなるでしょうか？&lt;/p&gt;
-&lt;div class="sourceCode" id="cb2"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb2-1" data-line-number="1"&gt;&lt;span class="ot"&gt;#!/usr/bin/env stack&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-2" data-line-number="2"&gt;&lt;span class="co"&gt;-- stack script --resolver lts-11.17&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-3" data-line-number="3"&gt;&lt;span class="kw"&gt;import&lt;/span&gt; &lt;span class="dt"&gt;Conduit&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-4" data-line-number="4"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-5" data-line-number="5"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb2-6" data-line-number="6"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; runConduit &lt;span class="fu"&gt;$&lt;/span&gt; yieldMany [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;] &lt;span class="fu"&gt;.|&lt;/span&gt; iterMC print &lt;span class="fu"&gt;.|&lt;/span&gt; sinkNull&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id="こたえ"&gt;こたえ&lt;/h3&gt;
-&lt;pre class="shell"&gt;&lt;code&gt;$ ./Quiz12.hs
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id="解説"&gt;解説&lt;/h3&gt;
-&lt;p&gt;&lt;a href="./07-08-quiz-10.html"&gt;Quiz10&lt;/a&gt; でよく似た問題を出題しました。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb4"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb4-1" data-line-number="1"&gt;&lt;span class="ot"&gt;# Quiz10&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb4-2" data-line-number="2"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb4-3" data-line-number="3"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; runConduit &lt;span class="fu"&gt;$&lt;/span&gt; yieldMany [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;] &lt;span class="fu"&gt;.|&lt;/span&gt; iterMC print &lt;span class="fu"&gt;.|&lt;/span&gt; return ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb4-4" data-line-number="4"&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb4-5" data-line-number="5"&gt;&lt;span class="ot"&gt;# Quiz12&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb4-6" data-line-number="6"&gt;&lt;span class="ot"&gt;main ::&lt;/span&gt; &lt;span class="dt"&gt;IO&lt;/span&gt; ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb4-7" data-line-number="7"&gt;main &lt;span class="fu"&gt;=&lt;/span&gt; runConduit &lt;span class="fu"&gt;$&lt;/span&gt; yieldMany [&lt;span class="dv"&gt;1&lt;/span&gt;&lt;span class="fu"&gt;..&lt;/span&gt;&lt;span class="dv"&gt;10&lt;/span&gt;] &lt;span class="fu"&gt;.|&lt;/span&gt; iterMC print &lt;span class="fu"&gt;.|&lt;/span&gt; sinkNull&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;異なるのは最後の &lt;code&gt;return ()&lt;/code&gt; と &lt;code&gt;sinkNull&lt;/code&gt; だけです。&lt;/p&gt;
-&lt;p&gt;Quiz10 の結果は何も表示されませんでしたが、今回は &lt;code&gt;1 ~ 10&lt;/code&gt; の数字が表示されています。&lt;/p&gt;
-&lt;p&gt;この挙動を理解するために &lt;code&gt;sinkNull&lt;/code&gt; の実装を確認してみましょう。&lt;/p&gt;
-&lt;h4 id="sinknull"&gt;sinkNull&lt;/h4&gt;
-&lt;p&gt;&lt;a href="https://www.stackage.org/haddock/lts-11.17/conduit-1.3.0.3/Data-Conduit-Combinators.html#v:sinkNull"&gt;sinkNull&lt;/a&gt; 関数の実装は以下の通りです。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb5"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb5-1" data-line-number="1"&gt;&lt;span class="ot"&gt;sinkNull ::&lt;/span&gt; &lt;span class="dt"&gt;Monad&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i o m ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb5-2" data-line-number="2"&gt;sinkNull &lt;span class="fu"&gt;=&lt;/span&gt; awaitForever &lt;span class="fu"&gt;$&lt;/span&gt; \_ &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; return ()&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;非常にシンプルな実装になっています。 &lt;a href="https://www.stackage.org/haddock/lts-11.17/conduit-1.3.0.3/Data-Conduit.html#v:awaitForever"&gt;awaitForever&lt;/a&gt; の実装は以下の通りです。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb6"&gt;&lt;pre class="sourceCode haskell"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb6-1" data-line-number="1"&gt;&lt;span class="ot"&gt;awaitForever ::&lt;/span&gt; &lt;span class="dt"&gt;Monad&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; (i &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i o m r) &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i o m ()&lt;/a&gt;
-&lt;a class="sourceLine" id="cb6-2" data-line-number="2"&gt;awaitForever f &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; &lt;span class="fu"&gt;$&lt;/span&gt; \rest &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt;&lt;/a&gt;
-&lt;a class="sourceLine" id="cb6-3" data-line-number="3"&gt;    &lt;span class="kw"&gt;let&lt;/span&gt; go &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;NeedInput&lt;/span&gt; (\i &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; unConduitT (f i) (const go)) rest&lt;/a&gt;
-&lt;a class="sourceLine" id="cb6-4" data-line-number="4"&gt;     &lt;span class="kw"&gt;in&lt;/span&gt; go&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;つまり、上流に対して値を要求し、その値に対して、引数として与えられた関数 &lt;code&gt;f&lt;/code&gt; を適用するという関数です。 &lt;code&gt;Forever&lt;/code&gt; という名前の通り、この関数は上流の値が無くなるまで値を要求し続けます。(そのため、&lt;code&gt;yieldMany [1..]&lt;/code&gt; のような無限リストの場合は停止しません。)&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://www.stackage.org/haddock/lts-11.17/conduit-1.3.0.3/Data-Conduit.html#v:await"&gt;await&lt;/a&gt; 関数はこのような定義だったので、とても似ていますね。&lt;/p&gt;
-&lt;div class="sourceCode" id="cb7"&gt;&lt;pre class="sourceCode hs"&gt;&lt;code class="sourceCode haskell"&gt;&lt;a class="sourceLine" id="cb7-1" data-line-number="1"&gt;&lt;span class="ot"&gt;await ::&lt;/span&gt; &lt;span class="dt"&gt;Monad&lt;/span&gt; m &lt;span class="ot"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; i o m (&lt;span class="dt"&gt;Maybe&lt;/span&gt; i)&lt;/a&gt;
-&lt;a class="sourceLine" id="cb7-2" data-line-number="2"&gt;await &lt;span class="fu"&gt;=&lt;/span&gt; &lt;span class="dt"&gt;ConduitT&lt;/span&gt; &lt;span class="fu"&gt;$&lt;/span&gt; \f &lt;span class="ot"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="dt"&gt;NeedInput&lt;/span&gt; (f &lt;span class="fu"&gt;.&lt;/span&gt; &lt;span class="dt"&gt;Just&lt;/span&gt;) (const &lt;span class="fu"&gt;$&lt;/span&gt; f &lt;span class="dt"&gt;Nothing&lt;/span&gt;)&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id="まとめ"&gt;まとめ&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;sinkNull&lt;/code&gt; は上流で用意した値を全て処理するために使うと便利&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;await&lt;/code&gt; は上流の値を一度だけ要求する&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;awaitForever&lt;/code&gt; は上流の値が無くなるまで要求する&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;以上です。&lt;/p&gt;</summary></entry><entry><id>https://matsubara0507.github.io/posts/2018-07-01-join-ruby-hack-challenge4.html</id><title type="text">Ruby Hack Challenge ＃4 に参加してきた</title><updated>2018-07-01T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2018-07-01-join-ruby-hack-challenge4.html"/><summary type="html">&lt;article class="post card" itemscope itemtype="http://schema.org/BlogPosting"&gt;
  &lt;div class="card-content"&gt;
