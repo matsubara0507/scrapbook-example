@@ -1,0 +1,11 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: e0f843b5e76d8c44f26ee44fd9792962ffe39c0773251f3c3991706b02c42864
+
+name:           scrapbook-example
+version:        0.0.1
+build-type:     Simple
