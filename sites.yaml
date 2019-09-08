@@ -17,11 +17,6 @@ sites:
     author: "matsubara0507"
     url: https://github.com/matsubara0507/test-rss
     feed: https://github.com/matsubara0507/test-rss/releases.atom
-  # example RSS 2.0
-  - title: "あどけない話"
-    author: "kazu-yamamoto"
-    url: http://d.hatena.ne.jp/kazu-yamamoto
-    rss: http://d.hatena.ne.jp/kazu-yamamoto/rss2
   # if filtering Atom feed's links using attr of `a` tag
   - title: "Kuro's Blog"
     author: "Hiroyuki Kurokawa"
