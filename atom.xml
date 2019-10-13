@@ -255,6 +255,15 @@ Flags for format:
 &lt;span id=&#34;cb7-3&#34;&gt;&lt;a href=&#34;#cb7-3&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;100&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;kind!&lt;/code&gt; のエイリアスとして &lt;code&gt;k!&lt;/code&gt; コマンド欲しい。&lt;/p&gt;
+&lt;h2 id=&#34;追記&#34;&gt;追記&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;k!&lt;/code&gt; コマンドのマージリクエストが作られました &lt;a href=&#34;https://gitlab.haskell.org/ghc/ghc/merge_requests/1934&#34;&gt;Allow completion for GHCi commands with option &lt;code&gt;!&lt;/code&gt; (#17345)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ありがとうございます :)&lt;/p&gt;
+&lt;p&gt;GHC に組み込まれるまでは、&lt;code&gt;~/.ghci&lt;/code&gt; や &lt;code&gt;&amp;lt;proj&amp;gt;/.ghci&lt;/code&gt; に以下の内容を記述しておけば &lt;code&gt;:kind!&lt;/code&gt; のエイリアスとして &lt;code&gt;:k!&lt;/code&gt; が使えるようになります。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:def! k! (\e -&amp;gt; return (&amp;quot;:kind! &amp;quot; ++ e))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;実行結果&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; :k! 1+1
+1+1 :: Nat
+= 2&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&#34;参考リソース&#34;&gt;参考リソース&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://downloads.haskell.org/~ghc/8.8.1/docs/html/users_guide/glasgow_exts.html?highlight=nostaristype#extension-StarIsType&#34;&gt;StarIsType - Glasgow Haskell Compiler User’s Guide&lt;/a&gt;&lt;/li&gt;
