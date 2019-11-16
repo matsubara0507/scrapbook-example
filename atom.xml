@@ -1,4 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2019-11-15T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://matsubara0507.github.io/posts/2019-11-15-line-charts-with-elm.html</id><title type="text">Elm で line charts する</title><updated>2019-11-15T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2019-11-15-line-charts-with-elm.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
+<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2019-11-16T09:38:23.124+09:00</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>http://kurokawh.blogspot.com/2019/11/mac-mojava.html</id><title type="text">[mac] Mojavaクリーンインストール</title><updated>2019-11-16T09:38:23.124+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2019/11/mac-mojava.html"/><summary type="text">Mojavaへのアップデートを契機にmac book airを初期化して環境をクリーンセットアップしました。
+自分にとって使いやすい環境の設定手順および、インストールしたアプリ群の情報をメモがわりに残しておきます。
+
+
+
+システム環境設定
+
+トラックパッド
+
+軌跡の速さを速くする 
+「スクロールとズーム」内の「スクロールの方向」を「ナチュラル」にする
+「その他のジェスチャー」内の全てのチェックを外す
+
+アクセシビリティ
+
+マウスとトラックパッド
+
+トラックパッドオプション
+
+「ドラッグを有効にする」にチェック
+
+→ダブルタップでドラッグできるようになる
+
+「ドラッグロックなし」を選択
+
+→トラックパッドから手を離すとドラッグ解除
+
+
+
+
+
+キーボード
+
+F1, F2などのキーを標準のファンクションキーとして利用する：チェック
+
+Dock
+
+ 最近使ったアプリケーションをDock に追加</summary></entry><entry><id>https://matsubara0507.github.io/posts/2019-11-15-line-charts-with-elm.html</id><title type="text">Elm で line charts する</title><updated>2019-11-15T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2019-11-15-line-charts-with-elm.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
     &lt;p&gt;Elm で作っているスコアボードにスコアの線グラフを追加したかったので &lt;a href=&#34;https://package.elm-lang.org/packages/terezka/line-charts/&#34;&gt;&lt;code&gt;terezka/line-charts&lt;/code&gt;&lt;/a&gt; というパッケージを使って追加した． っていうメモ書き。 追加の PR はこれです:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/matsubara0507/git-plantation/pull/49&#34;&gt;スコアボードにグラフを描写するページを追加 by matsubara0507 · Pull Request #49 · matsubara0507/git-plantation&lt;/a&gt;&lt;/li&gt;
@@ -405,49 +442,7 @@ g :: X -&amp;gt; (Y -&amp;gt; Z) -- はダメらしい(もちろん Haskell は�
 &lt;li&gt;いつものように、変更の完全なリストについては、&lt;a href=&#34;https://github.com/mrkkrp/megaparsec/blob/master/CHANGELOG.md&#34;&gt;chagelog&lt;/a&gt; を参照してください。&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://markkarpov.com/megaparsec/megaparsec.html&#34;&gt;公式チュートリアル&lt;/a&gt;を含むすべてのテキストをバージョン8と互換性があるように更新しました。新しい機能の使用方法を説明するセクションを含めるように拡張しました。&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;hspec-megaparsec&lt;/code&gt; などのサテライトパッケージが更新され、バージョン8で動作するようになりました。&lt;/li&gt;
-&lt;/ul&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2019/11/mac-mojava.html</id><title type="text">[mac] Mojavaクリーンインストール</title><updated>2019-11-09T08:45:47.041+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2019/11/mac-mojava.html"/><summary type="text">Mojavaへのアップデートを契機にmac book airを初期化して環境をクリーンセットアップしました。
-自分にとって使いやすい環境の設定手順および、インストールしたアプリ群の情報をメモがわりに残しておきます。
-
-
-
-システム環境設定
-
-トラックパッド
-
-軌跡の速さを速くする 
-「スクロールとズーム」内の「スクロールの方向」を「ナチュラル」にする
-「その他のジェスチャー」内の全てのチェックを外す
-
-アクセシビリティ
-
-マウスとトラックパッド
-
-トラックパッドオプション
-
-「ドラッグを有効にする」にチェック
-
-→ダブルタップでドラッグできるようになる
-
-「ドラッグロックなし」を選択
-
-→トラックパッドから手を離すとドラッグ解除
-
-
-
-
-
-キーボード
-
-F1, F2などのキーを標準のファンクションキーとして利用する：チェック
-
-
-
-
-システムアプリケーション
-
-ターミナル
-
-環境設定 -</summary></entry><entry><id>https://matsubara0507.github.io/posts/2019-10-31-join-hacktoberfest-2019.html</id><title type="text">Hacktoberfest 2019 なので PR を4つ以上出してみた</title><updated>2019-10-31T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2019-10-31-join-hacktoberfest-2019.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
+&lt;/ul&gt;</summary></entry><entry><id>https://matsubara0507.github.io/posts/2019-10-31-join-hacktoberfest-2019.html</id><title type="text">Hacktoberfest 2019 なので PR を4つ以上出してみた</title><updated>2019-10-31T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2019-10-31-join-hacktoberfest-2019.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
     &lt;p&gt;毎年恒例，去年に引き続き Hacktoberfest に参加しました．&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/assets/join-hacktoberfest-2019/status.jpg&#34;&gt;&lt;/img&gt;&lt;/p&gt;
 &lt;p&gt;すごい量になっているけど個人のリポジトリや参加してる Org アカウントにも PR を作ってやっていたのでこんな量になった. 実際に、自分の所属となんも関係のない PR は以下の4つ:&lt;/p&gt;
