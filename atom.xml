@@ -1,4 +1,182 @@
-<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2020-01-08T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://matsubara0507.github.io/posts/2020-01-08-calc-ssh-pubkey-fingerprint-with-haskell.html</id><title type="text">Haskell で SSH Public Key の FingerPrint を計算する</title><updated>2020-01-08T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2020-01-08-calc-ssh-pubkey-fingerprint-with-haskell.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
+<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2020-01-18T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://haskell.e-bigmoon.com/posts/2020/01-18-cabal-build-tool-depends.html</id><title type="text">cabal の build-tool-depends フィールド</title><updated>2020-01-18T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2020/01-18-cabal-build-tool-depends.html"/><summary type="html">&lt;p&gt;cabal の &lt;a href=&#34;https://www.haskell.org/cabal/users-guide/developing-packages.html#pkg-field-build-tool-depends&#34;&gt;build-tool-depends&lt;/a&gt; というフィールドが便利だったので紹介します。&lt;/p&gt;
+&lt;p&gt;テストを書くときに &lt;a href=&#34;https://hackage.haskell.org/package/hspec-discover&#34;&gt;hspec-discover&lt;/a&gt; や &lt;a href=&#34;https://hackage.haskell.org/package/tasty-discover&#34;&gt;tasty-discover&lt;/a&gt; などを使う場合、このフィールドを設定しておくことで依存している実行ファイルを自動的にダウンロードして使ってくれます。&lt;/p&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ cabal --version
+cabal-install version 3.0.0.0
+compiled using version 3.0.0.0 of the Cabal library &lt;/code&gt;&lt;/pre&gt;
+&lt;!--more--&gt;
+&lt;h2 id=&#34;サンプルプロジェクトの構成&#34;&gt;サンプルプロジェクトの構成&lt;/h2&gt;
+&lt;p&gt;全体のディレクトリ構成は以下のようになっているとしましょう。&lt;/p&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ tree .
+.
+├── example.cabal
+├── src
+│   └── Lib.hs
+├── stack.yaml
+└── test
+    ├── LibSpec.hs
+    └── Spec.hs&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;それぞれのファイルの内容は以下のようになっています。&lt;/p&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb3&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb3-1&#34;&gt;&lt;a href=&#34;#cb3-1&#34;&gt;&lt;/a&gt;&lt;span class=&#34;co&#34;&gt;-- src/Lib.hs&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb3-2&#34;&gt;&lt;a href=&#34;#cb3-2&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;module&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Lib&lt;/span&gt; (someFunc) &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb3-3&#34;&gt;&lt;a href=&#34;#cb3-3&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb3-4&#34;&gt;&lt;a href=&#34;#cb3-4&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;someFunc ::&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;IO&lt;/span&gt; ()&lt;/span&gt;
+&lt;span id=&#34;cb3-5&#34;&gt;&lt;a href=&#34;#cb3-5&#34;&gt;&lt;/a&gt;someFunc &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;fu&#34;&gt;putStrLn&lt;/span&gt; &lt;span class=&#34;st&#34;&gt;&amp;quot;someFunc&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb4&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb4-1&#34;&gt;&lt;a href=&#34;#cb4-1&#34;&gt;&lt;/a&gt;&lt;span class=&#34;co&#34;&gt;-- test/LibSpec.hs&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb4-2&#34;&gt;&lt;a href=&#34;#cb4-2&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;module&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;LibSpec&lt;/span&gt; (spec) &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb4-3&#34;&gt;&lt;a href=&#34;#cb4-3&#34;&gt;&lt;/a&gt;&lt;/span&gt;
+&lt;span id=&#34;cb4-4&#34;&gt;&lt;a href=&#34;#cb4-4&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;spec ::&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Spec&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb4-5&#34;&gt;&lt;a href=&#34;#cb4-5&#34;&gt;&lt;/a&gt;spec &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;fu&#34;&gt;undefined&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb5&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb5-1&#34;&gt;&lt;a href=&#34;#cb5-1&#34;&gt;&lt;/a&gt;&lt;span class=&#34;co&#34;&gt;-- test/Spec.hs&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb5-2&#34;&gt;&lt;a href=&#34;#cb5-2&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;{-# OPTIONS_GHC -F -pgmF hspec-discover #-}&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class=&#34;cabal&#34;&gt;&lt;code&gt;-- example.cabal
+cabal-version: 2.4
+name:          example
+version:       0.1.0.0
+
+library
+  exposed-modules:  Lib
+  hs-source-dirs:   src
+  build-depends:    base &amp;gt;=4.7 &amp;amp;&amp;amp; &amp;lt;5
+  default-language: Haskell2010
+
+test-suite example-test
+  type:             exitcode-stdio-1.0
+  main-is:          Spec.hs
+  hs-source-dirs:   test
+  other-modules:    LibSpec
+  build-depends:
+    , base     &amp;gt;=4.7 &amp;amp;&amp;amp; &amp;lt;5
+    , example
+
+  default-language: Haskell2010&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&#34;sourceCode&#34; id=&#34;cb7&#34;&gt;&lt;pre class=&#34;sourceCode yaml&#34;&gt;&lt;code class=&#34;sourceCode yaml&#34;&gt;&lt;span id=&#34;cb7-1&#34;&gt;&lt;a href=&#34;#cb7-1&#34;&gt;&lt;/a&gt;&lt;span class=&#34;co&#34;&gt;# stack.yaml&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb7-2&#34;&gt;&lt;a href=&#34;#cb7-2&#34;&gt;&lt;/a&gt;&lt;span class=&#34;fu&#34;&gt;resolver&lt;/span&gt;&lt;span class=&#34;kw&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;at&#34;&gt; lts-14.20&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb7-3&#34;&gt;&lt;a href=&#34;#cb7-3&#34;&gt;&lt;/a&gt;&lt;span class=&#34;fu&#34;&gt;packages&lt;/span&gt;&lt;span class=&#34;kw&#34;&gt;:&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb7-4&#34;&gt;&lt;a href=&#34;#cb7-4&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;at&#34;&gt; .&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;このような状況で &lt;code&gt;cabal&lt;/code&gt; や &lt;code&gt;stack&lt;/code&gt; がどのように振舞うか見ていきましょう。&lt;/p&gt;
+&lt;p&gt;現時点では &lt;code&gt;hspec-discover&lt;/code&gt; の実行ファイルは存在していません。&lt;/p&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ hspec-discover
+bash: hspec-discover: コマンドが見つかりません&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;stack&#34;&gt;stack&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;hspec-discover&lt;/code&gt; の実行ファイルが無い状態で &lt;code&gt;stack test&lt;/code&gt; を実行すると以下のようにエラーになります。&lt;/p&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ stack test
+...
+
+ghc: could not execute: hspec-discover&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;hspec-discover-をインストールした場合&#34;&gt;hspec-discover をインストールした場合&lt;/h3&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ stack install hspec-discover
+
+$ hspec-discover
+Usage: hspec-discover SRC CUR DST [--module-name=NAME]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;上記のようにインストールした場合は、問題無く動作します。&lt;/p&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ stack test
+...
+
+example/test/LibSpec.hs:3:9: error:
+    Not in scope: type constructor or class ‘Spec’
+  |         
+3 | spec :: Spec
+  |         ^^^^&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;hspec-discover&lt;/code&gt; がファイルを自動的に見つけてくれたので、コンパイルエラーになりました。&lt;/p&gt;
+&lt;p&gt;次に進む前に実行ファイルを削除しておきます。&lt;/p&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ rm ~/.local/bin/hspec-discover&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;build-depends-に追加した場合&#34;&gt;build-depends に追加した場合&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;example.cabal&lt;/code&gt; ファイルの &lt;code&gt;build-depends&lt;/code&gt; に追加した場合はどうなるのでしょうか？&lt;/p&gt;
+&lt;pre class=&#34;cabal&#34;&gt;&lt;code&gt;test-suite example-test
+  type:             exitcode-stdio-1.0
+  main-is:          Spec.hs
+  hs-source-dirs:   test
+  other-modules:    LibSpec
+  build-depends:
+    , base     &amp;gt;=4.7 &amp;amp;&amp;amp; &amp;lt;5
+    , example
+    , hspec-discover  -- 新しく追加した
+
+  default-language: Haskell2010&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;では &lt;code&gt;stack test&lt;/code&gt; を実行してみます。&lt;/p&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ stack test
+...
+
+example/test/LibSpec.hs:3:9: error:
+    Not in scope: type constructor or class ‘Spec’
+  |         
+3 | spec :: Spec
+  |         ^^^^&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;実行ファイルがローカル環境に存在しなくても自動的に &lt;code&gt;hspec-discover&lt;/code&gt; が動作しています。&lt;/p&gt;
+&lt;p&gt;そのため、&lt;code&gt;stack&lt;/code&gt; プロジェクトでは &lt;code&gt;hspec-discover&lt;/code&gt; を依存関係 (&lt;code&gt;build-depends&lt;/code&gt;) に追加するだけで良い感じにテストが進みます。&lt;/p&gt;
+&lt;h2 id=&#34;cabal&#34;&gt;cabal&lt;/h2&gt;
+&lt;p&gt;同様に &lt;code&gt;cabal&lt;/code&gt; の場合も確かめてみましょう。(&lt;code&gt;example.cabal&lt;/code&gt; ファイルから &lt;code&gt;hspec-discover&lt;/code&gt; を削除しておきます)&lt;/p&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ cabal test
+...
+
+ghc: could not execute: hspec-discover&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;stack&lt;/code&gt; と同様のエラーになりました。&lt;/p&gt;
+&lt;h3 id=&#34;hspec-discover-をインストールした場合-1&#34;&gt;hspec-discover をインストールした場合&lt;/h3&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ cabal install hspec-discover
+
+$ hspec-discover
+Usage: hspec-discover SRC CUR DST [--module-name=NAME]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;同様に &lt;code&gt;cabal test&lt;/code&gt; を実行してみます。&lt;/p&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ cabal test
+...
+
+test/LibSpec.hs:3:9: error:
+    Not in scope: type constructor or class ‘Spec’
+  |
+3 | spec :: Spec
+  | &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;stack&lt;/code&gt; の場合と同じように、ちゃんと動いていますね。&lt;/p&gt;
+&lt;h3 id=&#34;build-depends-に追加した場合-1&#34;&gt;build-depends に追加した場合&lt;/h3&gt;
+&lt;p&gt;まずはバイナリファイルを削除しておきます。&lt;/p&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ rm ~/.cabal/bin/hspec-discover&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;example.cabal&lt;/code&gt; ファイルは先ほどと同じように &lt;code&gt;build-depends&lt;/code&gt; に &lt;code&gt;hspec-discover&lt;/code&gt; を追加した状態です。&lt;/p&gt;
+&lt;p&gt;テストを実行してみましょう。&lt;/p&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ cabal test
+...
+
+ghc: could not execute: hspec-discover&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;stack&lt;/code&gt; と異なる結果になりましたね・・・。僕は今までこの結果への対処法は &lt;code&gt;hspec-discover&lt;/code&gt; をインストールしておくしかないと思っていました。&lt;/p&gt;
+&lt;p&gt;しかし、&lt;code&gt;build-tool-depends&lt;/code&gt; をフィールドを利用することで &lt;code&gt;stack&lt;/code&gt; と同じ挙動になるということがわかりました。&lt;/p&gt;
+&lt;p&gt;実際に試してみましょう。&lt;/p&gt;
+&lt;h3 id=&#34;build-tool-depends-に追加した場合&#34;&gt;build-tool-depends に追加した場合&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;build-tool-depends&lt;/code&gt; に追加するとこんな感じです。&lt;/p&gt;
+&lt;pre class=&#34;cabal&#34;&gt;&lt;code&gt;test-suite example-test
+  type:             exitcode-stdio-1.0
+  main-is:          Spec.hs
+  hs-source-dirs:   test
+  other-modules:    LibSpec
+  build-depends:
+    , base     &amp;gt;=4.7 &amp;amp;&amp;amp; &amp;lt;5
+    , example
+
+  build-tool-depends:                 -- 新たに追加した行
+    , hspec-discover:hspec-discover   -- 新たに追加した行
+
+  default-language: Haskell2010&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;build-depends&lt;/code&gt; が &lt;code&gt;&amp;lt;package_name&amp;gt;&lt;/code&gt; という指定方法でしたが、&lt;code&gt;build-tool-depends&lt;/code&gt; では &lt;code&gt;&amp;lt;package_name&amp;gt;:&amp;lt;exe_name&amp;gt;&lt;/code&gt; という指定方法になっている点に注意です。&lt;/p&gt;
+&lt;p&gt;バージョン制約が必要な場合は &lt;code&gt;build-depends&lt;/code&gt; と同じように指定できます。&lt;/p&gt;
+&lt;pre class=&#34;cabal&#34;&gt;&lt;code&gt;hspec-discover:hspec-discover ^&amp;gt;=2.7&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;これでテストを実行してみましょう。&lt;/p&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ cabal test
+...
+
+test/LibSpec.hs:3:9: error:
+    Not in scope: type constructor or class ‘Spec’
+  |
+3 | spec :: Spec
+  | &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;これで &lt;code&gt;stack&lt;/code&gt; と同じような挙動になりました！happy!&lt;/p&gt;
+&lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;こんな便利なフィールドがあるなんて全然知りませんでした・・・。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;build-tool-depends&lt;/code&gt; を指定しておけば、実行ファイルが無くても大丈夫&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;stack&lt;/code&gt; は初心者に優しい&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.haskell.org/ghc/blog/20200116-ghc-8.8.2-released.html&#34;&gt;GHC-8.8.2 がリリース&lt;/a&gt;されましたね。&lt;/p&gt;
+&lt;h2 id=&#34;参考リソース&#34;&gt;参考リソース&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.haskell.org/cabal/users-guide/developing-packages.html#pkg-field-build-tool-depends&#34;&gt;cabal user guide&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</summary></entry><entry><id>https://matsubara0507.github.io/posts/2020-01-08-calc-ssh-pubkey-fingerprint-with-haskell.html</id><title type="text">Haskell で SSH Public Key の FingerPrint を計算する</title><updated>2020-01-08T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2020-01-08-calc-ssh-pubkey-fingerprint-with-haskell.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
     &lt;p&gt;GitHub に登録している Public Key から &lt;code&gt;~/.ssh/authorized_key&lt;/code&gt; を生成する簡易的な CLI ツールを作ろうと考えた． そして，Public Key をフィルタリングするために &lt;code&gt;https://github.com/settings/keys&lt;/code&gt; で参照できる FingerPrint を使おうと考えたが，その場合は GitHub API で取得した Public Key から FingerPrint をプログラム側で計算しないといけない．&lt;/p&gt;
 &lt;p&gt;もちろん，&lt;code&gt;ssh-keygen -l -E md5 -f ssh_host_ecdsa_key.pub&lt;/code&gt; なんかで生成できるのだが可能なら素の Haskell プログラムでやりたいなと考えた． ということで，本記事はタイトルの通り Haskell で SSH Public Key の FingerPrint を計算することになったので，そのために色々調べたメモ書き．&lt;/p&gt;
 &lt;h2 id=&#34;fingerprint&#34;&gt;FingerPrint&lt;/h2&gt;
@@ -5934,115 +6112,7 @@ MacPortsのアップデート
 
 Yosemite環境でインストールしたMacPortsはそのままでは利用できない。以下のようなエラーメッセージが表示される。
 % port qv installed
-Error: </summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2019/02-13-sum-monoid%20copy.html</id><title type="text">Sum Monoid</title><updated>2019-02-13T00:00:00Z</updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2019/02-13-sum-monoid%20copy.html"/><summary type="html">&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Monoid.html&#34;&gt;Data.Monoid&lt;/a&gt; に &lt;a href=&#34;https://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Monoid.html#t:Sum&#34;&gt;Sum&lt;/a&gt; 型が定義されています。&lt;/p&gt;
-&lt;div class=&#34;sourceCode&#34; id=&#34;cb1&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb1-1&#34;&gt;&lt;a href=&#34;#cb1-1&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;newtype&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; {&lt;span class=&#34;ot&#34;&gt; getSum ::&lt;/span&gt; a }&lt;/span&gt;
-&lt;span id=&#34;cb1-2&#34;&gt;&lt;a href=&#34;#cb1-2&#34;&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id=&#34;cb1-3&#34;&gt;&lt;a href=&#34;#cb1-3&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Num&lt;/span&gt; a &lt;span class=&#34;ot&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Semigroup&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a) &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb1-4&#34;&gt;&lt;a href=&#34;#cb1-4&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; b &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; (a &lt;span class=&#34;op&#34;&gt;+&lt;/span&gt; b)&lt;/span&gt;
-&lt;span id=&#34;cb1-5&#34;&gt;&lt;a href=&#34;#cb1-5&#34;&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id=&#34;cb1-6&#34;&gt;&lt;a href=&#34;#cb1-6&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Num&lt;/span&gt; a &lt;span class=&#34;ot&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Monoid&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a) &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb1-7&#34;&gt;&lt;a href=&#34;#cb1-7&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;fu&#34;&gt;mempty&lt;/span&gt; &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;使い方は簡単。&lt;/p&gt;
-&lt;div class=&#34;sourceCode&#34; id=&#34;cb2&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb2-1&#34;&gt;&lt;a href=&#34;#cb2-1&#34;&gt;&lt;/a&gt;ghci&lt;span class=&#34;op&#34;&gt;&amp;gt;&lt;/span&gt; getSum (&lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;fu&#34;&gt;mempty&lt;/span&gt;)&lt;/span&gt;
-&lt;span id=&#34;cb2-2&#34;&gt;&lt;a href=&#34;#cb2-2&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dv&#34;&gt;3&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb2-3&#34;&gt;&lt;a href=&#34;#cb2-3&#34;&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id=&#34;cb2-4&#34;&gt;&lt;a href=&#34;#cb2-4&#34;&gt;&lt;/a&gt;ghci&lt;span class=&#34;op&#34;&gt;&amp;gt;&lt;/span&gt; getSum &lt;span class=&#34;op&#34;&gt;$&lt;/span&gt; &lt;span class=&#34;fu&#34;&gt;foldMap&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; [&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;op&#34;&gt;..&lt;/span&gt;&lt;span class=&#34;dv&#34;&gt;10&lt;/span&gt;]&lt;/span&gt;
-&lt;span id=&#34;cb2-5&#34;&gt;&lt;a href=&#34;#cb2-5&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dv&#34;&gt;55&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;!--more--&gt;
-&lt;h2 id=&#34;semigroup-monoid-law-の確認&#34;&gt;Semigroup, Monoid law の確認&lt;/h2&gt;
-&lt;p&gt;Semigroup Law&lt;/p&gt;
-&lt;div class=&#34;sourceCode&#34; id=&#34;cb3&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb3-1&#34;&gt;&lt;a href=&#34;#cb3-1&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; b &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; c)&lt;/span&gt;
-&lt;span id=&#34;cb3-2&#34;&gt;&lt;a href=&#34;#cb3-2&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; (b &lt;span class=&#34;op&#34;&gt;+&lt;/span&gt; c)&lt;/span&gt;
-&lt;span id=&#34;cb3-3&#34;&gt;&lt;a href=&#34;#cb3-3&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; (a &lt;span class=&#34;op&#34;&gt;+&lt;/span&gt; (b &lt;span class=&#34;op&#34;&gt;+&lt;/span&gt; c))&lt;/span&gt;
-&lt;span id=&#34;cb3-4&#34;&gt;&lt;a href=&#34;#cb3-4&#34;&gt;&lt;/a&gt;&lt;span class=&#34;co&#34;&gt;-- (+) の結合律より&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb3-5&#34;&gt;&lt;a href=&#34;#cb3-5&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; ((a &lt;span class=&#34;op&#34;&gt;+&lt;/span&gt; b) &lt;span class=&#34;op&#34;&gt;+&lt;/span&gt; c)&lt;/span&gt;
-&lt;span id=&#34;cb3-6&#34;&gt;&lt;a href=&#34;#cb3-6&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; (a &lt;span class=&#34;op&#34;&gt;+&lt;/span&gt; b) &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; c&lt;/span&gt;
-&lt;span id=&#34;cb3-7&#34;&gt;&lt;a href=&#34;#cb3-7&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; b) &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; c&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Monoid Law&lt;/p&gt;
-&lt;div class=&#34;sourceCode&#34; id=&#34;cb4&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb4-1&#34;&gt;&lt;a href=&#34;#cb4-1&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; (&lt;span class=&#34;fu&#34;&gt;mempty&lt;/span&gt;&lt;span class=&#34;ot&#34;&gt; ::&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a)&lt;/span&gt;
-&lt;span id=&#34;cb4-2&#34;&gt;&lt;a href=&#34;#cb4-2&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb4-3&#34;&gt;&lt;a href=&#34;#cb4-3&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; (a &lt;span class=&#34;op&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;)&lt;/span&gt;
-&lt;span id=&#34;cb4-4&#34;&gt;&lt;a href=&#34;#cb4-4&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a&lt;/span&gt;
-&lt;span id=&#34;cb4-5&#34;&gt;&lt;a href=&#34;#cb4-5&#34;&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id=&#34;cb4-6&#34;&gt;&lt;a href=&#34;#cb4-6&#34;&gt;&lt;/a&gt;  (&lt;span class=&#34;fu&#34;&gt;mempty&lt;/span&gt;&lt;span class=&#34;ot&#34;&gt; ::&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a) &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a&lt;/span&gt;
-&lt;span id=&#34;cb4-7&#34;&gt;&lt;a href=&#34;#cb4-7&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;op&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a&lt;/span&gt;
-&lt;span id=&#34;cb4-8&#34;&gt;&lt;a href=&#34;#cb4-8&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; (&lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;op&#34;&gt;+&lt;/span&gt; a)&lt;/span&gt;
-&lt;span id=&#34;cb4-9&#34;&gt;&lt;a href=&#34;#cb4-9&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;newtype-を使って定義する理由&#34;&gt;newtype を使って定義する理由&lt;/h2&gt;
-&lt;p&gt;わざわざ &lt;code&gt;Sum&lt;/code&gt; という新しい型を作ってインスタンスを定義しなくても、&lt;code&gt;Int&lt;/code&gt; を使って直接 &lt;code&gt;Semigroup&lt;/code&gt; と &lt;code&gt;Monoid&lt;/code&gt; のインスタンスを定義すれば良いんじゃないか？と普通は思います。&lt;/p&gt;
-&lt;p&gt;実際に以下の定義は問題なく動きます。&lt;/p&gt;
-&lt;div class=&#34;sourceCode&#34; id=&#34;cb5&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb5-1&#34;&gt;&lt;a href=&#34;#cb5-1&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Semigroup&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Int&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb5-2&#34;&gt;&lt;a href=&#34;#cb5-2&#34;&gt;&lt;/a&gt;  (&lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt;) &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; (&lt;span class=&#34;op&#34;&gt;+&lt;/span&gt;)&lt;/span&gt;
-&lt;span id=&#34;cb5-3&#34;&gt;&lt;a href=&#34;#cb5-3&#34;&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id=&#34;cb5-4&#34;&gt;&lt;a href=&#34;#cb5-4&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Monoid&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Int&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb5-5&#34;&gt;&lt;a href=&#34;#cb5-5&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;fu&#34;&gt;mempty&lt;/span&gt; &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;div class=&#34;sourceCode&#34; id=&#34;cb6&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb6-1&#34;&gt;&lt;a href=&#34;#cb6-1&#34;&gt;&lt;/a&gt;ghci&lt;span class=&#34;op&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;ot&#34;&gt; mempty ::&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Int&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb6-2&#34;&gt;&lt;a href=&#34;#cb6-2&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dv&#34;&gt;3&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb6-3&#34;&gt;&lt;a href=&#34;#cb6-3&#34;&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id=&#34;cb6-4&#34;&gt;&lt;a href=&#34;#cb6-4&#34;&gt;&lt;/a&gt;ghci&lt;span class=&#34;op&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;fu&#34;&gt;mconcat&lt;/span&gt; [&lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;op&#34;&gt;..&lt;/span&gt;&lt;span class=&#34;dv&#34;&gt;10&lt;/span&gt;]&lt;span class=&#34;ot&#34;&gt; ::&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Int&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb6-5&#34;&gt;&lt;a href=&#34;#cb6-5&#34;&gt;&lt;/a&gt;&lt;span class=&#34;dv&#34;&gt;55&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;しかし、足し算と同様に掛け算もモノイドとして定義したいと思う人もいるでしょう。&lt;/p&gt;
-&lt;p&gt;この時 &lt;code&gt;Int&lt;/code&gt; は既に &lt;code&gt;Semigroup&lt;/code&gt;, &lt;code&gt;Monoid&lt;/code&gt; のインスタンス定義があるため、同じファイルに以下のように定義することはできません。&lt;/p&gt;
-&lt;div class=&#34;sourceCode&#34; id=&#34;cb7&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb7-1&#34;&gt;&lt;a href=&#34;#cb7-1&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Semigroup&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Int&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb7-2&#34;&gt;&lt;a href=&#34;#cb7-2&#34;&gt;&lt;/a&gt;  (&lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt;) &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; (&lt;span class=&#34;op&#34;&gt;*&lt;/span&gt;)&lt;/span&gt;
-&lt;span id=&#34;cb7-3&#34;&gt;&lt;a href=&#34;#cb7-3&#34;&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id=&#34;cb7-4&#34;&gt;&lt;a href=&#34;#cb7-4&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Monoid&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Int&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb7-5&#34;&gt;&lt;a href=&#34;#cb7-5&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;fu&#34;&gt;mempty&lt;/span&gt; &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;この問題を解決する方法はいくつかありますが、このような例では &lt;code&gt;newtype&lt;/code&gt; が適切ということです。&lt;/p&gt;
-&lt;h2 id=&#34;law-の自動チェック-quickcheck-classes&#34;&gt;Law の自動チェック (quickcheck-classes)&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://hackage.haskell.org/package/quickcheck-classes&#34;&gt;quickcheck-classes&lt;/a&gt; を使って &lt;code&gt;Semigroup law&lt;/code&gt; と &lt;code&gt;Monoid law&lt;/code&gt; がちゃんと法則を満たすかどうかチェックしてみます。&lt;/p&gt;
-&lt;div class=&#34;sourceCode&#34; id=&#34;cb8&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb8-1&#34;&gt;&lt;a href=&#34;#cb8-1&#34;&gt;&lt;/a&gt;&lt;span class=&#34;ot&#34;&gt;{-# LANGUAGE GeneralizedNewtypeDeriving #-}&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb8-2&#34;&gt;&lt;a href=&#34;#cb8-2&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;newtype&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; {&lt;span class=&#34;ot&#34;&gt; getSum ::&lt;/span&gt; a }&lt;/span&gt;
-&lt;span id=&#34;cb8-3&#34;&gt;&lt;a href=&#34;#cb8-3&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;kw&#34;&gt;deriving&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;Eq&lt;/span&gt;, &lt;span class=&#34;dt&#34;&gt;Show&lt;/span&gt;, &lt;span class=&#34;dt&#34;&gt;Arbitrary&lt;/span&gt;)&lt;/span&gt;
-&lt;span id=&#34;cb8-4&#34;&gt;&lt;a href=&#34;#cb8-4&#34;&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id=&#34;cb8-5&#34;&gt;&lt;a href=&#34;#cb8-5&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Num&lt;/span&gt; a &lt;span class=&#34;ot&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Semigroup&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a) &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb8-6&#34;&gt;&lt;a href=&#34;#cb8-6&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a &lt;span class=&#34;op&#34;&gt;&amp;lt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; b &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; (a &lt;span class=&#34;op&#34;&gt;+&lt;/span&gt; b)&lt;/span&gt;
-&lt;span id=&#34;cb8-7&#34;&gt;&lt;a href=&#34;#cb8-7&#34;&gt;&lt;/a&gt;&lt;/span&gt;
-&lt;span id=&#34;cb8-8&#34;&gt;&lt;a href=&#34;#cb8-8&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Num&lt;/span&gt; a &lt;span class=&#34;ot&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Monoid&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a) &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb8-9&#34;&gt;&lt;a href=&#34;#cb8-9&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;fu&#34;&gt;mempty&lt;/span&gt; &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;Eq&lt;/code&gt;, &lt;code&gt;Show&lt;/code&gt;, &lt;code&gt;Arbitrary&lt;/code&gt; が無いとチェックできないので &lt;code&gt;derive&lt;/code&gt; しています。&lt;/p&gt;
-&lt;p&gt;実行はめっちゃ簡単で、&lt;code&gt;lawsCheck&lt;/code&gt; 関数と &lt;code&gt;semigroupLaws&lt;/code&gt; や &lt;code&gt;monoidLaws&lt;/code&gt; などのチェックしたい則に対応する関数を使うだけです。&lt;/p&gt;
-&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;&amp;gt; import Test.QuickCheck.Classes
-&amp;gt; import Data.Proxy
-
-&amp;gt; lawsCheck (semigroupLaws (Proxy :: Proxy (Sum Int)))
-Semigroup: Associative +++ OK, passed 100 tests.
-Semigroup: Concatenation +++ OK, passed 100 tests.
-Semigroup: Times +++ OK, passed 100 tests; 99 discarded.
-
-&amp;gt; lawsCheck (monoidLaws (Proxy :: Proxy (Sum Int)))
-Monoid: Associative +++ OK, passed 100 tests.
-Monoid: Left Identity +++ OK, passed 100 tests.
-Monoid: Right Identity +++ OK, passed 100 tests.
-Monoid: Concatenation +++ OK, passed 100 tests.&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;参考までに &lt;code&gt;mempty&lt;/code&gt; の定義が Law を満たさない場合の例も載せておきます。&lt;/p&gt;
-&lt;div class=&#34;sourceCode&#34; id=&#34;cb10&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb10-1&#34;&gt;&lt;a href=&#34;#cb10-1&#34;&gt;&lt;/a&gt;&lt;span class=&#34;kw&#34;&gt;instance&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Num&lt;/span&gt; a &lt;span class=&#34;ot&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Monoid&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; a) &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb10-2&#34;&gt;&lt;a href=&#34;#cb10-2&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;fu&#34;&gt;mempty&lt;/span&gt; &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;Sum&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;&amp;gt; import Test.QuickCheck.Classes
-&amp;gt; import Data.Proxy
-
-&amp;gt; lawsCheck (semigroupLaws (Proxy :: Proxy (Sum Int)))
-Semigroup: Associative +++ OK, passed 100 tests.
-Semigroup: Concatenation +++ OK, passed 100 tests.
-Semigroup: Times +++ OK, passed 100 tests; 113 discarded.
-
-&amp;gt; lawsCheck (monoidLaws (Proxy :: Proxy (Sum Int)))
-Monoid: Associative +++ OK, passed 100 tests.
-Monoid: Left Identity *** Failed! Falsifiable (after 1 test):
-  Description: mappend mempty a = a
-  a = Sum {getSum = 0}
-  mappend mempty a = Sum {getSum = 1}
-Monoid: Right Identity *** Failed! Falsifiable (after 1 test):
-  Description: mappend a mempty = a
-  a = Sum {getSum = 0}
-  mappend a mempty = Sum {getSum = 1}
-Monoid: Concatenation +++ OK, passed 100 tests.&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;こんな感じでモノイドの左単位元則 (Left Identity law) と右単位元則 (Right Identity law) が満たされていないことを教えてくれます。&lt;/p&gt;
-&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://people.cs.kuleuven.be/~tom.schrijvers/Research/talks/lhug4.pdf&#34;&gt;Lists and Other Monoids&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/01/cygwin-cygwin.html</id><title type="text">[cygwin] cygwinセットアップ・環境構築手順メモ</title><updated>2018-12-16T14:31:09.194+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/01/cygwin-cygwin.html"/><summary type="text">
+Error: </summary></entry><entry><id>http://kurokawh.blogspot.com/2018/01/cygwin-cygwin.html</id><title type="text">[cygwin] cygwinセットアップ・環境構築手順メモ</title><updated>2018-12-16T14:31:09.194+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/01/cygwin-cygwin.html"/><summary type="text">
 
 主に自分向けの防備録です。windows10上で確認。インストーラーはここからDLする。
 
