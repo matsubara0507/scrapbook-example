@@ -1267,7 +1267,7 @@ version:        1.999999999     -- 変更後&lt;/code&gt;&lt;/pre&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;Ap&lt;/code&gt; モノイドの使い道がわかった&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://blog.miz-ar.info/2019/02/monoid-for-haskellers/&#34;&gt;Haskellerのためのモノイド完全ガイド&lt;/a&gt; でも解説されているので、気になった方はこちらもどうぞ&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;fmap fold . sequenceA&lt;/code&gt; と &lt;code&gt;getAp . foldMap Ap&lt;/code&gt; を比較すると型制約が若干違う&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;fmap fold . sequenceA&lt;/code&gt; と &lt;code&gt;getAp . foldMap Ap&lt;/code&gt; を比較すると型クラス制約が若干違う&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;sourceCode&#34; id=&#34;cb13&#34;&gt;&lt;pre class=&#34;sourceCode hs&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb13-1&#34;&gt;&lt;a href=&#34;#cb13-1&#34;&gt;&lt;/a&gt;&lt;span class=&#34;op&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;op&#34;&gt;:&lt;/span&gt;t &lt;span class=&#34;fu&#34;&gt;fmap&lt;/span&gt; fold &lt;span class=&#34;op&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;fu&#34;&gt;sequenceA&lt;/span&gt;&lt;/span&gt;
 &lt;span id=&#34;cb13-2&#34;&gt;&lt;a href=&#34;#cb13-2&#34;&gt;&lt;/a&gt;&lt;span class=&#34;fu&#34;&gt;fmap&lt;/span&gt; fold &lt;span class=&#34;op&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;ot&#34;&gt; sequenceA ::&lt;/span&gt; (&lt;span class=&#34;dt&#34;&gt;Monoid&lt;/span&gt; a, &lt;span class=&#34;dt&#34;&gt;Traversable&lt;/span&gt; t, &lt;span class=&#34;dt&#34;&gt;Applicative&lt;/span&gt; f) &lt;span class=&#34;ot&#34;&gt;=&amp;gt;&lt;/span&gt; t (f a) &lt;span class=&#34;ot&#34;&gt;-&amp;gt;&lt;/span&gt; f a&lt;/span&gt;
@@ -4485,11 +4485,11 @@ Flags for format:
 &lt;span id=&#34;cb4-4&#34;&gt;&lt;a href=&#34;#cb4-4&#34;&gt;&lt;/a&gt;  x &lt;span class=&#34;ot&#34;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&#34;fu&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;/span&gt;
 &lt;span id=&#34;cb4-5&#34;&gt;&lt;a href=&#34;#cb4-5&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;kw&#34;&gt;let&lt;/span&gt; y &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; x &lt;span class=&#34;op&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt;&lt;/span&gt;
 &lt;span id=&#34;cb4-6&#34;&gt;&lt;a href=&#34;#cb4-6&#34;&gt;&lt;/a&gt;      z &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb4-7&#34;&gt;&lt;a href=&#34;#cb4-7&#34;&gt;&lt;/a&gt;    &lt;span class=&#34;kw&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;fu&#34;&gt;return&lt;/span&gt; (y&lt;span class=&#34;op&#34;&gt;+&lt;/span&gt;z)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span id=&#34;cb4-7&#34;&gt;&lt;a href=&#34;#cb4-7&#34;&gt;&lt;/a&gt;   &lt;span class=&#34;kw&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;fu&#34;&gt;return&lt;/span&gt; (y&lt;span class=&#34;op&#34;&gt;+&lt;/span&gt;z)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;let...in&lt;/code&gt; を使うとインデントに気配りする必要があるので面倒です
 &lt;ul&gt;
-&lt;li&gt;例えば &lt;code&gt;let&lt;/code&gt; と &lt;code&gt;in&lt;/code&gt; の先頭を合わせるとコンパイルエラーになります&lt;/li&gt;
+&lt;li&gt;例えば &lt;code&gt;do&lt;/code&gt; の中で &lt;code&gt;let&lt;/code&gt; と &lt;code&gt;in&lt;/code&gt; の先頭を合わせるとコンパイルエラーになります&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;sourceCode&#34; id=&#34;cb5&#34;&gt;&lt;pre class=&#34;sourceCode haskell&#34;&gt;&lt;code class=&#34;sourceCode haskell&#34;&gt;&lt;span id=&#34;cb5-1&#34;&gt;&lt;a href=&#34;#cb5-1&#34;&gt;&lt;/a&gt;&lt;span class=&#34;co&#34;&gt;-- let...in version (compile error)&lt;/span&gt;&lt;/span&gt;
@@ -4505,10 +4505,10 @@ Flags for format:
 &lt;span id=&#34;cb6-3&#34;&gt;&lt;a href=&#34;#cb6-3&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;op&#34;&gt;|&lt;/span&gt; bmi &lt;span class=&#34;op&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&#34;fl&#34;&gt;18.5&lt;/span&gt; &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;st&#34;&gt;&amp;quot;痩せてるね&amp;quot;&lt;/span&gt;&lt;/span&gt;
 &lt;span id=&#34;cb6-4&#34;&gt;&lt;a href=&#34;#cb6-4&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;op&#34;&gt;|&lt;/span&gt; bmi &lt;span class=&#34;op&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&#34;fl&#34;&gt;25.0&lt;/span&gt; &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;st&#34;&gt;&amp;quot;普通だね&amp;quot;&lt;/span&gt;&lt;/span&gt;
 &lt;span id=&#34;cb6-5&#34;&gt;&lt;a href=&#34;#cb6-5&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;op&#34;&gt;|&lt;/span&gt; bmi &lt;span class=&#34;op&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&#34;fl&#34;&gt;30.0&lt;/span&gt; &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;st&#34;&gt;&amp;quot;ぽっちゃりだね&amp;quot;&lt;/span&gt;&lt;/span&gt;
-&lt;span id=&#34;cb6-6&#34;&gt;&lt;a href=&#34;#cb6-6&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;op&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;fu&#34;&gt;otherwise&lt;/span&gt; &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;st&#34;&gt;&amp;quot;太っているね&amp;quot;&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb6-6&#34;&gt;&lt;a href=&#34;#cb6-6&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;op&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;fu&#34;&gt;otherwise&lt;/span&gt;   &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;st&#34;&gt;&amp;quot;太っているね&amp;quot;&lt;/span&gt;&lt;/span&gt;
 &lt;span id=&#34;cb6-7&#34;&gt;&lt;a href=&#34;#cb6-7&#34;&gt;&lt;/a&gt;  &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt;&lt;/span&gt;
 &lt;span id=&#34;cb6-8&#34;&gt;&lt;a href=&#34;#cb6-8&#34;&gt;&lt;/a&gt;    bmi &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; kg &lt;span class=&#34;op&#34;&gt;/&lt;/span&gt; (m&lt;span class=&#34;op&#34;&gt;^&lt;/span&gt;&lt;span class=&#34;dv&#34;&gt;2&lt;/span&gt;)&lt;/span&gt;
-&lt;span id=&#34;cb6-9&#34;&gt;&lt;a href=&#34;#cb6-9&#34;&gt;&lt;/a&gt;    m &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; cm &lt;span class=&#34;op&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;100&lt;/span&gt;&lt;/span&gt;
+&lt;span id=&#34;cb6-9&#34;&gt;&lt;a href=&#34;#cb6-9&#34;&gt;&lt;/a&gt;    m   &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; cm &lt;span class=&#34;op&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;100&lt;/span&gt;&lt;/span&gt;
 &lt;span id=&#34;cb6-10&#34;&gt;&lt;a href=&#34;#cb6-10&#34;&gt;&lt;/a&gt;&lt;/span&gt;
 &lt;span id=&#34;cb6-11&#34;&gt;&lt;a href=&#34;#cb6-11&#34;&gt;&lt;/a&gt;&lt;span class=&#34;co&#34;&gt;-- *Main&amp;gt; putStrLn $ calcBmi 170 60&lt;/span&gt;&lt;/span&gt;
 &lt;span id=&#34;cb6-12&#34;&gt;&lt;a href=&#34;#cb6-12&#34;&gt;&lt;/a&gt;&lt;span class=&#34;co&#34;&gt;-- 普通だね&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -4584,7 +4584,7 @@ Flags for format:
 &lt;span id=&#34;cb10-3&#34;&gt;&lt;a href=&#34;#cb10-3&#34;&gt;&lt;/a&gt;&lt;/span&gt;
 &lt;span id=&#34;cb10-4&#34;&gt;&lt;a href=&#34;#cb10-4&#34;&gt;&lt;/a&gt;&lt;span class=&#34;co&#34;&gt;-- NG&lt;/span&gt;&lt;/span&gt;
 &lt;span id=&#34;cb10-5&#34;&gt;&lt;a href=&#34;#cb10-5&#34;&gt;&lt;/a&gt;g &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;if&lt;/span&gt; (x &lt;span class=&#34;kw&#34;&gt;where&lt;/span&gt; x &lt;span class=&#34;ot&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;dt&#34;&gt;True&lt;/span&gt;) &lt;span class=&#34;kw&#34;&gt;then&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;kw&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;dv&#34;&gt;0&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;構文上のどこに式が出現できるかという規則については &lt;code&gt;Language Report&lt;/code&gt; に詳しく記載されています。&lt;/p&gt;
+&lt;p&gt;構文上のどこに式が出現できるかという規則については &lt;code&gt;Haskell 2010 Language Report&lt;/code&gt; に詳しく記載されています。&lt;/p&gt;
 &lt;h2 id=&#34;まとめ&#34;&gt;まとめ&lt;/h2&gt;
 &lt;p&gt;このように、&lt;code&gt;let&lt;/code&gt;, &lt;code&gt;where&lt;/code&gt;, &lt;code&gt;let...in&lt;/code&gt; はどちらでも書けることが多いので、適材適所で自分の感性を信じて使いこなすと良いのではないかと思います。&lt;/p&gt;
 &lt;p&gt;そういえばラムダノートさんから&lt;a href=&#34;https://www.lambdanote.com/collections/haskell&#34;&gt;プログラミングHaskellの第2版&lt;/a&gt;が発売されましたね。書籍の内容が個人的にとても好きなので、弊社のアルバイトの人には推薦図書として英語版を読んでもらっていました。&lt;/p&gt;
@@ -4594,11 +4594,7 @@ Flags for format:
 &lt;li&gt;&lt;a href=&#34;https://www.haskell.org/onlinereport/haskell2010/&#34;&gt;Haskell 2010 Language Report&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;すごいHaskellたのしく学ぼう！&lt;/li&gt;
 &lt;li&gt;Programming in Haskell 2nd Edition&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;宣伝&#34;&gt;宣伝&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&#34;https://techbookfest.org/event/tbf07&#34;&gt;技術書典7&lt;/a&gt;に初参加します。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/images/2019/08-19/circle.png&#34; alt =&#34;サークルカット&#34; width=&#34;400px&#34;&gt;&lt;/p&gt;
-&lt;p&gt;進捗・詳細については &lt;a href=&#34;/ad/techbookfest7.html&#34;&gt;技術書典7特設ページ&lt;/a&gt; をご確認ください。&lt;/p&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/02/windows-windows10.html</id><title type="text">[windows] Windows10セットアップ・設定項目のメモ</title><updated>2019-08-22T13:32:52.909+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/02/windows-windows10.html"/><summary type="text">Windows10セットアップ時の設定項目、インストールアプリの備忘録。
+&lt;/ul&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/02/windows-windows10.html</id><title type="text">[windows] Windows10セットアップ・設定項目のメモ</title><updated>2019-08-22T13:32:52.909+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/02/windows-windows10.html"/><summary type="text">Windows10セットアップ時の設定項目、インストールアプリの備忘録。
 
 
 スタートメニュー・タスクバーの設定
