@@ -1314,7 +1314,44 @@ Plan construction failed.&lt;/code&gt;&lt;/pre&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/haskell/cabal/pull/6576&#34;&gt;Resolve #6369 and #6393: Allow cabal v2-install pkgname:exename or http://example.com/package.tar.gz(#sha256=abcde…) #6576&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ cabal install &amp;#39;https://hackage.haskell.org/package/cabal-fmt-0.1.2/cabal-fmt-0.1.2.tar.gz#sha256=aae556efbcaddfd65c6a1c1811b122b0d8c8d00624c8c2e36aabb5e9f9ea9840&amp;#39;&lt;/code&gt;&lt;/pre&gt;</summary></entry><entry><id>https://matsubara0507.github.io/posts/2020-04-20-servant-with-slack-verifying-requests.html</id><title type="text">Haskell Servant で Slack からの署名付きリクエストを受ける</title><updated>2020-04-20T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2020-04-20-servant-with-slack-verifying-requests.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ cabal install &amp;#39;https://hackage.haskell.org/package/cabal-fmt-0.1.2/cabal-fmt-0.1.2.tar.gz#sha256=aae556efbcaddfd65c6a1c1811b122b0d8c8d00624c8c2e36aabb5e9f9ea9840&amp;#39;&lt;/code&gt;&lt;/pre&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2019/11/mac-mojava.html</id><title type="text">[mac] Mojavaクリーンインストール</title><updated>2020-05-04T13:04:37.067+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2019/11/mac-mojava.html"/><summary type="text">Mojavaへのアップデートを契機にmac book airを初期化して環境をクリーンセットアップしました。
+自分にとって使いやすい環境の設定手順および、インストールしたアプリ群の情報をメモがわりに残しておきます。
+
+
+
+システム環境設定
+
+トラックパッド
+
+軌跡の速さを速くする 
+「スクロールとズーム」内の「スクロールの方向」を「ナチュラル」にする
+「その他のジェスチャー」内の全てのチェックを外す
+
+アクセシビリティ
+
+マウスとトラックパッド
+
+トラックパッドオプション
+
+「ドラッグを有効にする」にチェック
+
+→ダブルタップでドラッグできるようになる
+
+「ドラッグロックなし」を選択
+
+→トラックパッドから手を離すとドラッグ解除
+
+
+
+
+
+キーボード
+
+F1, F2などのキーを標準のファンクションキーとして利用する：チェック
+
+Dock
+
+ 最近使ったアプリケーションをDock に追加</summary></entry><entry><id>https://matsubara0507.github.io/posts/2020-04-20-servant-with-slack-verifying-requests.html</id><title type="text">Haskell Servant で Slack からの署名付きリクエストを受ける</title><updated>2020-04-20T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2020-04-20-servant-with-slack-verifying-requests.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
     &lt;p&gt;Slack のスラッシュコマンドなどで利用される署名付きリクエストを Haskell Servant で受ける方法を考えて実装しました． 実装は slackell という Haskell の Slack API パッケージにしてあります：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/matsubara0507/slackell&#34;&gt;matsubara0507/slackell - GitHub&lt;/a&gt;&lt;/li&gt;
@@ -4071,44 +4108,7 @@ less, lv, manコマンド終了時に画面をクリアしない
 &lt;p&gt;色々ととりあえずで作ったので雑だ（現在のは改良したあとなのでこのコードとは少し違う）．&lt;/p&gt;
 &lt;h2 id=&#34;おしまい&#34;&gt;おしまい&lt;/h2&gt;
 &lt;p&gt;ちなみに，会社で同期と TaPL (雑な)読書会をしており，このシリーズはその成果です． すでに半年ぐらいやってるが未だに10章です笑&lt;/p&gt;
-  &lt;/div&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2019/11/mac-mojava.html</id><title type="text">[mac] Mojavaクリーンインストール</title><updated>2019-11-16T09:38:23.124+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2019/11/mac-mojava.html"/><summary type="text">Mojavaへのアップデートを契機にmac book airを初期化して環境をクリーンセットアップしました。
-自分にとって使いやすい環境の設定手順および、インストールしたアプリ群の情報をメモがわりに残しておきます。
-
-
-
-システム環境設定
-
-トラックパッド
-
-軌跡の速さを速くする 
-「スクロールとズーム」内の「スクロールの方向」を「ナチュラル」にする
-「その他のジェスチャー」内の全てのチェックを外す
-
-アクセシビリティ
-
-マウスとトラックパッド
-
-トラックパッドオプション
-
-「ドラッグを有効にする」にチェック
-
-→ダブルタップでドラッグできるようになる
-
-「ドラッグロックなし」を選択
-
-→トラックパッドから手を離すとドラッグ解除
-
-
-
-
-
-キーボード
-
-F1, F2などのキーを標準のファンクションキーとして利用する：チェック
-
-Dock
-
- 最近使ったアプリケーションをDock に追加</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/02/windows-windows10.html</id><title type="text">[windows] Windows10セットアップ・設定項目のメモ</title><updated>2019-08-22T13:32:52.909+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/02/windows-windows10.html"/><summary type="text">Windows10セットアップ時の設定項目、インストールアプリの備忘録。
+  &lt;/div&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/02/windows-windows10.html</id><title type="text">[windows] Windows10セットアップ・設定項目のメモ</title><updated>2019-08-22T13:32:52.909+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/02/windows-windows10.html"/><summary type="text">Windows10セットアップ時の設定項目、インストールアプリの備忘録。
 
 
 スタートメニュー・タスクバーの設定
