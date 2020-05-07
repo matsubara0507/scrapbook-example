@@ -1314,7 +1314,7 @@ Plan construction failed.&lt;/code&gt;&lt;/pre&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/haskell/cabal/pull/6576&#34;&gt;Resolve #6369 and #6393: Allow cabal v2-install pkgname:exename or http://example.com/package.tar.gz(#sha256=abcde…) #6576&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ cabal install &amp;#39;https://hackage.haskell.org/package/cabal-fmt-0.1.2/cabal-fmt-0.1.2.tar.gz#sha256=aae556efbcaddfd65c6a1c1811b122b0d8c8d00624c8c2e36aabb5e9f9ea9840&amp;#39;&lt;/code&gt;&lt;/pre&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2019/11/mac-mojava.html</id><title type="text">[mac] Mojavaクリーンインストール</title><updated>2020-05-05T23:45:26.947+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2019/11/mac-mojava.html"/><summary type="text">Mojavaへのアップデートを契機にmac book airを初期化して環境をクリーンセットアップしました。
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ cabal install &amp;#39;https://hackage.haskell.org/package/cabal-fmt-0.1.2/cabal-fmt-0.1.2.tar.gz#sha256=aae556efbcaddfd65c6a1c1811b122b0d8c8d00624c8c2e36aabb5e9f9ea9840&amp;#39;&lt;/code&gt;&lt;/pre&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2019/11/mac-mojava.html</id><title type="text">[mac] Mojavaクリーンインストール</title><updated>2020-05-06T17:02:25.994+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2019/11/mac-mojava.html"/><summary type="text">Mojavaへのアップデートを契機にmac book airを初期化して環境をクリーンセットアップしました。
 自分にとって使いやすい環境の設定手順および、インストールしたアプリ群の情報をメモがわりに残しておきます。
 
 
@@ -1347,10 +1347,26 @@ Plan construction failed.&lt;/code&gt;&lt;/pre&gt;
 
 キーボード
 
-F1, F2などのキーを標準のファンクションキーとして利用する：チェック
-ショートカット ー 入力ソース：以下のチェックを外す
+キーボード
 
-前の</summary></entry><entry><id>https://matsubara0507.github.io/posts/2020-04-20-servant-with-slack-verifying-requests.html</id><title type="text">Haskell Servant で Slack からの署名付きリクエストを受ける</title><updated>2020-04-20T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2020-04-20-servant-with-slack-verifying-requests.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
+F1, F2などのキーを標準のファンクションキーとして利用する：チェック
+修飾キー：ControlとOptionを</summary></entry><entry><id>http://kurokawh.blogspot.com/2020/05/linux-gnupg.html</id><title type="text">[linux] gnupgによる暗号化処理時の確認プロンプトを抑制する方法</title><updated>2020-05-06T16:37:57.790+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2020/05/linux-gnupg.html"/><summary type="text">gnupgを用いてファイルを暗号化する際、予めインポートした公開鍵に対してtrust設定をしておかないと、指定した公開鍵毎に以下のような警告が発せられます。
+
+
+% gpg -e -r abc@test.org a.txt 
+gpg: AAAA4C0DD6F2ZZZZ: この鍵が本当に本人のものである、という兆候が、ありません
+
+sub  elg2048/AAAA4C0DD6F2ZZZZ 2020-05-06 Hiroyuki Kurokawa &lt;abc@test.org&gt;
+  主鍵フィンガープリント: &lt;snip&gt;
+  副鍵フィンガープリント: &lt;snip&gt;
+
+この鍵は、このユーザIDをなのる本人のものかどうか確信でき
+ません。今から行うことを＊本当に＊理解していない場合には、
+次の質問にはnoと答えてください。
+
+それでもこの鍵を使いますか? (y/N)
+
+以下のオプションを指定する</summary></entry><entry><id>https://matsubara0507.github.io/posts/2020-04-20-servant-with-slack-verifying-requests.html</id><title type="text">Haskell Servant で Slack からの署名付きリクエストを受ける</title><updated>2020-04-20T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2020-04-20-servant-with-slack-verifying-requests.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
     &lt;p&gt;Slack のスラッシュコマンドなどで利用される署名付きリクエストを Haskell Servant で受ける方法を考えて実装しました． 実装は slackell という Haskell の Slack API パッケージにしてあります：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/matsubara0507/slackell&#34;&gt;matsubara0507/slackell - GitHub&lt;/a&gt;&lt;/li&gt;
@@ -4455,17 +4471,7 @@ gtagsの特徴：
 正規表現で一覧絞り込み可能（gtags-find-pattern）
 開いているファイルで絞り込み可能（gtags-parsefiile）
 
-特定文字列</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/06/subversion.html</id><title type="text">[subversion] 特定ディレクトリ以下をサーバーとの同期対象から除外する方法</title><updated>2015-06-26T13:55:24.651+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/06/subversion.html"/><summary type="text">subversionでチェックアウトした作業コピー内の特定ディレクトリ以下をサーバーとの同期対象から除外したい、ということを考えたことはないでしょうか。
-例えば、リポジトリの特定ディレクトリ以下に自分にとって不要なファイルやアーカイブが多数コミットされていると、以下のような無駄が生じます。これらの無駄をなくしたい、というのが主なユースケースです。
-
-不要なファイル・アーカイブによってディスクスペースが占有される
-サーバー上に更新が発生した際にupdateに余計な時間がかかってしまう
-
-
-
-単純に特定ディレクトリ以下の作業ファイルを削除してしまうと、コミット時に差分として検知されてしまう、また、次回以降のupdateコマンドで再ダウンロードされてしまう、という非常に残念な挙動になります。
-
-このようなケースでは以下の方法を使えば、差分が検知されない状態で所定ディレクトリ以下のファイルを削除</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2020/04-12-cabal-repl.html</id><title type="text">cabal repl コマンドについて</title><updated></updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2020/04-12-cabal-repl.html"/><summary type="html">&lt;p&gt;&lt;code&gt;cabal repl&lt;/code&gt; コマンドは&lt;/p&gt;
+特定文字列</summary></entry><entry><id>https://haskell.e-bigmoon.com/posts/2020/04-12-cabal-repl.html</id><title type="text">cabal repl コマンドについて</title><updated></updated><author><name>e-bigmoon</name></author><link href="https://haskell.e-bigmoon.com/posts/2020/04-12-cabal-repl.html"/><summary type="html">&lt;p&gt;&lt;code&gt;cabal repl&lt;/code&gt; コマンドは&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;ghci&lt;/code&gt;, &lt;code&gt;ghc --interactive&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;stack repl&lt;/code&gt;, &lt;code&gt;stack ghci&lt;/code&gt;&lt;/li&gt;
