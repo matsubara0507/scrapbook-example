@@ -1314,7 +1314,35 @@ Plan construction failed.&lt;/code&gt;&lt;/pre&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/haskell/cabal/pull/6576&#34;&gt;Resolve #6369 and #6393: Allow cabal v2-install pkgname:exename or http://example.com/package.tar.gz(#sha256=abcde…) #6576&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ cabal install &amp;#39;https://hackage.haskell.org/package/cabal-fmt-0.1.2/cabal-fmt-0.1.2.tar.gz#sha256=aae556efbcaddfd65c6a1c1811b122b0d8c8d00624c8c2e36aabb5e9f9ea9840&amp;#39;&lt;/code&gt;&lt;/pre&gt;</summary></entry><entry><id>https://matsubara0507.github.io/posts/2020-05-31-create-deps-sensor-part1.html</id><title type="text">自分の Haskell プロジェクトの依存パッケージの古さを可視化する（その１）</title><updated>2020-05-31T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2020-05-31-create-deps-sensor-part1.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
+&lt;pre class=&#34;shell&#34;&gt;&lt;code&gt;$ cabal install &amp;#39;https://hackage.haskell.org/package/cabal-fmt-0.1.2/cabal-fmt-0.1.2.tar.gz#sha256=aae556efbcaddfd65c6a1c1811b122b0d8c8d00624c8c2e36aabb5e9f9ea9840&amp;#39;&lt;/code&gt;&lt;/pre&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/02/windows-windows10.html</id><title type="text">[windows] Windows10セットアップ・設定項目のメモ</title><updated>2020-06-12T13:14:02.963+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/02/windows-windows10.html"/><summary type="text">Windows10セットアップ時の設定項目、インストールアプリの備忘録。
+
+
+スタートメニュー・タスクバーの設定
+
+タスクバーの設定 
+
+小さいタスクバーボタンを使う：オン 
+[スタート]ボタンを右クリックするかWindowsキー＋Xキーを押したときに表示されるメニューで、コマンドプロンプトをWindows PowerShellに置き換える：オフ
+タスクバーボタンを結合する
+
+「タスクバーに入りきらない場合」を選択
+
+タスクバーをすべての ディスプレイに表示する：オフ
+
+
+
+ Quick Launcherを表示する
+
+クイック起動を復活する 
+Windows 10 タスクバーにクイック起動を表示する
+
+スタートメニューにコントロールパネルを表示する
+
+「Windows 10」のコントロールパネルを表示する方法について
+
+スタートメニューにピン止めするアプリ：
+
+Windowsシステム</summary></entry><entry><id>https://matsubara0507.github.io/posts/2020-05-31-create-deps-sensor-part1.html</id><title type="text">自分の Haskell プロジェクトの依存パッケージの古さを可視化する（その１）</title><updated>2020-05-31T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2020-05-31-create-deps-sensor-part1.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
     &lt;p&gt;思いついたツールを自作続けるとこうなりますよね&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/assets/create-deps-sensor/myprojects.jpg&#34;&gt;&lt;/img&gt;&lt;/p&gt;
 &lt;p&gt;時々思いつきで依存パッケージ，Stack プロジェクトであれば resolver をあげるんですけど，いい加減調べるのが大変． と言うことで，どれがどんだけ古くなってるかを可視化するツールを作りました． リポジトリはこちら：&lt;/p&gt;
@@ -3849,35 +3877,7 @@ less, lv, manコマンド終了時に画面をクリアしない
 &lt;p&gt;あとは &lt;code&gt;Chapter&lt;/code&gt; 型を &lt;code&gt;main&lt;/code&gt; の &lt;code&gt;Model&lt;/code&gt; に持たせて，それぞれの関数を &lt;code&gt;Chapter&lt;/code&gt; のものへと置き換えるだけ． これが良い方法かどうか，正直なんとも言えないが面白いモノができたの個人的には満足．&lt;/p&gt;
 &lt;h2 id=&#34;おしまい&#34;&gt;おしまい&lt;/h2&gt;
 &lt;p&gt;ところで，型なしラムダ計算は停止しない場合がある(例えば &lt;code&gt;(\x . x x) (\x . x x)&lt;/code&gt; とか)． このような式を SPA に突っ込むと無限に eval ボタンを押せてしまう． そこで，同期からは「eval ボタンが下にずれていくから無限プチプチみたいなのができない」と言われた笑． 検討した結果，ボタン固定にすると式の結果を追うのに上下スクロールを何回もしないとなので却下した(ごめんね)．&lt;/p&gt;
-  &lt;/div&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2018/02/windows-windows10.html</id><title type="text">[windows] Windows10セットアップ・設定項目のメモ</title><updated>2019-08-22T13:32:52.909+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/02/windows-windows10.html"/><summary type="text">Windows10セットアップ時の設定項目、インストールアプリの備忘録。
-
-
-スタートメニュー・タスクバーの設定
-
-タスクバーの設定 
-
-小さいタスクバーボタンを使う：オン 
-[スタート]ボタンを右クリックするかWindowsキー＋Xキーを押したときに表示されるメニューで、コマンドプロンプトをWindows PowerShellに置き換える：オフ
-タスクバーボタンを結合する
-
-「タスクバーに入りきらない場合」を選択
-
-タスクバーをすべての ディスプレイに表示する：オフ
-
-
-
- Quick Launcherを表示する
-
-クイック起動を復活する 
-Windows 10 タスクバーにクイック起動を表示する
-
-スタートメニューにコントロールパネルを表示する
-
-「Windows 10」のコントロールパネルを表示する方法について
-
-スタートメニューにピン止めするアプリ：
-
-Windowsシステム</summary></entry><entry><id>http://kurokawh.blogspot.com/2019/07/mac-el-capitan.html</id><title type="text">[mac] El Capitanへのアップグレード関連作業まとめ</title><updated>2019-07-13T19:19:56.684+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2019/07/mac-el-capitan.html"/><summary type="text">YosemiteからEl Capitan（10.11.2）へアップグレードしました。旧環境で起動できていたアプリケーションが起動できなくなったり、コマンドが見つからなくなる、といった問題が発生しましたが一通り解決できたので、その内容をまとめておきます。
+  &lt;/div&gt;</summary></entry><entry><id>http://kurokawh.blogspot.com/2019/07/mac-el-capitan.html</id><title type="text">[mac] El Capitanへのアップグレード関連作業まとめ</title><updated>2019-07-13T19:19:56.684+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2019/07/mac-el-capitan.html"/><summary type="text">YosemiteからEl Capitan（10.11.2）へアップグレードしました。旧環境で起動できていたアプリケーションが起動できなくなったり、コマンドが見つからなくなる、といった問題が発生しましたが一通り解決できたので、その内容をまとめておきます。
 
 ＃ポストし忘れてた･･･。今更な情報ですが自分の備忘録の意味もあるので公開。
 
