@@ -1,4 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2021-04-01T00:00:00Z</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>https://matsubara0507.github.io/posts/2021-04-01-create-homelyapp-part1.html</id><title type="text">家計簿アプリを作る：HaskellでSQL編</title><updated>2021-04-01T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2021-04-01-create-homelyapp-part1.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
+<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">Sample Site Posts</title><id>https://matsubara0507.github.io/scrapbook-example/atom.xml</id><updated>2021-04-18T11:56:12.128+09:00</updated><link href="https://matsubara0507.github.io/scrapbook-example"/><entry><id>http://kurokawh.blogspot.com/2018/05/emacscygwin-visual-studioemacs.html</id><title type="text">[emacs][cygwin] Visual Studioのemacs / emacsclient 連携設定</title><updated>2021-04-18T11:56:12.128+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2018/05/emacscygwin-visual-studioemacs.html"/><summary type="text">Visual Studioの外部ツール機能を利用して、Visual Studioで開いているファイルをショートカットキー一発で（orメニューから）emacs/emacsclientで開くことができる設定を紹介します。カーソル位置がemacsに引き継がれるのが地味に便利です。職場の都合などでビルド環境がVisual Studioだが、ビルド以外の作業は使い慣れたemacsを利用したい、という方にお勧めです。今の時代になぜWSLでなくcygwinなのか？という疑問をもたれる方がいると思いますが、このエントリはWSLがリリース前にメモを作って、ずっと公開しないまま眠っていたものです。せっかくの情報なので時代遅れを承知の上公開します。 
+
+前提：
+&#34;C:\cygwin64&#34;以下にcygwinをインストールし、cygwin上でemacs/emacsclientを利用している、自分の環境を前提に設定</summary></entry><entry><id>https://matsubara0507.github.io/posts/2021-04-01-create-homelyapp-part1.html</id><title type="text">家計簿アプリを作る：HaskellでSQL編</title><updated>2021-04-01T00:00:00Z</updated><author><name>matsubara0507</name></author><link href="https://matsubara0507.github.io/posts/2021-04-01-create-homelyapp-part1.html"/><summary type="html">&lt;div class=&#34;post-content&#34; itemprop=&#34;articleBody&#34;&gt;
     &lt;p&gt;自分用に Haskell で&lt;a href=&#34;https://github.com/matsubara0507/homelyapp&#34;&gt;家計簿アプリ的なの&lt;/a&gt;を作り始めました． 今回はまずバックエンドでのDBとの繋ぎの部分のメモ書きです．&lt;/p&gt;
 &lt;h2 id=&#34;バックエンドの構成&#34;&gt;バックエンドの構成&lt;/h2&gt;
 &lt;ul&gt;
@@ -3837,16 +3840,7 @@ UNLOCKED
 
 SHARED
 
-read可、write不可な状態。複数プロセスが同時にSHAREDロックを取得可能。複数プロセスが同時にreadできることを意味する。DBがこの状態にあるとき、他のプロセスからの</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/07/cygwinhaskellemacs-mingwcygwincygdrivec.html</id><title type="text">[cygwin][haskell][emacs] MinGWでcygwinの&#34;/cygdrive&#34;パスにアクセスする裏技（cygwin環境のemacsでflycheckを動作させる方法）</title><updated>2015-12-27T23:55:24.842+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/07/cygwinhaskellemacs-mingwcygwincygdrivec.html"/><summary type="text">haskell関連のコマンドはMinGW上でビルドされているため、cygwin環境の&#34;/cygdrive&#34;から始まるパスには対応していません。haskell-hlintから呼び出されるhlintも当然この問題の影響を受けておりemacs関連の設定が適切にされていたとしても、以下のようなエラーが表示されてしまいます。
-
-
-
-ミニバッファに表示されるエラー詳細：
-Suspicious state from syntax checker haskell-hlint: Checker haskell-hlint returned non-zero exit code 1, but no errors from output: hlint.exe: Couldn&#39;t find file: /cygdrive/c/Users/Hiroyuki/tmp/flycheck_hello.hs
-
-
-
-</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/11/haskellstack-stack-exec-ghcicouldnt.html</id><title type="text">[haskell][stack] stack exec ghciで”Couldn&#39;t match expected type&#34;エラーが発生する問題の対処</title><updated>2015-11-08T15:09:21.187+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/11/haskellstack-stack-exec-ghcicouldnt.html"/><summary type="text">先日、haskellのパッケージ管理をcabalからstackに移行して「便利〜！」と感動していたところなのですが、stach exec ghciでソースをロードしようとすると&#34;Couldn&#39;t match expected type: xxxxx&#34;とエラーが発生する問題に遭遇しました。
+read可、write不可な状態。複数プロセスが同時にSHAREDロックを取得可能。複数プロセスが同時にreadできることを意味する。DBがこの状態にあるとき、他のプロセスからの</summary></entry><entry><id>http://kurokawh.blogspot.com/2015/11/haskellstack-stack-exec-ghcicouldnt.html</id><title type="text">[haskell][stack] stack exec ghciで”Couldn&#39;t match expected type&#34;エラーが発生する問題の対処</title><updated>2015-11-08T15:09:21.187+09:00</updated><author><name>Hiroyuki Kurokawa</name></author><link href="http://kurokawh.blogspot.com/2015/11/haskellstack-stack-exec-ghcicouldnt.html"/><summary type="text">先日、haskellのパッケージ管理をcabalからstackに移行して「便利〜！」と感動していたところなのですが、stach exec ghciでソースをロードしようとすると&#34;Couldn&#39;t match expected type: xxxxx&#34;とエラーが発生する問題に遭遇しました。
 ネットの情報を参考に解決することができたのでその手順をまとめておきます。
 
 
